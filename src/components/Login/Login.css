@@ -1,11 +1,5 @@
 .login-container {
+    margin: 5%;
     color: whitesmoke; 
     text-align: center;
-}
-
-.app-header {
-    justify-content: center;
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
-    text-align: center;
-    margin-bottom: 50px;
 }
