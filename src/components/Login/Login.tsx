@@ -4,7 +4,7 @@ import { Row, Col } from 'react-bootstrap';
 import Stack from 'react-bootstrap/Stack';
 import './Login.css';
 import logo from '../../assets/logo.png';
-import apiService from '../../services/DataService';
+// import apiService from '../../services/DataService';
 
 const Login = () => {
    const [name, setName] = useState('');
