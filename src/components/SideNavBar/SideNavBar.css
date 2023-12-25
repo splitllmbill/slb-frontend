@@ -1,0 +1,14 @@
+.nav-item {
+    padding: 10px;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.nav-item:hover {
+    background-color: #290670;
+}
+
+.active {
+    background-color: #290670;
+}
