@@ -2,14 +2,17 @@ import { FC, useEffect, useState } from 'react';
 import { NavBar, SideNavBarWrapper } from './SideNavBar.styled';
 import './SideNavBar.css';
 
-interface SideNavBarProps { }
+interface SideNavBarProps {
+   onSelectContent: (content: string) => void;
+}
 
-const SideNavBar: FC<SideNavBarProps> = () => {
+const SideNavBar: FC<SideNavBarProps> = ({ onSelectContent }) => {
    const [activeItem, setActiveItem] = useState('Groups');
    const [isSmallScreen, setIsSmallScreen] = useState(false);
 
    const handleItemClick = (itemName: string) => {
       setActiveItem(itemName);
+      onSelectContent(itemName);
    };
 
    useEffect(() => {
