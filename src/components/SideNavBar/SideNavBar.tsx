@@ -1,19 +1,61 @@
-import { FC, useState } from 'react';
-import { SideNavBarWrapper } from './SideNavBar.styled';
+import { FC, useEffect, useState } from 'react';
+import { NavBar, SideNavBarWrapper } from './SideNavBar.styled';
+import './SideNavBar.css';
+
 interface SideNavBarProps { }
 
 const SideNavBar: FC<SideNavBarProps> = () => {
-   const [activeItem, setActiveItem] = useState('Home');
+   const [activeItem, setActiveItem] = useState('Groups');
+   const [isSmallScreen, setIsSmallScreen] = useState(false);
 
    const handleItemClick = (itemName: string) => {
       setActiveItem(itemName);
-      // You can add additional logic here when an item is clicked
    };
 
+   useEffect(() => {
+      const handleResize = () => {
+         setIsSmallScreen(window.innerWidth <= 500);
+      };
+
+      handleResize(); // Initial check
+      window.addEventListener('resize', handleResize);
+
+      return () => {
+         window.removeEventListener('resize', handleResize);
+      };
+   }, []);
+
    return (
-      <SideNavBarWrapper>
-         HIIII
-      </SideNavBarWrapper>
+      <>
+         <SideNavBarWrapper>
+            <NavBar className={!isSmallScreen ? 'show' : ''}>
+               <div
+                  className={`nav-item ${activeItem === 'Groups' ? 'active' : ''}`}
+                  onClick={() => handleItemClick('Groups')}
+               >
+                  Groups
+               </div>
+               <div
+                  className={`nav-item ${activeItem === 'Friends' ? 'active' : ''}`}
+                  onClick={() => handleItemClick('Friends')}
+               >
+                  Friends
+               </div>
+               <div
+                  className={`nav-item ${activeItem === 'Personal Expenses' ? 'active' : ''}`}
+                  onClick={() => handleItemClick('Personal Expenses')}
+               >
+                  Personal Expenses
+               </div>
+               <div
+                  className={`nav-item ${activeItem === 'Account' ? 'active' : ''}`}
+                  onClick={() => handleItemClick('Account')}
+               >
+                  Account
+               </div>
+            </NavBar>
+         </SideNavBarWrapper>
+      </>
    );
 };
 

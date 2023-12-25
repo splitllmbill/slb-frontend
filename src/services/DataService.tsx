@@ -1,11 +1,11 @@
-// import { environment } from "../environment";
+import { environment } from "../environment";
 
-// const BASE_URL = environment.domainUrl;
+const BASE_URL = environment.domainUrl;
 
 const dataService = {
     signup: async (userData: User) => {
         try {
-            const response = await fetch(`/db/signup`, {
+            const response = await fetch(BASE_URL+`db/signup`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

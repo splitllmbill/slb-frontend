@@ -3,7 +3,7 @@ import { Form, Button, FormGroup } from 'react-bootstrap';
 import { Row, Col } from 'react-bootstrap';
 import './Login.css';
 import Header from '../Header/Header';
-// import apiService from '../../services/DataService';
+import apiService from '../../services/DataService';
 
 const Login = () => {
    const [name, setName] = useState('');
@@ -17,7 +17,7 @@ const Login = () => {
       const formData = new FormData(event.target);
       const formDataObject = Object.fromEntries(formData.entries());
       console.log(formDataObject);
-      //apiService.signup(formDataObject as unknown as User)
+      apiService.signup(formDataObject as unknown as User)
    };
 
    const appDesc = "Welcome to SplitLLMBill, your go-to app for seamless bill splitting. Easily manage shared expenses, split bills with friends, and keep track of your finances.";
