@@ -11,13 +11,14 @@ import { BottomNavigationAction } from '@mui/material';
 
 import Login from '../Login/Login';
 import PersonalExpense from '../PersonalExpense/PersonalExpense';
+import Events from '../Events/Events';
 
 interface DashboardProps {}
 
 const Dashboard: FC<DashboardProps> = () => {
   const [isSmallScreen, setIsSmallScreen] = useState(false);
-  const [selectedContent, setSelectedContent] = useState('Groups'); // Initial selected content
-  const [value, setValue] = useState('Groups');
+  const [selectedContent, setSelectedContent] = useState('Events'); // Initial selected content
+  const [value, setValue] = useState('Events');
 
   useEffect(() => {
     const handleResize = () => {
@@ -46,7 +47,7 @@ const Dashboard: FC<DashboardProps> = () => {
       <DashboardWrapper>
         {!isSmallScreen && <SideNavBar onSelectContent={setSelectedContent} />}
         <ContentArea>
-          {selectedContent === 'Groups' && <Login />}
+          {selectedContent === 'Events' && <Events />}
           {selectedContent === 'Friends' && <Login/>}
           {selectedContent === 'Personal Expenses' && <PersonalExpense />}
           {selectedContent === 'Account' && <Login />}
@@ -56,7 +57,7 @@ const Dashboard: FC<DashboardProps> = () => {
       <BottomNavWrapper>
         {isSmallScreen && (
           <BottomNavigation showLabels value={value} onChange={handleNavigationChange}>
-            <BottomNavigationAction label="Groups" icon={<GrGroup />} value="Groups" />
+            <BottomNavigationAction label="Events" icon={<GrGroup />} value="Events" />
             <BottomNavigationAction label="Friends" icon={<FaUserFriends />} value="Friends" />
             <BottomNavigationAction label="Personal Expenses" icon={<BiMoneyWithdraw />} value="Personal Expenses" />
             <BottomNavigationAction label="Account" icon={<IoPersonCircle />} value="Account" />

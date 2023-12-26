@@ -8,7 +8,7 @@ export const ChatbotContainer = styled.div`
 `;
 
 export const ChatbotWindow = styled.div`
-  height: 400px;
+  height: 60vh;
   overflow-y: auto;
   border: 1px solid #ccc;
   padding: 10px;
@@ -35,9 +35,19 @@ export const Input = styled.input`
 `;
 
 export const Button = styled.button`
-  background-color: yellow;
+  background-color: darkgrey;
 `;
 
 export const Table = styled.table`
   /* Your styling for the table */
+`;
+
+export const TH = styled.th`
+  padding:10px;
+  border: 0.5px solid grey;
+`;
+
+export const TD = styled.td`
+  padding:10px;
+  border: 0.5px solid grey;
 `;

@@ -7,7 +7,7 @@ interface SideNavBarProps {
 }
 
 const SideNavBar: FC<SideNavBarProps> = ({ onSelectContent }) => {
-   const [activeItem, setActiveItem] = useState('Groups');
+   const [activeItem, setActiveItem] = useState('Events');
    const [isSmallScreen, setIsSmallScreen] = useState(false);
 
    const handleItemClick = (itemName: string) => {
@@ -33,10 +33,10 @@ const SideNavBar: FC<SideNavBarProps> = ({ onSelectContent }) => {
          <SideNavBarWrapper>
             <NavBar className={!isSmallScreen ? 'show' : ''}>
                <div
-                  className={`nav-item ${activeItem === 'Groups' ? 'active' : ''}`}
-                  onClick={() => handleItemClick('Groups')}
+                  className={`nav-item ${activeItem === 'Events' ? 'active' : ''}`}
+                  onClick={() => handleItemClick('Events')}
                >
-                  Groups
+                  Events
                </div>
                <div
                   className={`nav-item ${activeItem === 'Friends' ? 'active' : ''}`}

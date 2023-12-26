@@ -1,5 +1,5 @@
 import React, { SetStateAction, useState } from 'react';
-import { Button, ChatbotContainer, ChatbotWindow, Input, InputContainer, Message, Table } from './ChatBot.styled';
+import { Button, ChatbotContainer, ChatbotWindow, Input, InputContainer, Message, TD, TH, Table } from './ChatBot.styled';
 import logo from '../../../assets/logo.png';
 import { PiUserCircleThin } from 'react-icons/pi';
 
@@ -67,24 +67,24 @@ const Chatbot = () => {
                      <Table contentEditable="true">
                         <thead>
                            <tr>
-                              <th contentEditable="false"><b>Expense</b></th>
-                              <th contentEditable="false"><b>Cost</b></th>
+                              <TH contentEditable="false"><b>Expense</b></TH>
+                              <TH contentEditable="false"><b>Cost</b></TH>
                            </tr>
                         </thead>
                         <tbody>
                            <tr>
-                              <td contentEditable="true">Type your expense</td>
-                              <td contentEditable="true">Type the cost</td>
+                              <TD contentEditable="true">Type your expense</TD>
+                              <TD contentEditable="true">Type the cost</TD>
                            </tr>
                         </tbody>
                      </Table>
                   </Message>
                )}
                {showTable && (
-                  <div>
+                  <Message>
                      <Button onClick={handleAddExpense}>Okay (Add Expense)</Button>
                      <Button onClick={handleTryAgain}>Try Again</Button>
-                  </div>
+                  </Message>
                )}
             </div>
          </ChatbotWindow>
