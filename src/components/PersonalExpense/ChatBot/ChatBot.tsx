@@ -1,5 +1,5 @@
 import React, { SetStateAction, useState } from 'react';
-import { Button, ChatbotContainer, ChatbotWindow, Input, InputContainer, Message, TD, TH, Table } from './ChatBot.styled';
+import { Button, ChatbotContainer, ChatbotWindow, Input, InputContainer, Message, Table } from './ChatBot.styled';
 import logo from '../../../assets/logo.png';
 import { PiUserCircleThin } from 'react-icons/pi';
 
