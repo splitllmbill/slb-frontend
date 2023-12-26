@@ -29,6 +29,7 @@ const Login = () => {
          const result = buttonText == 'Login' ? await apiService.login(formDataObject as unknown as User) : await apiService.signup(formDataObject as unknown as User);
          if (result) {
             if (buttonText == 'Login') {
+               localStorage.setItem('authToken', result.token);
                return navigate('/home');
             } else if (buttonText == 'Signup') {
                setAlertInfo({ open: true, severity: 'success', message: 'Signup successful!' });

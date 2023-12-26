@@ -2,9 +2,10 @@ import styled from 'styled-components';
 
 export const ChatbotContainer = styled.div`
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-direction: column; 
   margin-top: 50px;
+  margin: 5vh;
+  background-color:white;
 `;
 
 export const ChatbotWindow = styled.div`
@@ -49,5 +50,5 @@ export const TH = styled.th`
 
 export const TD = styled.td`
   padding:10px;
-  border: 0.5px solid grey;
+  border: 1px solid grey !important;
 `;

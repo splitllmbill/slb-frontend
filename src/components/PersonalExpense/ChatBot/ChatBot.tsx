@@ -1,7 +1,9 @@
-import React, { SetStateAction, useState } from 'react';
-import { Button, ChatbotContainer, ChatbotWindow, Input, InputContainer, Message, Table } from './ChatBot.styled';
+import { SetStateAction, useState } from 'react';
+import { Button, ChatbotContainer, ChatbotWindow, Input, InputContainer, Message, Table, TH, TD } from './ChatBot.styled';
 import logo from '../../../assets/logo.png';
 import { PiUserCircleThin } from 'react-icons/pi';
+import dataService from '../../../services/DataService';
+import { personalExpenseAdded } from '../../../services/State';
 
 const Chatbot = () => {
    const [messages, setMessages] = useState<any[]>([
@@ -9,24 +11,31 @@ const Chatbot = () => {
    ]);
    const [input, setInput] = useState('');
    const [showTable, setShowTable] = useState(false);
+   const [expenses, setExpenses] = useState<any[]>([]);
+   const [expenseData, setExpenseData] = useState<Expense>();
+   const today = new Date();
+   const formattedDate = today.toLocaleDateString(); // Adjust the format as needed
 
    const handleInputChange = (e: { target: { value: SetStateAction<string> } }) => {
       setInput(e.target.value);
    };
 
-   const handleSendMessage = () => {
+   const handleSendMessage = async () => {
       if (input.trim() === '') return;
 
       const newMessages = [...messages, { text: input, sender: 'user' }];
       setMessages(newMessages);
       setInput('');
 
-      // Simulate a response from the chatbot
-      setTimeout(() => {
-         const botResponse = { text: 'You said: ' + input, sender: 'bot' };
-         setMessages([...newMessages, botResponse]);
+      try {
+         const botResponse = await dataService.addPersonalExpenseViaLLM(input);
+         setMessages([...newMessages, { text: 'Here is a simple table of the expenses listed by you. Please make corrections to the data if necessary and click OKAY to add the expense!', sender: 'bot' }]);
+         setExpenses(botResponse.llmoutput);
          setShowTable(true);
-      }, 500);
+      } catch (error) {
+         // Handle error state or display an error message to the user
+         console.error('Error handling chatbot response:', error);
+      }
    };
 
    const handleKeyDown = (e: { key: string; target: Element | null }) => {
@@ -36,18 +45,45 @@ const Chatbot = () => {
       }
    };
 
-   const handleAddExpense = () => {
-      // Add logic to handle adding expense to your data structure
-      console.log('Expense added:', input);
-
-      // Optionally, reset the table and showTable state
-      setShowTable(false);
-      setMessages([...messages, { text: 'Expense added ' + input, sender: 'bot' }]);
+   const handleAddExpense = async () => {
+      try {
+         for (const exp of expenses) {
+            console.log(exp);
+            setExpenseData({
+               expenseName: exp.name,
+               amount: exp.amount,
+               type: 'normal',
+               paidBy: "",
+               shares: [],
+               createdAt: today,
+               updatedAt: today,
+               createdBy: "",
+               updatedBy: "",
+               category: exp.category
+            })
+            const createdExpense = await dataService.createExpense(expenseData as Expense);
+            console.log('Expense created successfully:', createdExpense);
+         }
+         personalExpenseAdded.next();
+         setShowTable(false);
+         setMessages([...messages, { text: 'Expense added ' + input, sender: 'bot' }]);
+      } catch (error) {
+         console.error('Error creating expense:', error);
+         setShowTable(false);
+         setMessages([...messages, { text: 'An errror occured ', sender: 'bot' }]);
+      }
    };
 
    const handleTryAgain = () => {
       setShowTable(false);
-      // You may want to reset the input or other relevant state here
+      setMessages([messages[0]]);
+   };
+
+   const handleExpenseChange = (index: number, key: string, value: string) => {
+      const updatedExpenses = [...expenses];
+      updatedExpenses[index][key] = value;
+      setExpenses(updatedExpenses);
+      console.log(updatedExpenses);
    };
 
    return (
@@ -69,13 +105,27 @@ const Chatbot = () => {
                            <tr>
                               <TH contentEditable="false"><b>Expense</b></TH>
                               <TH contentEditable="false"><b>Cost</b></TH>
+                              <TH contentEditable="false"><b>Category</b></TH>
+                              <TH contentEditable="false"><b>Date</b></TH>
                            </tr>
                         </thead>
                         <tbody>
-                           <tr>
-                              <TD contentEditable="true">Type your expense</TD>
-                              <TD contentEditable="true">Type the cost</TD>
-                           </tr>
+                           {expenses.map((row, index) => (
+                              <tr key={index}>
+                                 <TD>
+                                    <input type="text" value={row.name} onChange={(e) => handleExpenseChange(index, 'name', e.target.value)} />
+                                 </TD>
+                                 <TD>
+                                    <input type="text" value={row.amount} onChange={(e) => handleExpenseChange(index, 'amount', e.target.value)} />
+                                 </TD>
+                                 <TD>
+                                    <input type="text" value={row.category} onChange={(e) => handleExpenseChange(index, 'category', e.target.value)} />
+                                 </TD>
+                                 <TD>
+                                    <input type="text" value={formattedDate} onChange={(e) => handleExpenseChange(index, 'date', e.target.value)} />
+                                 </TD>
+                              </tr>
+                           ))}
                         </tbody>
                      </Table>
                   </Message>
@@ -97,7 +147,7 @@ const Chatbot = () => {
                onKeyDown={handleKeyDown}
             />
          </InputContainer>
-      </ChatbotContainer>
+      </ChatbotContainer >
    );
 };
 
