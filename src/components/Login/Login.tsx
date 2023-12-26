@@ -5,8 +5,10 @@ import { Alert, AlertColor } from '@mui/material';
 import './Login.css';
 import Header from '../Header/Header';
 import apiService from '../../services/DataService';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
+   let navigate = useNavigate();
    const [name, setName] = useState('');
    const [email, setEmail] = useState('');
    const [password, setPassword] = useState('');
@@ -18,25 +20,30 @@ const Login = () => {
       setAlertInfo({ ...alertInfo, open: false });
    };
 
-   const handleSignUp = async (event: any) => {
+   const handleSignUpOrLogin = async (event: any) => {
       event.preventDefault();
       const formData = new FormData(event.target);
       const formDataObject = Object.fromEntries(formData.entries());
 
       try {
-         const result = await apiService.signup(formDataObject as unknown as User);
+         const result = buttonText == 'Login' ? await apiService.login(formDataObject as unknown as User) : await apiService.signup(formDataObject as unknown as User);
          if (result) {
-            setAlertInfo({ open: true, severity: 'success', message: 'Signup successful!' });
-            setName('');
-            setEmail('');
-            setPassword('');
-            setRPassword('');
+            if (buttonText == 'Login') {
+               return navigate('/home');
+            } else if (buttonText == 'Signup') {
+               setAlertInfo({ open: true, severity: 'success', message: 'Signup successful!' });
+               setName('');
+               setEmail('');
+               setPassword('');
+               setRPassword('');
+            }
          }
       } catch (error) {
-         setAlertInfo({ open: true, severity: 'error', message: 'Unexpected error during signup' });
+         setAlertInfo({ open: true, severity: 'error', message: 'Unexpected error occured! Please try again.' });
          console.error('Unexpected error during signup:', error);
       }
    };
+
    const appDesc = "Welcome to SplitLLMBill, your go-to app for seamless bill splitting. Easily manage shared expenses, split bills with friends, and keep track of your finances.";
    const lorem = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.";
 
@@ -60,7 +67,7 @@ const Login = () => {
                      </Row>
                      <Row>
                         <Col>
-                           <Form onSubmit={handleSignUp}>
+                           <Form onSubmit={handleSignUpOrLogin}>
                               <FormGroup controlId="formBasicName">
                                  <Form.Control type="name" placeholder="Name" onChange={(event) => setName(event.target.value)} value={name} name="name" required />
                               </FormGroup>
