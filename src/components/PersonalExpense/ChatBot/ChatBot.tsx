@@ -12,7 +12,6 @@ const Chatbot = () => {
    const [input, setInput] = useState('');
    const [showTable, setShowTable] = useState(false);
    const [expenses, setExpenses] = useState<any[]>([]);
-   const [expenseData, setExpenseData] = useState<Expense>();
    const today = new Date();
    const formattedDate = today.toLocaleDateString(); // Adjust the format as needed
 
@@ -48,8 +47,7 @@ const Chatbot = () => {
    const handleAddExpense = async () => {
       try {
          for (const exp of expenses) {
-            console.log(exp);
-            setExpenseData({
+            let expenseData = {
                expenseName: exp.name,
                amount: exp.amount,
                type: 'normal',
@@ -60,7 +58,9 @@ const Chatbot = () => {
                createdBy: "",
                updatedBy: "",
                category: exp.category
-            })
+            } as Expense;
+            console.log("expenseData", expenseData);
+            
             const createdExpense = await dataService.createExpense(expenseData as Expense);
             console.log('Expense created successfully:', createdExpense);
          }
