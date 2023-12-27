@@ -1,23 +1,48 @@
 import { useState } from 'react';
 import { Form, Button, FormGroup } from 'react-bootstrap';
 import { Row, Col } from 'react-bootstrap';
+import { Alert, AlertColor } from '@mui/material';
 import './Login.css';
 import Header from '../Header/Header';
 import apiService from '../../services/DataService';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
+   let navigate = useNavigate();
    const [name, setName] = useState('');
    const [email, setEmail] = useState('');
    const [password, setPassword] = useState('');
    const [rpassword, setRPassword] = useState('');
    const [buttonText, setButtonText] = useState('Login');
+   const [alertInfo, setAlertInfo] = useState({ open: false, severity: 'success', message: '' });
 
-   const handleSignUp = (event: any) => {
+   const handleCloseAlert = () => {
+      setAlertInfo({ ...alertInfo, open: false });
+   };
+
+   const handleSignUpOrLogin = async (event: any) => {
       event.preventDefault();
       const formData = new FormData(event.target);
       const formDataObject = Object.fromEntries(formData.entries());
-      console.log(formDataObject);
-      apiService.signup(formDataObject as unknown as User)
+
+      try {
+         const result = buttonText == 'Login' ? await apiService.login(formDataObject as unknown as User) : await apiService.signup(formDataObject as unknown as User);
+         if (result) {
+            if (buttonText == 'Login') {
+               localStorage.setItem('authToken', result.token);
+               return navigate('/home');
+            } else if (buttonText == 'Signup') {
+               setAlertInfo({ open: true, severity: 'success', message: 'Signup successful!' });
+               setName('');
+               setEmail('');
+               setPassword('');
+               setRPassword('');
+            }
+         }
+      } catch (error) {
+         setAlertInfo({ open: true, severity: 'error', message: 'Unexpected error occured! Please try again.' });
+         console.error('Unexpected error during signup:', error);
+      }
    };
 
    const appDesc = "Welcome to SplitLLMBill, your go-to app for seamless bill splitting. Easily manage shared expenses, split bills with friends, and keep track of your finances.";
@@ -27,17 +52,23 @@ const Login = () => {
       <>
          <div className="login-container">
             <Header></Header>
-            <br></br><br></br>
+            <br></br>
+            {alertInfo.open && (
+               <Alert open={alertInfo.open} onClose={handleCloseAlert} severity={alertInfo.severity as AlertColor} sx={{ width: '100%' }}>
+                  {alertInfo.message}
+               </Alert>
+            )}
+            <br></br>
             <Row>
                <Col sm={5}>
                   <Row>
                      <Row>
-                        <Col sm={6}><Button className={buttonText === 'Login' ? 'button primary active' : 'button primary '} onClick={() => setButtonText('Login')}>Login</Button></Col>
-                        <Col sm={6}><Button className='button primary' onClick={() => setButtonText('Sign Up')}>Signup</Button></Col>
+                        <Col sm={6}><Button className={buttonText === 'Login' ? 'button primary active' : 'button primary'} onClick={() => setButtonText('Login')}>Login</Button></Col>
+                        <Col sm={6}><Button className={buttonText === 'Signup' ? 'button primary active' : 'button primary'} onClick={() => setButtonText('Signup')}>Signup</Button></Col>
                      </Row>
                      <Row>
                         <Col>
-                           <Form onSubmit={handleSignUp}>
+                           <Form onSubmit={handleSignUpOrLogin}>
                               <FormGroup controlId="formBasicName">
                                  <Form.Control type="name" placeholder="Name" onChange={(event) => setName(event.target.value)} value={name} name="name" required />
                               </FormGroup>
@@ -50,7 +81,7 @@ const Login = () => {
                                  <Form.Control type="password" placeholder="Password" onChange={(event) => setPassword(event.target.value)} value={password} name="password" required />
                               </FormGroup>
                               <br></br>
-                              {buttonText === 'Sign Up' &&
+                              {buttonText === 'Signup' &&
                                  <>
                                     <FormGroup controlId="formBasicPasswordRepeat">
                                        <Form.Control type="password" placeholder="Re-enter Password" onChange={(event) => setRPassword(event.target.value)} value={rpassword} required />

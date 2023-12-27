@@ -2,14 +2,17 @@ import { FC, useEffect, useState } from 'react';
 import { NavBar, SideNavBarWrapper } from './SideNavBar.styled';
 import './SideNavBar.css';
 
-interface SideNavBarProps { }
+interface SideNavBarProps {
+   onSelectContent: (content: string) => void;
+}
 
-const SideNavBar: FC<SideNavBarProps> = () => {
-   const [activeItem, setActiveItem] = useState('Groups');
+const SideNavBar: FC<SideNavBarProps> = ({ onSelectContent }) => {
+   const [activeItem, setActiveItem] = useState('Events');
    const [isSmallScreen, setIsSmallScreen] = useState(false);
 
    const handleItemClick = (itemName: string) => {
       setActiveItem(itemName);
+      onSelectContent(itemName);
    };
 
    useEffect(() => {
@@ -30,10 +33,10 @@ const SideNavBar: FC<SideNavBarProps> = () => {
          <SideNavBarWrapper>
             <NavBar className={!isSmallScreen ? 'show' : ''}>
                <div
-                  className={`nav-item ${activeItem === 'Groups' ? 'active' : ''}`}
-                  onClick={() => handleItemClick('Groups')}
+                  className={`nav-item ${activeItem === 'Events' ? 'active' : ''}`}
+                  onClick={() => handleItemClick('Events')}
                >
-                  Groups
+                  Events
                </div>
                <div
                   className={`nav-item ${activeItem === 'Friends' ? 'active' : ''}`}

@@ -6,12 +6,13 @@ height:-webkit-fill-available;
 padding-top: 70px; 
 `;
 
-export const ContentArea = styled.div<{isSmallScreen: boolean}>`
+export const ContentArea = styled.div`
 background-color: whitesmoke;
 width:100%;
 margin-right:0;
 color: black;
 overflow-y: auto;
+height: webkit-fill-available;
 `;
 
 export const HeaderWrapper = styled.div`
