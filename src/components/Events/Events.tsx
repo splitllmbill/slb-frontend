@@ -9,9 +9,9 @@ interface EventsProps { }
 
 const Events: FC<EventsProps> = () => {
   const [events, setEvents] = useState<EventObject[]>([]);
-
+  
   const handleCreateEvent = () => {
-    console.log("yaeh");
+
   };
 
   useEffect(() => {
@@ -30,7 +30,7 @@ const Events: FC<EventsProps> = () => {
   return (
     <EventsWrapper>
       <button onClick={handleCreateEvent}>Create Event <MdOutlineGroupAdd style={{ fontSize: 'x-large' }}></MdOutlineGroupAdd></button>
-      <h2>Totally, you owe $450</h2>
+      <h2>Totally, you owe _____</h2>
       <br></br>
       <List>
         {events.map((event) => (

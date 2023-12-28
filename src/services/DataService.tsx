@@ -130,6 +130,25 @@ const dataService = {
             throw error;
         }
     },
+    getDuesForUser: async (event_id: string) => {
+        try {
+            const response = await fetch(`${BASE_URL}db/user/event/${event_id}/dues`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem('authToken')
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error(`Error: ${response.status}`);
+            }
+            return response.json();
+        } catch (error) {
+            console.error('Error fetching user events:', error);
+            throw error;
+        }
+    },
 
 };
 

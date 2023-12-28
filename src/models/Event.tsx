@@ -1,4 +1,5 @@
 interface EventObject {
+    id(id: any): unknown;
     _id: string;
     users: User[];
     eventName: string;
