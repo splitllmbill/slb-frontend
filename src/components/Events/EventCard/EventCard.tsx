@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { EventCardWrapper } from './EventCard.styled';
 import { Card, CardContent, Typography } from '@mui/material';
 import { toTitleCase } from '../../../services/State';
