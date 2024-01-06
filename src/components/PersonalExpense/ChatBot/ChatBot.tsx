@@ -1,4 +1,4 @@
-import { SetStateAction, useState } from 'react';
+import { KeyboardEventHandler, SetStateAction, useState } from 'react';
 import { Button, ChatbotContainer, ChatbotWindow, Input, InputContainer, Message, Table, TH, TD } from './ChatBot.styled';
 import logo from '../../../assets/logo.png';
 import { PiUserCircleThin } from 'react-icons/pi';
@@ -37,12 +37,22 @@ const Chatbot = () => {
       }
    };
 
-   const handleKeyDown = (e: { key: string; target: Element | null }) => {
-      if (e.key === 'Enter' && document.activeElement === e.target) {
-         // Check if the Enter key is pressed and the input has focus
-         handleSendMessage();
+   const handleKeyDown: KeyboardEventHandler<HTMLInputElement> = (event) => {
+      // Ensure event is of type KeyboardEvent<HTMLInputElement>
+      const keyboardEvent = event as React.KeyboardEvent<HTMLInputElement>;
+    
+      // Access properties like 'key' and 'target' from the keyboard event
+      const { key, currentTarget } = keyboardEvent;
+    
+      // Ensure 'currentTarget' is of type HTMLInputElement
+      const inputTarget = currentTarget as HTMLInputElement;
+    
+      // Your existing logic using 'key' and 'currentTarget'
+      if (key === 'Enter' && document.activeElement === inputTarget) {
+        // Check if the Enter key is pressed and the input has focus
+        handleSendMessage();
       }
-   };
+    };
 
    const handleAddExpense = async () => {
       try {
@@ -64,7 +74,7 @@ const Chatbot = () => {
             const createdExpense = await dataService.createExpense(expenseData as Expense);
             console.log('Expense created successfully:', createdExpense);
          }
-         personalExpenseAdded.next();
+         // personalExpenseAdded.next();
          setShowTable(false);
          setMessages([...messages, { text: 'Expense added ' + input, sender: 'bot' }]);
       } catch (error) {
@@ -145,7 +155,7 @@ const Chatbot = () => {
                value={input}
                onChange={handleInputChange}
                onKeyDown={handleKeyDown}
-            />
+            />Substitute
          </InputContainer>
       </ChatbotContainer >
    );

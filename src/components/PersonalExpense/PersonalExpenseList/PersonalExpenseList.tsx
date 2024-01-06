@@ -44,9 +44,7 @@ const PersonalExpenseList: FC<PersonalExpenseListProps> = () => {
       <DataGrid
         rows={expenses}
         columns={columns}
-        pageSize={10}
         autoHeight
-        disableSelectionOnClick
       />
     </PersonalExpenseListWrapper>
   );
