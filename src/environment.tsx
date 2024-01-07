@@ -1,3 +1,3 @@
 export const environment = {
-    domainUrl : "https://flask-backend-puce.vercel.app/"
+    domainUrl : "https://flask-backend-puce.vercel.app"
 }

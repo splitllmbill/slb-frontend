@@ -2,9 +2,9 @@ import { FC, useState, useEffect } from 'react';
 import { PersonalExpenseListWrapper } from './PersonalExpenseList.styled';
 import dataService from '../../../services/DataService';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import { personalExpenseAdded } from '../../../services/State'; 
+import { personalExpenseAdded } from '../../../services/State';
 
-interface PersonalExpenseListProps {}
+interface PersonalExpenseListProps { }
 
 const PersonalExpenseList: FC<PersonalExpenseListProps> = () => {
   const [expenses, setExpenses] = useState<Expense[]>([]);
@@ -38,14 +38,13 @@ const PersonalExpenseList: FC<PersonalExpenseListProps> = () => {
     { field: 'amount', headerName: 'Cost', flex: 1 },
   ];
 
+  const totalAmount = expenses.reduce((total, expense) => total + expense.amount, 0);
+  const totalRow = { id: 'total', updatedAt: 'Total', expenseName: '', category: '', amount: totalAmount };
+
   return (
     <PersonalExpenseListWrapper>
       <h3>Personal Expenses</h3>
-      <DataGrid
-        rows={expenses}
-        columns={columns}
-        autoHeight
-      />
+      <DataGrid rows={[...expenses, totalRow]} columns={columns} autoHeight />
     </PersonalExpenseListWrapper>
   );
 };
