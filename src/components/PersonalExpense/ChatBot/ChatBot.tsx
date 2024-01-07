@@ -155,7 +155,7 @@ const Chatbot = () => {
                value={input}
                onChange={handleInputChange}
                onKeyDown={handleKeyDown}
-            />Substitute
+            />
          </InputContainer>
       </ChatbotContainer >
    );
