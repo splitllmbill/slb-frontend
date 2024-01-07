@@ -1,6 +1,6 @@
 import { Subject } from 'rxjs';
 
-export const personalExpenseAdded = new Subject();
+export const personalExpenseAdded = new Subject<void>();
 
 export const toTitleCase = (str: string) => {
     return str.replace(/\w\S*/g, (txt) => {

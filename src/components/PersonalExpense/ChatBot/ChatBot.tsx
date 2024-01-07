@@ -74,7 +74,7 @@ const Chatbot = () => {
             const createdExpense = await dataService.createExpense(expenseData as Expense);
             console.log('Expense created successfully:', createdExpense);
          }
-         // personalExpenseAdded.next();
+         personalExpenseAdded.next();
          setShowTable(false);
          setMessages([...messages, { text: 'Expense added ' + input, sender: 'bot' }]);
       } catch (error) {
