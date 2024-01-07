@@ -32,7 +32,7 @@ export const InputContainer = styled.div`
 export const Input = styled.input`
   flex: 1;
   padding: 8px;
-  margin:5px;
+  margin:4px;
 `;
 
 export const Button = styled.button`
