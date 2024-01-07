@@ -54,7 +54,7 @@ const Login = () => {
             <Header></Header>
             <br></br>
             {alertInfo.open && (
-               <Alert open={alertInfo.open} onClose={handleCloseAlert} severity={alertInfo.severity as AlertColor} sx={{ width: '100%' }}>
+               <Alert onClose={handleCloseAlert} severity={alertInfo.severity as AlertColor} sx={{ width: '100%' }}>
                   {alertInfo.message}
                </Alert>
             )}
