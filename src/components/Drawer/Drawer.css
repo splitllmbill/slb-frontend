@@ -1,0 +1,46 @@
+@keyframes drawerOpen {
+    from {width: 50px;}
+    to {width: 200px;}
+}
+
+.drawer{
+    background-color: white;
+    width: 200px;
+    padding-left: 0;
+    position:absolute;
+    font-size: larger;
+    left: 0;
+    top:0;
+    bottom:0;
+    animation-name: drawerOpen;
+    animation-duration: 1s;
+}
+.drawer-closed{
+    background-color: white;
+    width: 50px;
+    padding-left: 0;
+    position:absolute;
+    font-size: larger;
+    left: 0;
+    top:0;
+    bottom:0;
+}
+
+.drawerItem:hover{
+    cursor: pointer;
+   
+    background-color: lightgrey;
+}
+.drawerItem{
+    caret-color: transparent;
+}
+
+.close-button{
+    width: 20px;
+    padding-bottom: 30px;
+    padding-left: 12px;
+}
+
+.menu-list{
+
+}
