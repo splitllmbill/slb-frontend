@@ -16,7 +16,7 @@ const EventCard: FC<EventCardProps> = ({ eventSent }) => {
    useEffect(() => {
       const fetchEvents = async () => {
          try {
-            const data = await dataService.getDuesForUser(eventSent._id);
+            const data = await dataService.getDuesForUser(eventSent.id);
             setEventData(data);
          } catch (error) {
             console.log("Error occurred");
