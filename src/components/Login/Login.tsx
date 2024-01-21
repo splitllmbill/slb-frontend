@@ -24,12 +24,15 @@ const Login = () => {
       event.preventDefault();
       const formData = new FormData(event.target);
       const formDataObject = Object.fromEntries(formData.entries());
-
       try {
          const result = buttonText == 'Login' ? await apiService.login(formDataObject as unknown as User) : await apiService.signup(formDataObject as unknown as User);
          if (result) {
             if (buttonText == 'Login') {
                localStorage.setItem('authToken', result.token);
+               const userResult =await apiService.getUserByEmail(formDataObject.email as unknown as string);
+               if(userResult){
+                  localStorage.setItem('userId', userResult.id);
+               }
                return navigate('/home');
             } else if (buttonText == 'Signup') {
                setAlertInfo({ open: true, severity: 'success', message: 'Signup successful!' });
@@ -69,9 +72,11 @@ const Login = () => {
                      <Row>
                         <Col>
                            <Form onSubmit={handleSignUpOrLogin}>
-                              <FormGroup controlId="formBasicName">
-                                 <Form.Control type="name" placeholder="Name" onChange={(event) => setName(event.target.value)} value={name} name="name" required />
-                              </FormGroup>
+                              {buttonText === 'Signup' &&
+                                 <FormGroup controlId="formBasicName">
+                                    <Form.Control type="name" placeholder="Name" onChange={(event) => setName(event.target.value)} value={name} name="name" required />
+                                 </FormGroup>
+                              }  
                               <br></br>
                               <FormGroup controlId="formBasicEmail">
                                  <Form.Control type="email" placeholder="Enter email" onChange={(event) => setEmail(event.target.value)} value={email} name="email" required />
