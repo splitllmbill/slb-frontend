@@ -5,16 +5,22 @@ import EventCard from './EventCard/EventCard';
 import dataService from '../../services/DataService';
 import { List } from '@mui/material';
 import CreateEventDrawer from './CreateEventDrawer/CreateEventDrawer';
+import EventDetail from './EventDetail/EventDetail';
 
 interface EventsProps { }
 
 const Events: FC<EventsProps> = () => {
   const [events, setEvents] = useState<EventObject[]>([]);
-  const [isDrawerOpen,setIsDrawerOpen] = useState(false);
+  const [eventID,setEventID] = useState<string>('');
+  const [isEventDrawerOpen,setIsEventDrawerOpen] = useState(false);
+  const [isCreateEventDrawerOpen,setIsCreateEventDrawerOpen] = useState(false);
   const createEventDrawerRef:any = createRef();
   
-  const handleCreateEvent = () => {
-    setIsDrawerOpen(true);
+  const handleClickEventCard = (eventID:string) => {
+    setEventID(eventID);setIsEventDrawerOpen(true)
+  };
+  const handleCreateEventButton = () => {
+    setIsCreateEventDrawerOpen(true);
   };
 
   const fetchData = ()=>{
@@ -27,14 +33,14 @@ const Events: FC<EventsProps> = () => {
   }
 
   useEffect(() => {
-    if (!isDrawerOpen) 
+    if (!isCreateEventDrawerOpen) 
       fetchData();
-  },[setEvents,isDrawerOpen]);// Initial data fetch
+  },[setEvents,isCreateEventDrawerOpen]);// Initial data fetch
 
   useEffect(() => {
     const handler = (e:any)=>{
         if (!createEventDrawerRef.current.contains(e.target)){
-          setIsDrawerOpen(false);
+          setIsCreateEventDrawerOpen(false);
         }
     };
     document.addEventListener("mousedown",handler);
@@ -42,20 +48,27 @@ const Events: FC<EventsProps> = () => {
       document.removeEventListener("mousedown",handler);
     }
   }, [createEventDrawerRef]);
-
+  if(eventID == ''){
+    console.log(eventID)
+  }
   return (
-    <EventsWrapper>
-      <button onClick={handleCreateEvent}>Create Event <MdOutlineGroupAdd style={{ fontSize: 'x-large' }}></MdOutlineGroupAdd></button>
+   <EventsWrapper>
+      <button onClick={handleCreateEventButton}>Create Event <MdOutlineGroupAdd style={{ fontSize: 'x-large' }}></MdOutlineGroupAdd></button>
       <h2>Totally, you owe _____</h2>
       <br></br>
       <List>
         {events.map((event) => (
-          <EventCard eventSent={event}></EventCard>
+          <div onClick={()=>{handleClickEventCard(event.id)}}>
+            <EventCard eventSent={event}></EventCard>
+          </div>
+         
         ))}
       </List>
-      {isDrawerOpen &&
-      <CreateEventDrawer drawerRef={createEventDrawerRef} setIsOpen={ setIsDrawerOpen}></CreateEventDrawer>}
-
+      {isCreateEventDrawerOpen &&
+      <CreateEventDrawer drawerRef={createEventDrawerRef} setIsOpen={ setIsCreateEventDrawerOpen}></CreateEventDrawer>}
+      {
+        isEventDrawerOpen && <EventDetail eventID={eventID}/>
+      }
     </EventsWrapper>
   );
 };

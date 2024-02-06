@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const DashboardWrapper = styled.div`
 display:flex;
 height:-webkit-fill-available;
-padding-top: 70px; 
+padding-top: 70px;
 `;
 
 export const ContentArea = styled.div`
