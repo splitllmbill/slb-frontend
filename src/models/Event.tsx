@@ -8,4 +8,5 @@ interface EventObject {
     createdBy: User;
     updatedBy: User;
     expenses: Expense[];
+    dues: any;
 }
