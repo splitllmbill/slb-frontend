@@ -21,7 +21,7 @@ const EventCard: FC<EventCardProps> = ({ eventSent }) => {
                   </Col>
                   <Col sm={6} className="d-flex justify-content-center align-items-center">
                      <div className="text-left"> {/* Add text-left class for left alignment inside the div */}
-                        <Typography variant="h5" component="div">
+                        <Typography variant="h5" component="div" sx={{ fontWeight:'bold',textTransform: 'capitalize'}}>
                            {toTitleCase(eventSent.eventName)}
                         </Typography>
                         {eventSent.dues?.totalOwed > 0 && (
