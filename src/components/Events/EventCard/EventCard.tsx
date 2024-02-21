@@ -1,8 +1,7 @@
-import { FC, useEffect, useState } from 'react';
+import { FC} from 'react';
 import { EventCardWrapper } from './EventCard.styled';
 import { Card, CardContent, Typography } from '@mui/material';
 import { toTitleCase } from '../../../services/State';
-import dataService from '../../../services/DataService';
 import { Col, Row } from 'react-bootstrap';
 import group from '../../../assets/group.png';
 
@@ -11,20 +10,6 @@ interface EventCardProps {
 }
 
 const EventCard: FC<EventCardProps> = ({ eventSent }) => {
-   // const [eventData, setEventData] = useState<any>();
-
-   // useEffect(() => {
-   //    const fetchEvents = async () => {
-   //       try {
-   //          const data = await dataService.getDuesForUser(eventSent.id);
-   //          setEventData(data);
-   //       } catch (error) {
-   //          console.log("Error occurred");
-   //       }
-   //    };
-
-   //    fetchEvents();
-   // }, []);
 
    return (
       <EventCardWrapper>
