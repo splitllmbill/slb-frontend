@@ -11,20 +11,20 @@ interface EventCardProps {
 }
 
 const EventCard: FC<EventCardProps> = ({ eventSent }) => {
-   const [eventData, setEventData] = useState<any>();
+   // const [eventData, setEventData] = useState<any>();
 
-   useEffect(() => {
-      const fetchEvents = async () => {
-         try {
-            const data = await dataService.getDuesForUser(eventSent.id);
-            setEventData(data);
-         } catch (error) {
-            console.log("Error occurred");
-         }
-      };
+   // useEffect(() => {
+   //    const fetchEvents = async () => {
+   //       try {
+   //          const data = await dataService.getDuesForUser(eventSent.id);
+   //          setEventData(data);
+   //       } catch (error) {
+   //          console.log("Error occurred");
+   //       }
+   //    };
 
-      fetchEvents();
-   }, []);
+   //    fetchEvents();
+   // }, []);
 
    return (
       <EventCardWrapper>
@@ -39,14 +39,14 @@ const EventCard: FC<EventCardProps> = ({ eventSent }) => {
                         <Typography variant="h5" component="div">
                            {toTitleCase(eventSent.eventName)}
                         </Typography>
-                        {eventData?.totalOwed > 0 && (
+                        {eventSent.dues?.totalOwed > 0 && (
                            <>
                               <Typography variant="h6" color="text.secondary">
-                                 You are owed {eventData.totalOwed}
+                                 You are owed {eventSent.dues.totalOwed}
                               </Typography>
                               <Typography variant="body1" color="text.secondary" component="div">
                                  <ul>
-                                    {eventData?.isOwed?.map((item: any) => (
+                                    {eventSent.dues?.isOwed?.map((item: any) => (
                                        <li key={item.id}>
                                           <strong>{item.name} owes you {item.amount}</strong>
                                        </li>
@@ -55,14 +55,14 @@ const EventCard: FC<EventCardProps> = ({ eventSent }) => {
                               </Typography>
                            </>
                         )}
-                        {eventData?.totalDebt > 0 && (
+                        {eventSent.dues?.totalDebt > 0 && (
                            <>
                               <Typography variant="h6" color="text.secondary">
-                                 You owe {eventData.totalDebt}
+                                 You owe {eventSent.dues.totalDebt}
                               </Typography>
                               <Typography variant="body1" color="text.secondary" component="div">
                                  <ul>
-                                    {eventData?.inDebtTo?.map((item: any) => (
+                                    {eventSent.dues?.inDebtTo?.map((item: any) => (
                                        <li key={item.id}>
                                           <strong>You owe {item.name} {item.amount}</strong>
                                        </li>
