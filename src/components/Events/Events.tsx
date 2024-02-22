@@ -58,7 +58,7 @@ const Events: FC<EventsProps> = () => {
       <br></br>
       <List>
         {events.map((event) => (
-          <div onClick={()=>{handleClickEventCard(event.id)}}>
+          <div onClick={()=>{handleClickEventCard(event.id!)}}>
             <EventCard eventSent={event}></EventCard>
           </div>
          
