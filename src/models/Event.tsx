@@ -1,5 +1,5 @@
 interface EventObject {
-    id: string;
+    id?: string;
     users: User[];
     eventName: string;
     totalExpense: number;
