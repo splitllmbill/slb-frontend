@@ -3,7 +3,7 @@ import { EventsWrapper } from './Events.styled';
 import { MdOutlineGroupAdd } from "react-icons/md";
 import EventCard from './EventCard/EventCard';
 import dataService from '../../services/DataService';
-import { List } from '@mui/material';
+import { List} from '@mui/material';
 import CreateEventDrawer from './CreateEventDrawer/CreateEventDrawer';
 import EventDetail from './EventDetail/EventDetail';
 
@@ -12,19 +12,26 @@ interface EventsProps { }
 const Events: FC<EventsProps> = () => {
   const [events, setEvents] = useState<EventObject[]>([]);
   const [eventID,setEventID] = useState<string>('');
+  const [users,setUsers] = useState<User[]>([])
   const [isEventDrawerOpen,setIsEventDrawerOpen] = useState(false);
   const [isCreateEventDrawerOpen,setIsCreateEventDrawerOpen] = useState(false);
-  const createEventDrawerRef:any = createRef();
+  const eventDetailRef:any = createRef();
   
   const handleClickEventCard = (eventID:string) => {
-    setEventID(eventID);setIsEventDrawerOpen(true)
+    if(eventID !=""){
+      setEventID(eventID);setIsEventDrawerOpen(true)
+    }else{
+      setEventID('');setIsEventDrawerOpen(false)
+    }
   };
-  const handleCreateEventButton = () => {
-    setIsCreateEventDrawerOpen(true);
+  const toggleCreateEventButton = () => {
+    setIsCreateEventDrawerOpen(!true);
   };
 
   const fetchData = ()=>{
     try {
+      dataService.getAllUsers()
+      .then(data => setUsers(data));
       dataService.getUserEvents()
       .then(data => setEvents(data));
     } catch (error) {
@@ -37,23 +44,10 @@ const Events: FC<EventsProps> = () => {
       fetchData();
   },[setEvents,isCreateEventDrawerOpen]);// Initial data fetch
 
-  useEffect(() => {
-    const handler = (e:any)=>{
-        if (!createEventDrawerRef.current.contains(e.target)){
-          setIsCreateEventDrawerOpen(false);
-        }
-    };
-    document.addEventListener("mousedown",handler);
-    return()=>{
-      document.removeEventListener("mousedown",handler);
-    }
-  }, [createEventDrawerRef]);
-  if(eventID == ''){
-    console.log(eventID)
-  }
+
   return (
    <EventsWrapper>
-      <button onClick={handleCreateEventButton}>Create Event <MdOutlineGroupAdd style={{ fontSize: 'x-large' }}></MdOutlineGroupAdd></button>
+      <button onClick={()=>setIsCreateEventDrawerOpen(true)}>Create Event <MdOutlineGroupAdd style={{ fontSize: 'x-large' }}></MdOutlineGroupAdd></button>
       <h2>Totally, you owe _____</h2>
       <br></br>
       <List>
@@ -65,9 +59,9 @@ const Events: FC<EventsProps> = () => {
         ))}
       </List>
       {isCreateEventDrawerOpen &&
-      <CreateEventDrawer drawerRef={createEventDrawerRef} setIsOpen={ setIsCreateEventDrawerOpen}></CreateEventDrawer>}
+      <CreateEventDrawer toggleCreateEventButton={ toggleCreateEventButton} users={users}></CreateEventDrawer>}
       {
-        isEventDrawerOpen && <EventDetail eventID={eventID}/>
+        isEventDrawerOpen && <EventDetail drawerRef={eventDetailRef}eventID={eventID}  handleClickEventCard={handleClickEventCard}/>
       }
     </EventsWrapper>
   );
