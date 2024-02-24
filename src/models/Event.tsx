@@ -1,6 +1,5 @@
 interface EventObject {
-    id(id: any): unknown;
-    _id: string;
+    id?: string;
     users: User[];
     eventName: string;
     totalExpense: number;
@@ -9,4 +8,5 @@ interface EventObject {
     createdBy: User;
     updatedBy: User;
     expenses: Expense[];
+    dues: any;
 }

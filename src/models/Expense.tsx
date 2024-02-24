@@ -1,4 +1,5 @@
 interface Expense {
+    id?:string;
     expenseName: string;
     amount: number;
     type: string;
