@@ -14,7 +14,7 @@ module.exports = async (req, res) => {
             },
             // Add any additional options if needed
         });
-
+        console.log(backendUrl + req.url);
         const data = await response.json();
         res.status(response.status).json(data);
     } catch (error) {
