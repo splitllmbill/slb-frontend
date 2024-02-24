@@ -190,6 +190,25 @@ const dataService = {
             throw error;
         }
     },
+    getAllUsers  : async () => {
+        try {
+            const response = await fetch(`${BASE_URL}/db/users`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem('authToken')
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error(`Error: ${response.status}`);
+            }
+            return response.json();
+        } catch (error) {
+            console.error('Error fetching user events:', error);
+            throw error;
+        }
+    },
     getEvent: async (event_id: string) => {
         try {
             const response = await fetch(`${BASE_URL}/db/event/${event_id}`, {
