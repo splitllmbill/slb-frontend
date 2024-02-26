@@ -1,12 +1,12 @@
 interface EventObject {
     id?: string;
-    users: User[];
+    users: string[];
     eventName: string;
     totalExpense: number;
     createdAt: Date;
     updatedAt: Date;
-    createdBy: User;
-    updatedBy: User;
+    createdBy: string;
+    updatedBy: string;
     expenses: Expense[];
     dues: any;
 }
