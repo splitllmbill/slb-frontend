@@ -47,7 +47,7 @@ const Dashboard: FC<DashboardProps> = () => {
       <DashboardWrapper>
         {!isSmallScreen && <SideNavBar onSelectContent={setSelectedContent} />}
         <ContentArea>
-          {selectedContent === 'Events' && <Events />}
+          {selectedContent === 'Events' && <Events currentEventID=''  />}
           {selectedContent === 'Friends' && <Login/>}
           {selectedContent === 'Personal Expenses' && <PersonalExpense />}
           {selectedContent === 'Account' && <Login />}

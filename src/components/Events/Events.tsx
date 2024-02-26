@@ -7,13 +7,15 @@ import { List} from '@mui/material';
 import CreateEventDrawer from './CreateEventDrawer/CreateEventDrawer';
 import EventDetail from './EventDetail/EventDetail';
 
-interface EventsProps { }
+interface EventsProps {
+  currentEventID:string,
+ }
 
-const Events: FC<EventsProps> = () => {
+const Events: FC<EventsProps> = ({currentEventID}) => {
   const [events, setEvents] = useState<EventObject[]>([]);
-  const [eventID,setEventID] = useState<string>('');
+  const [eventID,setEventID] = useState<string>(currentEventID);
   const [users,setUsers] = useState<User[]>([])
-  const [isEventDrawerOpen,setIsEventDrawerOpen] = useState(false);
+  const [isEventDrawerOpen,setIsEventDrawerOpen] = useState(currentEventID!="");
   const [isCreateEventDrawerOpen,setIsCreateEventDrawerOpen] = useState(false);
   const eventDetailRef:any = createRef();
   
@@ -25,7 +27,7 @@ const Events: FC<EventsProps> = () => {
     }
   };
   const toggleCreateEventButton = () => {
-    setIsCreateEventDrawerOpen(!true);
+    setIsCreateEventDrawerOpen(false);
   };
 
   const fetchData = ()=>{
@@ -61,7 +63,7 @@ const Events: FC<EventsProps> = () => {
       {isCreateEventDrawerOpen &&
       <CreateEventDrawer toggleCreateEventButton={ toggleCreateEventButton} users={users}></CreateEventDrawer>}
       {
-        isEventDrawerOpen && <EventDetail drawerRef={eventDetailRef}eventID={eventID}  handleClickEventCard={handleClickEventCard}/>
+        isEventDrawerOpen && <EventDetail drawerRef={eventDetailRef}eventID={eventID}  handleClickEventCard={handleClickEventCard} users={users}/>
       }
     </EventsWrapper>
   );
