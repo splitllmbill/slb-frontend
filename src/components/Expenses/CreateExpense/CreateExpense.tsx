@@ -5,7 +5,6 @@ import { Autocomplete, Button, Checkbox, Grid, Stack, TextField, ThemeProvider, 
 import CloseIcon from '@mui/icons-material/Close';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import Events from "../../Events/Events";
 
 
 
