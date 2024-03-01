@@ -12,6 +12,7 @@ import { BottomNavigationAction } from '@mui/material';
 import Login from '../Login/Login';
 import PersonalExpense from '../PersonalExpense/PersonalExpense';
 import Events from '../Events/Events';
+import Accountpage from '../Account/AccountPage';
 
 interface DashboardProps {}
 
@@ -50,7 +51,7 @@ const Dashboard: FC<DashboardProps> = () => {
           {selectedContent === 'Events' && <Events currentEventID=''  />}
           {selectedContent === 'Friends' && <Login/>}
           {selectedContent === 'Personal Expenses' && <PersonalExpense />}
-          {selectedContent === 'Account' && <Login />}
+          {selectedContent === 'Account' && <Accountpage />}
         </ContentArea>
       </DashboardWrapper>
 
