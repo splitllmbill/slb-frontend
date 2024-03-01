@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Label, Input, Button } from './AccountPage.styled'; // Import styled components
+import dataService from '../../services/DataService';
 
 const UserPage = () => {
     const [userData, setUserData] = useState({
@@ -20,10 +21,11 @@ const UserPage = () => {
     });
 
     const fetchData = () => {
-        dataService.getEvent(eventID)
-            .then(data => setEvent(data));
-        dataService.getEventExpenses(eventID)
-            .then(data => setExpenses(data))
+        dataService.getUserByID()
+            .then(data => {
+                console.log(data);
+
+            });
     }
     useEffect(() => {
         try {
@@ -32,6 +34,7 @@ const UserPage = () => {
             console.log("Error occurred");
         }
     }, []);
+
 
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault();
