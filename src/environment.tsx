@@ -1,3 +1,3 @@
 export const environment = {
-    domainUrl : "/api"
+    domainUrl : "http://127.0.0.1:8081"
 }

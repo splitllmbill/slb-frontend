@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 export const SideNavBarWrapper = styled.div`
 display: none;
-width:20%;
+width:30%;
 @media (min-width: 500px) {
     display: block;
 }

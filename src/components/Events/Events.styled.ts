@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const EventsWrapper = styled.div`
-
+    margin: 10px;
 `;
 
 export const Button = styled.button`
