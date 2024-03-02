@@ -1,31 +1,33 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Label, Input, Button } from './AccountPage.styled'; // Import styled components
+import { Container, Label, Input, Button, Flex } from './AccountPage.styled'; // Import styled components
 import dataService from '../../services/DataService';
+import { IoLogOutOutline } from "react-icons/io5";
+import { MdLockReset } from "react-icons/md";
+import { RiUpload2Line } from "react-icons/ri";
 
 const UserPage = () => {
     const [userData, setUserData] = useState({
         name: '',
         email: '',
-        phoneNumber: '',
         password: '',
-        token: '',
-        createdAt: '',
-        updatedAt: '',
         account: {
-            userId: '',
             upiId: '',
-            upiNumber: '',
-            createdAt: '',
-            updatedAt: ''
+            upiNumber: ''
         }
     });
 
-    const fetchData = () => {
-        dataService.getUserByID()
-            .then(data => {
-                console.log(data);
-
-            });
+    const fetchData = async () => {
+        const userData = await dataService.getUserByID();
+        setUserData(userData);
+        if (userData && userData.account) {
+            const accountData = await dataService.getUserAccount();
+            setUserData(prevUserData => ({
+                ...prevUserData,
+                account: accountData
+            }));
+        } else {
+            console.log("User data or account ID is missing.");
+        }
     }
     useEffect(() => {
         try {
@@ -36,15 +38,17 @@ const UserPage = () => {
     }, []);
 
 
-    const handleSubmit = (event: React.FormEvent) => {
-        event.preventDefault();
-        console.log("Form submitted");
-        // Implement logic to handle form submission
+    const handleSubmit = async (event: React.FormEvent) => {
+        await dataService.updateAccount(userData.account);
+        await dataService.updateUser(userData);
     };
 
     return (
         <Container>
-            <h2>User Information</h2>
+            <Flex>
+                <button >Change Password <MdLockReset style={{ fontSize: 'x-large' }}></MdLockReset></button><button >Logout <IoLogOutOutline style={{ fontSize: 'x-large' }}></IoLogOutOutline ></button>
+            </Flex>
+            <h2>Edit User Information</h2>
             <form onSubmit={handleSubmit}>
                 <div>
                     <Label>Name:</Label>
@@ -63,23 +67,7 @@ const UserPage = () => {
                         disabled
                     />
                 </div>
-                <div>
-                    <Label>Phone Number:</Label>
-                    <Input
-                        type="tel"
-                        value={userData.phoneNumber}
-                        onChange={(e) => setUserData({ ...userData, phoneNumber: e.target.value })}
-                    />
-                </div>
-                <div>
-                    <Label>Password:</Label>
-                    <Input
-                        type="password"
-                        value={userData.password}
-                        onChange={(e) => setUserData({ ...userData, password: e.target.value })}
-                        required
-                    />
-                </div>
+
                 <div>
                     <Label>UPI ID:</Label>
                     <Input
@@ -96,7 +84,7 @@ const UserPage = () => {
                         onChange={(e) => setUserData({ ...userData, account: { ...userData.account, upiNumber: e.target.value } })}
                     />
                 </div>
-                <Button type="submit">Submit</Button>
+                <Button >Submit <RiUpload2Line style={{ fontSize: 'x-large' }}></RiUpload2Line></Button>
             </form>
         </Container>
     );
