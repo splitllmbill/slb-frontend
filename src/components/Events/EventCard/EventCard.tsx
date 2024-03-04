@@ -4,6 +4,7 @@ import { Card, CardContent, Typography } from '@mui/material';
 import { toTitleCase } from '../../../services/State';
 import { Col, Row } from 'react-bootstrap';
 import group from '../../../assets/group.png';
+import MyIconComponent from '../RandomColorIcon';
 
 interface EventCardProps {
    eventSent: EventObject; // Adjust the type as per your EventObject structure
@@ -18,6 +19,7 @@ const EventCard: FC<EventCardProps> = ({ eventSent }) => {
                <Row>
                   <Col sm={4} className="d-none d-sm-block  justify-content-center align-items-center">
                      <img src={group}></img>
+                     {/* <MyIconComponent/> */}
                   </Col>
                   <Col sm={6} className="d-flex  align-items-center">
                      <div className="text-left"> {/* Add text-left class for left alignment inside the div */}
