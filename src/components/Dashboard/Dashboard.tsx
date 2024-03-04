@@ -8,19 +8,21 @@ import { FaUserFriends } from 'react-icons/fa';
 import { IoPersonCircle } from 'react-icons/io5';
 import { BottomNavigation } from '@mui/material';
 import { BottomNavigationAction } from '@mui/material';
-
-import Login from '../Login/Login';
 import PersonalExpense from '../PersonalExpense/PersonalExpense';
 import Events from '../Events/Events';
 import Accountpage from '../Account/AccountPage';
 import FriendsPage from '../Friends/FriendsPage';
+import { useLocation } from 'react-router-dom';
+import FriendDetail from '../Friends/FriendDetail/FriendDetail';
 
-interface DashboardProps {}
+interface DashboardProps { }
 
 const Dashboard: FC<DashboardProps> = () => {
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const [selectedContent, setSelectedContent] = useState('Events'); // Initial selected content
   const [value, setValue] = useState('Events');
+
+  const location = useLocation();
 
   useEffect(() => {
     const handleResize = () => {
@@ -29,6 +31,10 @@ const Dashboard: FC<DashboardProps> = () => {
 
     handleResize(); // Initial check
     window.addEventListener('resize', handleResize);
+
+    if (location.pathname.startsWith('/friend')) {
+      setSelectedContent('Friends');
+    }
 
     return () => {
       window.removeEventListener('resize', handleResize);
@@ -49,8 +55,9 @@ const Dashboard: FC<DashboardProps> = () => {
       <DashboardWrapper>
         {!isSmallScreen && <SideNavBar onSelectContent={setSelectedContent} />}
         <ContentArea>
-          {selectedContent === 'Events' && <Events currentEventID=''  />}
-          {selectedContent === 'Friends' && <FriendsPage/>}
+          {(selectedContent === 'Friends' && location.pathname.startsWith('/friend')) && <FriendDetail />}
+          {selectedContent === 'Events' && <Events currentEventID='' />}
+          {(selectedContent === 'Friends'&& location.pathname.startsWith('/home')) && <FriendsPage />}
           {selectedContent === 'Personal Expenses' && <PersonalExpense />}
           {selectedContent === 'Account' && <Accountpage />}
         </ContentArea>

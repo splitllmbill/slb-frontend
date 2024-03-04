@@ -1,55 +1,61 @@
-import { Avatar, List } from "@mui/material";
-import { useState } from "react";
-import { Header, FriendList, Friend, FriendDetails, FriendsContainer, Flex } from "./FriendsPage.styled";
+import { useState, useEffect, Key } from "react";
+import { List } from "@mui/material";
+import { Header, FriendList, FriendsContainer, Flex } from "./FriendsPage.styled";
 import { AiOutlineUsergroupAdd } from "react-icons/ai";
 import { IoMdSearch } from "react-icons/io";
 import { MdFilterList } from "react-icons/md";
 import FriendCard from "./FriendCard/FriendCard";
-
-
+import dataService from "../../services/DataService"; // Import your data service
 
 const FriendsPage = () => {
     const [searchVisible, setSearchVisible] = useState(false);
+    const [loadHeader, setLoadHeader] = useState(false);
+    const [friends, setFriends] = useState({
+        "overallYouOwe": "",
+        "overallYouAreOwed": "",
+        "friendsList": []
+    });
 
     const toggleSearch = () => {
         setSearchVisible(!searchVisible);
     };
 
-    const addFriend = () => {
-        // Implement add friend functionality
-    };
+    const fetchData = () => {
+        try {
+            dataService.getFriendsList()
+                .then(data => {
+                    setFriends(data);
+                    setLoadHeader(true);
+                });
+        } catch (error) {
+            console.log("Error occurred");
+        }
+    }
 
-    const friends = [
-        {
-            name: 'Friend 1',
-            totalIOwe: 100,
-            totalTheyOwe: 50,
-            overallWhoOwes: 'Me',
-            overallOweAmount: 50
-        },
-        {
-            name: 'Friend 2',
-            totalIOwe: 150,
-            totalTheyOwe: 75,
-            overallWhoOwes: 'Friend',
-            overallOweAmount: 75
-        },
-        // Add more friends as needed
-    ];
+    useEffect(() => {
+        fetchData();
+    }, []); // Empty dependency array means this effect runs only once, after the initial render
 
     return (
         <FriendsContainer>
             <Flex>
-                <button>Add Friend<AiOutlineUsergroupAdd style={{ fontSize: 'x-large' }}></AiOutlineUsergroupAdd></button><button >Logout <IoMdSearch style={{ fontSize: 'x-large' }}></IoMdSearch ></button>
+                <button>Add Friend <AiOutlineUsergroupAdd style={{ fontSize: 'x-large' }} /></button>
+                <button>Search <IoMdSearch style={{ fontSize: 'x-large' }} /></button>
             </Flex>
-            <br></br>
-            <Header>
-                <h3>Overall, you owe ___</h3><MdFilterList style={{ fontSize: 'x-large' }}></MdFilterList>
-            </Header>
+            <br />
+            {loadHeader && (<Header>
+                {parseFloat(friends.overallYouOwe) !== 0.0 && (
+                    <h3>Overall, you owe ${friends.overallYouOwe}</h3>
+                )}
+                {parseFloat(friends.overallYouAreOwed) !== 0.0 && (
+                    <h3>Overall, you are owed {friends.overallYouAreOwed}</h3>
+                )}
+                <MdFilterList style={{ fontSize: 'x-large' }} />
+            </Header>)}
             <FriendList>
                 <List>
-                    {friends.map((friend) => (
-                        <FriendCard friend={friend}></FriendCard>
+                    {friends.friendsList.map((friend: { name: string, oweAmount: number, whoOwes: string }) => (
+                        <FriendCard friend={friend} />
                     ))}
                 </List>
                 {/* Add more friends here */}

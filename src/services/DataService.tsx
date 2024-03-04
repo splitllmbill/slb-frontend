@@ -328,6 +328,46 @@ const dataService = {
             console.error('Error fetching event expenses:', error);
             throw error;
         }
+    },
+    getFriendsList: async () => {
+        try {
+            const response = await fetch(`${BASE_URL}/db/user/friends`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem('authToken')
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`Error: ${response.status}`);
+            }
+
+            return response.json();
+        } catch (error) {
+            console.error('Error fetching event expenses:', error);
+            throw error;
+        }
+    },
+    getFriendDetails: async (friend_id: string) => {
+        try {
+            const response = await fetch(`${BASE_URL}/db/user/expense/friend/${friend_id}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem('authToken')
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`Error: ${response.status}`);
+            }
+
+            return response.json();
+        } catch (error) {
+            console.error('Error fetching event expenses:', error);
+            throw error;
+        }
     }
 };
 

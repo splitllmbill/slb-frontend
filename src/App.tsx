@@ -11,6 +11,7 @@ function App() {
         <Route index element={<Login />} />
         <Route path="*" element={<Login />} />
         <Route path="home" element={<Dashboard />} />
+        <Route path="friend/:friendId"  element={<Dashboard/>} />
       </Routes>
     </BrowserRouter>
   );
