@@ -388,6 +388,26 @@ const dataService = {
             console.error('Error fetching event expenses:', error);
             throw error;
         }
+    },
+    getNonGroupExpenses: async () => {
+        try {
+            const response = await fetch(`${BASE_URL}//db/expense/nongroup`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem('authToken')
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`Error: ${response.status}`);
+            }
+
+            return response.json();
+        } catch (error) {
+            console.error('Error fetching event expenses:', error);
+            throw error;
+        }
     }
 };
 

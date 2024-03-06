@@ -15,10 +15,10 @@ const CreateEventDrawer: FC<CreateEventDrawerProps> = () => {
 
     const fetchData = async () => {
         try {
-            await apiService.getAllUsers()
+            await apiService.getFriendsList()
                 .then(data => {
                     console.log(data);
-                    setUsers(data)
+                    setUsers(data.friendsList)
                 });
         } catch (error) {
             console.log("Error occurred");
@@ -27,7 +27,7 @@ const CreateEventDrawer: FC<CreateEventDrawerProps> = () => {
 
     useEffect(() => {
         fetchData()
-    }, []);// Initial data fetch
+    }, [setUsers]);// Initial data fetch
 
 
     const handleCreateEvent = async () => {
@@ -76,7 +76,7 @@ const CreateEventDrawer: FC<CreateEventDrawerProps> = () => {
                     <Autocomplete
                         multiple
                         id="tags-outlined"
-                        options={users.filter((user) => user.id != currentUserId)}
+                        options={users}
                         onChange={(_, value) => setSelectedUsers(value)}
                         getOptionLabel={(option) => option.name}
                         defaultValue={[]}

@@ -8,17 +8,12 @@ import FriendCard from "./FriendCard/FriendCard";
 import dataService from "../../services/DataService"; // Import your data service
 
 const FriendsPage = () => {
-    const [searchVisible, setSearchVisible] = useState(false);
     const [loadHeader, setLoadHeader] = useState(false);
     const [friends, setFriends] = useState({
         "overallYouOwe": "",
         "overallYouAreOwed": "",
         "friendsList": []
     });
-
-    const toggleSearch = () => {
-        setSearchVisible(!searchVisible);
-    };
 
     const fetchData = () => {
         try {
@@ -45,10 +40,10 @@ const FriendsPage = () => {
             <br />
             {loadHeader && (<Header>
                 {parseFloat(friends.overallYouOwe) !== 0.0 && (
-                    <h3>Overall, you owe ${friends.overallYouOwe}</h3>
+                    <h3>Overall, you owe Rs.{friends.overallYouOwe}</h3>
                 )}
                 {parseFloat(friends.overallYouAreOwed) !== 0.0 && (
-                    <h3>Overall, you are owed {friends.overallYouAreOwed}</h3>
+                    <h3>Overall, you are owed Rs.{friends.overallYouAreOwed}</h3>
                 )}
                 <MdFilterList style={{ fontSize: 'x-large' }} />
             </Header>)}
@@ -58,7 +53,6 @@ const FriendsPage = () => {
                         <FriendCard friend={friend} />
                     ))}
                 </List>
-                {/* Add more friends here */}
             </FriendList>
         </FriendsContainer>
     );

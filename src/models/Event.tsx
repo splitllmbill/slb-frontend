@@ -12,7 +12,7 @@ interface EventObject {
 }
 
 interface EventsObject {
-    overallYouOwe: number,
-    whoOwesYou: any[],
+    overallOweAmount: number,
+    owingPerson: string,
     events: EventObject[]
 }
