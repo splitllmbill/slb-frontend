@@ -12,6 +12,8 @@ function App() {
         <Route path="*" element={<Login />} />
         <Route path="home" element={<Dashboard />} />
         <Route path="friend/:friendId"  element={<Dashboard/>} />
+        <Route path="createEvent"  element={<Dashboard/>} />
+        <Route path="event/:eventId"  element={<Dashboard/>} />
       </Routes>
     </BrowserRouter>
   );

@@ -35,12 +35,24 @@ const FriendCard: FC<FriendCardProps> = ({ friend }) => {
                         </Col>
                         <Col className="d-flex justify-content-end">
                             <Typography variant="p" color="#785A53" sx={{ fontWeight: 'bold', textTransform: 'capitalize', textAlign: 'right' }}>
-                                {friend.whoOwes === 'You' ? (
-                                    <div> You owe</div>
-                                ) : (
-                                    <div>{friend.name} owes</div>
+                                {(friend.whoOwes === 'user' && friend.oweAmount > 0) && (
+                                    <>
+                                        <div>You owe</div>
+                                        <div>Rs.{friend.oweAmount}</div>
+                                    </>
                                 )}
-                                <div>${friend.oweAmount}</div>
+                                {(friend.whoOwes === 'friend' && friend.oweAmount > 0) && (
+                                    <>
+                                        <div>{friend.name} owes </div>
+                                        <div>Rs.{friend.oweAmount}</div>
+                                    </>
+                                )}
+                                {friend.oweAmount == 0.0 && (
+                                    <>
+                                        <div>No expenses</div>
+                                    </>
+                                )}
+
                             </Typography>
                         </Col>
                     </Row>
