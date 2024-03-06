@@ -10,3 +10,9 @@ interface EventObject {
     expenses: Expense[];
     dues: any;
 }
+
+interface EventsObject {
+    overallYouOwe: number,
+    whoOwesYou: any[],
+    events: EventObject[]
+}

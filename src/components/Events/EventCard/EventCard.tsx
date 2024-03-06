@@ -1,10 +1,10 @@
-import { FC} from 'react';
+import { FC } from 'react';
 import { EventCardWrapper } from './EventCard.styled';
 import { Card, CardContent, Typography } from '@mui/material';
 import { toTitleCase } from '../../../services/State';
 import { Col, Row } from 'react-bootstrap';
 import group from '../../../assets/group.png';
-import MyIconComponent from '../RandomColorIcon';
+import { useNavigate } from 'react-router-dom';
 
 interface EventCardProps {
    eventSent: EventObject; // Adjust the type as per your EventObject structure
@@ -12,8 +12,13 @@ interface EventCardProps {
 
 const EventCard: FC<EventCardProps> = ({ eventSent }) => {
 
+   const navigate = useNavigate();
+   const handleClick = () => {
+      navigate(`/event/${eventSent.id}`);
+   };
+
    return (
-      <EventCardWrapper>
+      <EventCardWrapper onClick={handleClick}>
          <Card>
             <CardContent>
                <Row>
@@ -23,7 +28,7 @@ const EventCard: FC<EventCardProps> = ({ eventSent }) => {
                   </Col>
                   <Col sm={6} className="d-flex  align-items-center">
                      <div className="text-left"> {/* Add text-left class for left alignment inside the div */}
-                        <Typography variant="h5" component="div" sx={{ fontWeight:'bold',textTransform: 'capitalize'}}>
+                        <Typography variant="h5" component="div" sx={{ fontWeight: 'bold', textTransform: 'capitalize' }}>
                            {toTitleCase(eventSent.eventName)}
                         </Typography>
                         {eventSent.dues?.totalOwed > 0 && (
@@ -33,8 +38,8 @@ const EventCard: FC<EventCardProps> = ({ eventSent }) => {
                               </Typography>
                               <Typography variant="body1" color="text.secondary" component="div">
                                  <ul>
-                                    {eventSent.dues?.isOwed?.map((item: any) => (
-                                       <li key={item.id}>
+                                    {eventSent.dues?.isOwed?.map((item: any, index: number) => (
+                                       <li key={index}>
                                           <strong>{item.name} owes you {item.amount}</strong>
                                        </li>
                                     ))}

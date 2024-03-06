@@ -1,70 +1,67 @@
 import { FC, useEffect, createRef, useState } from 'react';
-import { EventsWrapper } from './Events.styled';
+import { EventsWrapper, NoExpensesWrapper } from './Events.styled';
 import { MdOutlineGroupAdd } from "react-icons/md";
 import EventCard from './EventCard/EventCard';
 import dataService from '../../services/DataService';
-import { List} from '@mui/material';
-import CreateEventDrawer from './CreateEventDrawer/CreateEventDrawer';
-import EventDetail from './EventDetail/EventDetail';
+import { List } from '@mui/material';
+import CircularProgress from '@mui/material/CircularProgress';
+import { useNavigate } from 'react-router-dom';
+import { TbFaceIdError } from "react-icons/tb";
+
 
 interface EventsProps {
-  currentEventID:string,
- }
+  currentEventID: string,
+}
 
-const Events: FC<EventsProps> = ({currentEventID}) => {
-  const [events, setEvents] = useState<EventObject[]>([]);
-  const [eventID,setEventID] = useState<string>(currentEventID);
-  const [users,setUsers] = useState<User[]>([])
-  const [isEventDrawerOpen,setIsEventDrawerOpen] = useState(currentEventID!="");
-  const [isCreateEventDrawerOpen,setIsCreateEventDrawerOpen] = useState(false);
-  const eventDetailRef:any = createRef();
-  
-  const handleClickEventCard = (eventID:string) => {
-    if(eventID !=""){
-      setEventID(eventID);setIsEventDrawerOpen(true)
-    }else{
-      setEventID('');setIsEventDrawerOpen(false)
-    }
-  };
-  const toggleCreateEventButton = () => {
-    setIsCreateEventDrawerOpen(false);
-  };
+const Events: FC<EventsProps> = () => {
+  const [events, setEvents] = useState<EventsObject>();
+  const [showEvents, setShowEvents] = useState(false);
 
-  const fetchData = ()=>{
+  const fetchData = async () => {
     try {
-      dataService.getAllUsers()
-      .then(data => setUsers(data));
-      dataService.getUserEvents()
-      .then(data => setEvents(data));
+      await dataService.getUserEvents()
+        .then(data => {
+          setEvents(data);
+          setShowEvents(true);
+        });
+
     } catch (error) {
       console.log("Error occurred");
     }
   }
 
   useEffect(() => {
-    if (!isCreateEventDrawerOpen) 
-      fetchData();
-  },[setEvents,isCreateEventDrawerOpen]);// Initial data fetch
+    fetchData();
+  }, [setEvents]);// Initial data fetch
 
+  const navigate = useNavigate();
+  const handleCreateEvent = () => {
+    navigate(`/createEvent`);
+  };
 
   return (
-   <EventsWrapper>
-      <button onClick={()=>setIsCreateEventDrawerOpen(true)}>Create Event <MdOutlineGroupAdd style={{ fontSize: 'x-large' }}></MdOutlineGroupAdd></button>
-      <h2>Totally, you owe _____</h2>
-      <br></br>
-      <List>
-        {events.map((event) => (
-          <div onClick={()=>{handleClickEventCard(event.id!)}}>
-            <EventCard eventSent={event}></EventCard>
-          </div>
-         
-        ))}
-      </List>
-      {isCreateEventDrawerOpen &&
-      <CreateEventDrawer toggleCreateEventButton={ toggleCreateEventButton} users={users}></CreateEventDrawer>}
-      {
-        isEventDrawerOpen && <EventDetail drawerRef={eventDetailRef}eventID={eventID}  handleClickEventCard={handleClickEventCard} users={users}/>
-      }
+    <EventsWrapper>
+      <>
+        <button onClick={handleCreateEvent}>Create Event <MdOutlineGroupAdd style={{ fontSize: 'x-large' }}></MdOutlineGroupAdd></button>
+        {!showEvents && (<div className="d-flex justify-content-center align-items-center"><CircularProgress color="secondary" variant="indeterminate" /></div>)}
+        {showEvents && events && events?.events.length > 0 && (
+          <>
+            <h2>Totally, you owe ${events?.overallYouOwe}</h2>
+            <br></br>
+            <List>
+              {events?.events?.map((event) => (
+                <div key={event.id}>
+                  <EventCard eventSent={event}></EventCard>
+                </div>
+              ))}
+            </List>
+          </>)}
+        {showEvents && events && events?.events.length == 0 && (
+          <NoExpensesWrapper>
+            <TbFaceIdError style={{ fontSize: 'xx-large' }}></TbFaceIdError>
+            <h6>No events yet!</h6>
+          </NoExpensesWrapper>)}
+      </>
     </EventsWrapper>
   );
 };

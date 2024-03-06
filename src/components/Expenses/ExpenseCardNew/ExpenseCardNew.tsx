@@ -5,8 +5,6 @@ import { ExpenseCardWrapper, MarginLeft } from './ExpenseCardNew.styled';
 import { MdOutlineEventNote } from "react-icons/md";
 import { toTitleCase } from '../../../services/State';
 
-
-
 interface ExpenseCardNewProps {
     expense: any; // Adjust the type as per your EventObject structure
 }
@@ -18,6 +16,8 @@ const ExpenseCardNew: FC<ExpenseCardNewProps> = ({ expense }) => {
         const date = new Date(dateString);
         return date.toLocaleDateString('en-GB', options).replace(/(\d+)(th|st|nd|rd)/, '$1');
     }
+    
+    const isMobile = window.innerWidth <= 500;
 
     return (
         <ExpenseCardWrapper>
@@ -35,9 +35,8 @@ const ExpenseCardNew: FC<ExpenseCardNewProps> = ({ expense }) => {
                                 <Typography variant="h6" component="div" sx={{ fontWeight: 'bold', textTransform: 'capitalize' }}>
                                     {toTitleCase(expense.expenseName)}
                                 </Typography>
-                                <p>
-                                    Category: {toTitleCase(expense.category)}
-                                </p>
+                                {!isMobile && <p>Category: {toTitleCase(expense.category)}</p>}
+                                {isMobile && <p>{toTitleCase(expense.category)}</p>}
                             </MarginLeft>
                         </Col>
                         <Col className="d-flex justify-content-end">

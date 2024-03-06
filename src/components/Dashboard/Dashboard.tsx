@@ -14,6 +14,8 @@ import Accountpage from '../Account/AccountPage';
 import FriendsPage from '../Friends/FriendsPage';
 import { useLocation } from 'react-router-dom';
 import FriendDetail from '../Friends/FriendDetail/FriendDetail';
+import CreateEventDrawer from '../Events/CreateEventDrawer/CreateEventDrawer';
+import EventDetail from '../Events/EventDetail/EventDetail';
 
 interface DashboardProps { }
 
@@ -56,8 +58,11 @@ const Dashboard: FC<DashboardProps> = () => {
         {!isSmallScreen && <SideNavBar onSelectContent={setSelectedContent} />}
         <ContentArea>
           {(selectedContent === 'Friends' && location.pathname.startsWith('/friend')) && <FriendDetail />}
-          {selectedContent === 'Events' && <Events currentEventID='' />}
-          {(selectedContent === 'Friends'&& location.pathname.startsWith('/home')) && <FriendsPage />}
+          {(selectedContent === 'Friends' && location.pathname.startsWith('/home')) && <FriendsPage />}
+
+          {(selectedContent === 'Events' && location.pathname.startsWith('/createEvent')) && <CreateEventDrawer />}
+          {(selectedContent === 'Events' && location.pathname.startsWith('/event')) && <EventDetail />}
+          {(selectedContent === 'Events' && location.pathname.startsWith('/home')) && <Events currentEventID='' />}
           {selectedContent === 'Personal Expenses' && <PersonalExpense />}
           {selectedContent === 'Account' && <Accountpage />}
         </ContentArea>
