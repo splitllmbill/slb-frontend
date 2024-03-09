@@ -16,6 +16,8 @@ import { useLocation } from 'react-router-dom';
 import FriendDetail from '../Friends/FriendDetail/FriendDetail';
 import CreateEventDrawer from '../Events/CreateEventDrawer/CreateEventDrawer';
 import EventDetail from '../Events/EventDetail/EventDetail';
+import CreateExpenseDrawer from '../Expenses/CreateExpense/CreateExpense';
+import ExpenseDetail from '../Expenses/ExpenseDetail/ExpenseDetail';
 
 interface DashboardProps { }
 
@@ -63,6 +65,10 @@ const Dashboard: FC<DashboardProps> = () => {
           {(selectedContent === 'Events' && location.pathname.startsWith('/createEvent')) && <CreateEventDrawer />}
           {(selectedContent === 'Events' && location.pathname.startsWith('/event')) && <EventDetail />}
           {(selectedContent === 'Events' && location.pathname.startsWith('/home')) && <Events currentEventID='' />}
+
+          {(location.pathname.startsWith('/createExpense')) && <CreateExpenseDrawer />}
+          {(location.pathname.startsWith('/expense/')) && <ExpenseDetail />}
+
           {selectedContent === 'Personal Expenses' && <PersonalExpense />}
           {selectedContent === 'Account' && <Accountpage />}
         </ContentArea>

@@ -30,7 +30,7 @@ function FriendDetail() {
 
     const navigate = useNavigate();
     const handleGoBack = () => {
-        navigate(`/home`);
+        navigate(-1);
     };
 
     return (
@@ -52,7 +52,7 @@ function FriendDetail() {
                     ) : (
                         ` ${friendData.name} owes you `
                     )}
-                    ${friendData.overallOweAmount}
+                    Rs.${friendData.overallOweAmount}
                 </Typography>)}
                 <br></br>
                 {friendData.expenses && friendData.expenses.reverse().map((expense: { expenseDate: string, expenseName: string, expenseId: string, category: string, oweAmount: Float32Array, whoOwes: string }, index) => (

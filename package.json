@@ -20,9 +20,10 @@
     "fa-icons": "^0.2.0",
     "react": "^18.2.0",
     "react-bootstrap": "^2.9.1",
+    "react-datepicker": "^6.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.12.0",
-    "react-router-dom": "^6.20.0",
+    "react-router-dom": "^6.22.2",
     "rxjs": "^7.8.1",
     "styled-components": "^6.1.3"
   },

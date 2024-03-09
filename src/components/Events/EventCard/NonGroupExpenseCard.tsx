@@ -12,7 +12,8 @@ interface NonGroupExpenseCardProps {
 const NonGroupExpenseCard: FC<NonGroupExpenseCardProps> = ({ expenses }) => {
 
     const navigate = useNavigate();
-    const handleClick = () => { };
+    const handleClick = () => {
+     };
 
     return (
         <EventCardWrapper onClick={handleClick}>
@@ -41,34 +42,18 @@ const NonGroupExpenseCard: FC<NonGroupExpenseCardProps> = ({ expenses }) => {
                                         <ul>
                                             {expenses.friendsList.map((friend: any, index: number) => (
                                                 <li key={index}>
-                                                    <strong>
+                                                    <span><strong>
                                                         {friend.whoOwes === 'user' ? (
                                                             <div>You owe {friend.name} Rs.{friend.oweAmount}</div>
                                                         ) : (
                                                             <div>{friend.name} owes you Rs.{friend.oweAmount}</div>
                                                         )}
-                                                    </strong>
+                                                    </strong></span>
                                                 </li>
                                             ))}
                                         </ul>
                                     </Typography>}
                                 </>
-                                {/* {eventSent.dues?.totalDebt > 0 && (
-                                    <>
-                                        <Typography variant="h6" color="text.secondary">
-                                            You owe Rs.{eventSent.dues.totalDebt}
-                                        </Typography>
-                                        <Typography variant="body1" color="text.secondary" component="div">
-                                            <ul>
-                                                {eventSent.dues?.inDebtTo?.map((item: any) => (
-                                                    <li key={item.id}>
-                                                        <strong>You owe {item.name} Rs.{item.amount}</strong>
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        </Typography>
-                                    </>
-                                )} */}
                             </div>
                         </Col>
 
