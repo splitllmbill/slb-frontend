@@ -17,13 +17,13 @@ const ExpenseCardNew: FC<ExpenseCardNewProps> = ({ expense }) => {
         const date = new Date(dateString);
         return date.toLocaleDateString('en-GB', options).replace(/(\d+)(th|st|nd|rd)/, '$1');
     }
+    
+    const isMobile = window.innerWidth <= 500;
 
     const navigate = useNavigate();
     const handleClick = () => {
        navigate(`/expense/${expense.expenseId}`);
     };
-
-    const isMobile = window.innerWidth <= 500;
 
     return (
         <ExpenseCardWrapper onClick={handleClick}>
