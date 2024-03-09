@@ -1,8 +1,8 @@
 interface Expense {
     id?:string;
-    expenseName: string;
-    amount: number;
-    type: string;
+    expenseName?: string;
+    amount?: number;
+    type?: string;
     paidBy?: string; // Reference to a User object
     shares: Share[]; // List of Share objects
     createdAt: Date;

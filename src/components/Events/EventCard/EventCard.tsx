@@ -40,7 +40,7 @@ const EventCard: FC<EventCardProps> = ({ eventSent }) => {
                                  <ul>
                                     {eventSent.dues?.isOwed?.map((item: any, index: number) => (
                                        <li key={index}>
-                                          <strong>{item.name} owes you Rs.{item.amount}</strong>
+                                          <span><strong>{toTitleCase(item.name)} owes you Rs.{item.amount}</strong></span>
                                        </li>
                                     ))}
                                  </ul>
@@ -56,12 +56,15 @@ const EventCard: FC<EventCardProps> = ({ eventSent }) => {
                                  <ul>
                                     {eventSent.dues?.inDebtTo?.map((item: any) => (
                                        <li key={item.id}>
-                                          <strong>You owe {item.name} Rs.{item.amount}</strong>
+                                          <span><strong>You owe {item.name} Rs.${item.amount}</strong></span>
                                        </li>
                                     ))}
                                  </ul>
                               </Typography>
                            </>
+                        )}
+                        {eventSent.dues?.totalOwed == 0 && eventSent.dues?.totalDebt == 0 && (
+                           <Typography variant="body1" color="text.secondary"><strong>No expenses due</strong></Typography>
                         )}
                      </div>
                   </Col>

@@ -15,7 +15,7 @@ const FriendCard: FC<FriendCardProps> = ({ friend }) => {
 
     const navigate = useNavigate();
     const handleClick = () => {
-        navigate(`/friend/${friend.id}`);
+        navigate(`/friend/${friend.friendId}`);
     };
 
     return (

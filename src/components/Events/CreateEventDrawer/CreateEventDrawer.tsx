@@ -1,14 +1,14 @@
 import { FC, useEffect, useState } from "react";
-import { CreateEventWrapper } from "./CreateEventDrawer.styled";
+import { CreateEventWrapper, Flex } from "./CreateEventDrawer.styled";
 import apiService from '../../../services/DataService';
-import { Autocomplete, Button, Checkbox, Stack, TextField, ThemeProvider, createTheme } from "@mui/material";
+import { Autocomplete, Button, Checkbox, Stack, TextField, ThemeProvider } from "@mui/material";
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import { useNavigate } from "react-router-dom";
 import { IoMdArrowBack } from "react-icons/io";
+import './CreateEventDrawer.styles.css';
 
-const CreateEventDrawer: FC<CreateEventDrawerProps> = () => {
-    const currentUserId = localStorage.getItem('userId')
+const CreateEventDrawer = () => {
     const [eventName, setEventName] = useState('')
     const [selectedUsers, setSelectedUsers] = useState<User[]>([])
     const [users, setUsers] = useState<User[]>([])
@@ -33,13 +33,13 @@ const CreateEventDrawer: FC<CreateEventDrawerProps> = () => {
     const handleCreateEvent = async () => {
         const createEventObject = {
             eventName: eventName,
-            users: [`${localStorage.getItem('userId')}`, ...(selectedUsers.map(selectedUser => selectedUser.id!))],
+            users: [`${localStorage.getItem('userId')}`, ...(selectedUsers.map(selectedUser => selectedUser.friendId!))],
         }
         try {
             const result = await apiService.createEvent(createEventObject as unknown as EventObject)
             if (result) {
                 setEventName('');
-                toggleCreateEventButton();
+                navigate(`/event/${result.id}`);
             }
         } catch (error) {
             // setAlertInfo({ open: true, severity: 'error', message: 'Unexpected error occured! Please try again.' });
@@ -50,30 +50,30 @@ const CreateEventDrawer: FC<CreateEventDrawerProps> = () => {
 
     const navigate = useNavigate();
     const handleGoBack = () => {
-        navigate(`/home`);
+        navigate(-1); 
     };
-
-    const theme = createTheme({
-
-    });
 
     const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
     const checkedIcon = <CheckBoxIcon fontSize="small" />;
     return (
 
         <CreateEventWrapper >
-            <button onClick={handleGoBack}>
-                <IoMdArrowBack style={{ fontSize: 'x-large' }}></IoMdArrowBack> Go Back
-            </button>
+            <Flex>
+                <button onClick={handleGoBack}>
+                    <IoMdArrowBack style={{ fontSize: 'x-large' }}></IoMdArrowBack> Go Back
+                </button>
+            </Flex>
+            <br />
             {/* <Row className="d-flex justify-content-end align-items-center text-end">
                 <CloseIcon onClick={toggleCreateEventButton} style={{ paddingTop: '0px', fontSize: '50px', fill: 'white', paddingBottom: '0px' }} />
             </Row> */}
-            <ThemeProvider theme={theme}>
+            <div>
                 <Stack spacing={2} useFlexGap direction="column">
                     <h3>Add a New Event</h3>
 
                     <TextField type="name" placeholder="Event Name" onChange={(event) => setEventName(event.target.value)} value={eventName} name="name" required />
                     <Autocomplete
+                        classes={{ endAdornment: 'MuiAutocomplete-endAdornment' }}
                         multiple
                         id="tags-outlined"
                         options={users}
@@ -82,7 +82,7 @@ const CreateEventDrawer: FC<CreateEventDrawerProps> = () => {
                         defaultValue={[]}
                         disableCloseOnSelect
                         limitTags={4}
-                        // isOptionEqualToValue=
+                        isOptionEqualToValue={(option, value) => option.friendId === value.friendId}
                         renderOption={(props, option, { selected }) => (
                             <li {...props}>
                                 <Checkbox
@@ -103,7 +103,7 @@ const CreateEventDrawer: FC<CreateEventDrawerProps> = () => {
                 </Stack>
                 <br />
                 <Button variant="contained" onClick={handleCreateEvent}>Add</Button>
-            </ThemeProvider>
+            </div>
         </CreateEventWrapper>
 
 

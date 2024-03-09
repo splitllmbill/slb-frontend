@@ -1,0 +1,4 @@
+.MuiAutocomplete-endAdornment {
+    display: flex !important;
+    position: static !important;
+}

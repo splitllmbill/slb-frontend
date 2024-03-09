@@ -5,6 +5,7 @@ import { MdDashboard } from "react-icons/md";
 import { TiGroup } from "react-icons/ti";
 import { RiAccountBoxFill } from "react-icons/ri";
 import { FaMoneyBill1Wave } from "react-icons/fa6";
+import { useNavigate } from 'react-router-dom';
 
 
 interface SideNavBarProps {
@@ -15,11 +16,12 @@ const SideNavBar: FC<SideNavBarProps> = ({ onSelectContent }) => {
    const [activeItem, setActiveItem] = useState('Events');
    const [isSmallScreen, setIsSmallScreen] = useState(false);
 
+   const navigate = useNavigate();
    const handleItemClick = (itemName: string) => {
       setActiveItem(itemName);
       onSelectContent(itemName);
+      navigate('/home');
    };
-
    useEffect(() => {
       const handleResize = () => {
          setIsSmallScreen(window.innerWidth <= 500);

@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const CreateEventWrapper = styled.div`
+export const CreateExpenseWrapper = styled.div`
 padding: 20px;
 `;
 
@@ -9,3 +9,6 @@ export const Flex = styled.div`
     gap: 10px;
 `;
 
+export const LabelForm = styled.div`
+padding: 8px 15px 0px 0px;
+`
