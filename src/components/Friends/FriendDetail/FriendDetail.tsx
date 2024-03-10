@@ -6,6 +6,9 @@ import { IoMdArrowBack } from "react-icons/io";
 import { IoPersonRemoveOutline } from "react-icons/io5";
 import { Typography } from '@mui/material';
 import ExpenseCardNew from '../../Expenses/ExpenseCardNew/ExpenseCardNew';
+import { Row, Col } from 'react-bootstrap';
+import { BiEditAlt } from 'react-icons/bi';
+import { MdOutlineDelete, MdOutlinePlaylistAdd } from 'react-icons/md';
 
 function FriendDetail() {
     const [friendData, setFriendData] = useState({
@@ -28,21 +31,39 @@ function FriendDetail() {
         }
     }, [friendId]); // useEffect dependency
 
+    const handleCreateExpense = () => {
+        navigate(`/createExpense/friend/${friendId}`);
+    };
+
     const navigate = useNavigate();
     const handleGoBack = () => {
         navigate(-1);
     };
+    const isMobile = window.innerWidth <= 500;
 
     return (
         <FriendDetailWrapper>
-            <Flex>
-                <button onClick={handleGoBack}> 
-                    <IoMdArrowBack style={{ fontSize: 'x-large' }}></IoMdArrowBack> Go Back
-                </button>
-                <button>
-                    Remove Friend <IoPersonRemoveOutline style={{ fontSize: 'x-large' }}></IoPersonRemoveOutline >
-                </button>
-            </Flex>
+            <Row>
+                <Col xs={3} md={3}>
+                    <button onClick={handleGoBack} className="w-100">
+                        <IoMdArrowBack style={{ fontSize: 'x-large' }} />
+                        {!isMobile && (<span> Go Back</span>)}
+                    </button>
+                </Col>
+                <Col xs={3} md={3}></Col>
+                <Col xs={3} md={3}>
+                    <button className="w-100" onClick={handleCreateExpense}>
+                        <MdOutlinePlaylistAdd style={{ fontSize: 'x-large' }} />
+                        {!isMobile && (<span> Add Expense</span>)}
+                    </button>
+                </Col>
+                <Col xs={3} md={3}>
+                    <button className="w-100">
+                        <IoPersonRemoveOutline style={{ fontSize: 'x-large' }} />
+                        {!isMobile && (<span> Remove Friend</span>)}
+                    </button>
+                </Col>
+            </Row>
             <div>
                 <h2>{friendData.name}</h2>
                 {showData && (<Typography variant="h6">

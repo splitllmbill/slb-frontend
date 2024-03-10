@@ -2,10 +2,6 @@ import React, { FC, useEffect, useState } from 'react';
 import { BottomNavWrapper, ContentArea, DashboardWrapper, HeaderWrapper } from './Dashboard.styled';
 import SideNavBar from '../SideNavBar/SideNavBar';
 import Header from '../Header/Header';
-import { BiMoneyWithdraw } from 'react-icons/bi';
-import { GrGroup } from 'react-icons/gr';
-import { FaUserFriends } from 'react-icons/fa';
-import { IoPersonCircle } from 'react-icons/io5';
 import { BottomNavigation } from '@mui/material';
 import { BottomNavigationAction } from '@mui/material';
 import PersonalExpense from '../PersonalExpense/PersonalExpense';
@@ -18,6 +14,10 @@ import CreateEventDrawer from '../Events/CreateEventDrawer/CreateEventDrawer';
 import EventDetail from '../Events/EventDetail/EventDetail';
 import CreateExpenseDrawer from '../Expenses/CreateExpense/CreateExpense';
 import ExpenseDetail from '../Expenses/ExpenseDetail/ExpenseDetail';
+import { MdDashboard } from 'react-icons/md';
+import { FaMoneyBill1Wave } from 'react-icons/fa6';
+import { RiAccountBoxFill } from 'react-icons/ri';
+import { TiGroup } from 'react-icons/ti';
 
 interface DashboardProps { }
 
@@ -77,10 +77,10 @@ const Dashboard: FC<DashboardProps> = () => {
       <BottomNavWrapper>
         {isSmallScreen && (
           <BottomNavigation showLabels value={value} onChange={handleNavigationChange}>
-            <BottomNavigationAction label="Events" icon={<GrGroup />} value="Events" />
-            <BottomNavigationAction label="Friends" icon={<FaUserFriends />} value="Friends" />
-            <BottomNavigationAction label="Personal Expenses" icon={<BiMoneyWithdraw />} value="Personal Expenses" />
-            <BottomNavigationAction label="Account" icon={<IoPersonCircle />} value="Account" />
+            <BottomNavigationAction label="Events" icon={<MdDashboard />} value="Events" />
+            <BottomNavigationAction label="Friends" icon={<TiGroup />} value="Friends" />
+            <BottomNavigationAction label="Personal Expenses" icon={<FaMoneyBill1Wave />} value="Personal Expenses" />
+            <BottomNavigationAction label="Account" icon={<RiAccountBoxFill />} value="Account" />
           </BottomNavigation>
         )}
       </BottomNavWrapper>

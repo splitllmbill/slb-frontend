@@ -9,6 +9,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import './CreateExpense.styles.css';
 
 
 const CreateExpenseDrawer = () => {
@@ -33,7 +34,7 @@ const CreateExpenseDrawer = () => {
         apiService.getEvent(id).then(data => {
             setEvent(data);
         });
-        apiService.getEventUsers(id).then(data => {
+        apiService.getEventUsers(id, type).then(data => {
             setUsers(data);
             setShowShareDetails(true);
         });
@@ -62,11 +63,19 @@ const CreateExpenseDrawer = () => {
             userId: share.userId,
             amount: splitType == 'equally' ? amount / (selectedUsers.length) : share.amount
         }));
-
+        let typeToPass;
+        switch (type) {
+            case 'event':
+                typeToPass = 'group';
+                break;
+            case 'friend':
+                typeToPass = 'friend';
+                break;
+        }
         const createExpenseObject = {
             expenseName: expenseName,
             amount: amount,
-            type: "group",
+            type: typeToPass,
             paidBy: paidBy.id,
             eventId: event.id,
             category: "food",
@@ -127,7 +136,7 @@ const CreateExpenseDrawer = () => {
                 <span><strong>Expense Name</strong></span>
                 <TextField type="name" onChange={(event) => setExpenseName(event.target.value)} value={expenseName} name="name" required />
                 <span><strong>Date </strong></span>
-                <DatePicker selected={selectedDate} onChange={(date) => setSelectedDate(date)} />
+                <DatePicker selected={selectedDate} onChange={(date) => setSelectedDate(date)} className="custom-datepicker" />
                 <span><strong>Expense Amount</strong></span>
                 <TextField type="number" onChange={(event) => setAmount(parseFloat(event.target.value))} value={amount} name="amount" required />
                 <span><strong>Paid By</strong></span>
@@ -142,16 +151,14 @@ const CreateExpenseDrawer = () => {
                         <TextField {...params} placeholder="Enter the payee" />
                     )}
                 />
-                {type === 'event' && (
-                    <FormControl>
-                        <RadioGroup row aria-labelledby="demo-row-radio-buttons-group-label" name="row-radio-buttons-group"
-                            value={splitType} onChange={handleSplitTypeChange}>
-                            <LabelForm><strong>Split</strong></LabelForm>
-                            <span><FormControlLabel value="equally" control={<Radio />} label="Equally" /></span>
-                            <FormControlLabel value="unequally" control={<Radio />} label="Unequally" />
-                        </RadioGroup>
-                    </FormControl>
-                )}
+                <FormControl>
+                    <RadioGroup row aria-labelledby="demo-row-radio-buttons-group-label" name="row-radio-buttons-group"
+                        value={splitType} onChange={handleSplitTypeChange}>
+                        <LabelForm><strong>Split</strong></LabelForm>
+                        <span><FormControlLabel value="equally" control={<Radio />} label="Equally" /></span>
+                        <FormControlLabel value="unequally" control={<Radio />} label="Unequally" />
+                    </RadioGroup>
+                </FormControl>
                 {splitType === 'equally' && (
                     <>
                         <span ><strong>Split Equally Among</strong></span>
