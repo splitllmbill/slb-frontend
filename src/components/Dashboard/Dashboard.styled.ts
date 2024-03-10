@@ -7,12 +7,13 @@ padding-top: 70px;
 `;
 
 export const ContentArea = styled.div`
-background-color: whitesmoke;
-width:100%;
-margin-right:0;
-color: black;
-overflow-y: auto;
-height: webkit-fill-available;
+  background-color: whitesmoke;
+  width: 100%;
+  margin-right: 0;
+  color: black;
+  overflow-y: auto;
+  height: calc(100vh - 70px); /* Adjust height based on the height of your BottomNavWrapper */
+  padding-bottom: 50px; /* Adjust padding to accommodate Bottom Navigation bar */
 `;
 
 export const HeaderWrapper = styled.div`
