@@ -40,19 +40,19 @@ const Chatbot = () => {
    const handleKeyDown: KeyboardEventHandler<HTMLInputElement> = (event) => {
       // Ensure event is of type KeyboardEvent<HTMLInputElement>
       const keyboardEvent = event as React.KeyboardEvent<HTMLInputElement>;
-    
+
       // Access properties like 'key' and 'target' from the keyboard event
       const { key, currentTarget } = keyboardEvent;
-    
+
       // Ensure 'currentTarget' is of type HTMLInputElement
       const inputTarget = currentTarget as HTMLInputElement;
-    
+
       // Your existing logic using 'key' and 'currentTarget'
       if (key === 'Enter' && document.activeElement === inputTarget) {
-        // Check if the Enter key is pressed and the input has focus
-        handleSendMessage();
+         // Check if the Enter key is pressed and the input has focus
+         handleSendMessage();
       }
-    };
+   };
 
    const handleAddExpense = async () => {
       try {
@@ -67,10 +67,11 @@ const Chatbot = () => {
                updatedAt: today,
                createdBy: "",
                updatedBy: "",
-               category: exp.category
+               category: exp.category,
+               date: formattedDate
             } as Expense;
             console.log("expenseData", expenseData);
-            
+
             const createdExpense = await dataService.createExpense(expenseData as Expense);
             console.log('Expense created successfully:', createdExpense);
          }
@@ -123,13 +124,13 @@ const Chatbot = () => {
                            {expenses.map((row, index) => (
                               <tr key={index}>
                                  <TD>
-                                    <input type="text" value={row.name} onChange={(e) => handleExpenseChange(index, 'name', e.target.value)} />
+                                    <input type="text" value={row.Name} onChange={(e) => handleExpenseChange(index, 'name', e.target.value)} />
                                  </TD>
                                  <TD>
-                                    <input type="text" value={row.amount} onChange={(e) => handleExpenseChange(index, 'amount', e.target.value)} />
+                                    <input type="text" value={row.Amount} onChange={(e) => handleExpenseChange(index, 'amount', e.target.value)} />
                                  </TD>
                                  <TD>
-                                    <input type="text" value={row.category} onChange={(e) => handleExpenseChange(index, 'category', e.target.value)} />
+                                    <input type="text" value={row.Category} onChange={(e) => handleExpenseChange(index, 'category', e.target.value)} />
                                  </TD>
                                  <TD>
                                     <input type="text" value={formattedDate} onChange={(e) => handleExpenseChange(index, 'date', e.target.value)} />

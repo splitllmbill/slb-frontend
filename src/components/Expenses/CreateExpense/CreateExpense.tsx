@@ -34,7 +34,7 @@ const CreateExpenseDrawer = () => {
         apiService.getEvent(id).then(data => {
             setEvent(data);
         });
-        apiService.getEventUsers(id).then(data => {
+        apiService.getEventUsers(id, type).then(data => {
             setUsers(data);
             setShowShareDetails(true);
         });
@@ -63,11 +63,19 @@ const CreateExpenseDrawer = () => {
             userId: share.userId,
             amount: splitType == 'equally' ? amount / (selectedUsers.length) : share.amount
         }));
-
+        let typeToPass;
+        switch (type) {
+            case 'event':
+                typeToPass = 'group';
+                break;
+            case 'friend':
+                typeToPass = 'friend';
+                break;
+        }
         const createExpenseObject = {
             expenseName: expenseName,
             amount: amount,
-            type: "group",
+            type: typeToPass,
             paidBy: paidBy.id,
             eventId: event.id,
             category: "food",
@@ -143,16 +151,14 @@ const CreateExpenseDrawer = () => {
                         <TextField {...params} placeholder="Enter the payee" />
                     )}
                 />
-                {type === 'event' && (
-                    <FormControl>
-                        <RadioGroup row aria-labelledby="demo-row-radio-buttons-group-label" name="row-radio-buttons-group"
-                            value={splitType} onChange={handleSplitTypeChange}>
-                            <LabelForm><strong>Split</strong></LabelForm>
-                            <span><FormControlLabel value="equally" control={<Radio />} label="Equally" /></span>
-                            <FormControlLabel value="unequally" control={<Radio />} label="Unequally" />
-                        </RadioGroup>
-                    </FormControl>
-                )}
+                <FormControl>
+                    <RadioGroup row aria-labelledby="demo-row-radio-buttons-group-label" name="row-radio-buttons-group"
+                        value={splitType} onChange={handleSplitTypeChange}>
+                        <LabelForm><strong>Split</strong></LabelForm>
+                        <span><FormControlLabel value="equally" control={<Radio />} label="Equally" /></span>
+                        <FormControlLabel value="unequally" control={<Radio />} label="Unequally" />
+                    </RadioGroup>
+                </FormControl>
                 {splitType === 'equally' && (
                     <>
                         <span ><strong>Split Equally Among</strong></span>

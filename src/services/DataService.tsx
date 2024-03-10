@@ -425,9 +425,9 @@ const dataService = {
             throw error;
         }
     },
-    getEventUsers: async (event_id: string) => {
+    getEventUsers: async (id: string, type: string) => {
         try {
-            const response = await fetch(`${BASE_URL}/db/event/${event_id}/users`, {
+            const response = await fetch(`${BASE_URL}/db/${type}/${id}/users`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
