@@ -9,6 +9,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import './CreateExpense.styles.css';
 
 
 const CreateExpenseDrawer = () => {
@@ -127,7 +128,7 @@ const CreateExpenseDrawer = () => {
                 <span><strong>Expense Name</strong></span>
                 <TextField type="name" onChange={(event) => setExpenseName(event.target.value)} value={expenseName} name="name" required />
                 <span><strong>Date </strong></span>
-                <DatePicker selected={selectedDate} onChange={(date) => setSelectedDate(date)} />
+                <DatePicker selected={selectedDate} onChange={(date) => setSelectedDate(date)} className="custom-datepicker" />
                 <span><strong>Expense Amount</strong></span>
                 <TextField type="number" onChange={(event) => setAmount(parseFloat(event.target.value))} value={amount} name="amount" required />
                 <span><strong>Paid By</strong></span>
