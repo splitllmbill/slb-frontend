@@ -1,19 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Container, Label, Input, Button, Flex } from './AccountPage.styled'; // Import styled components
 import dataService from '../../services/DataService';
 import { IoLogOutOutline } from "react-icons/io5";
-import { MdLockReset, MdOutlineDelete, MdOutlinePlaylistAdd } from "react-icons/md";
+import { MdLockReset } from "react-icons/md";
 import { RiUpload2Line } from 'react-icons/ri';
-import { IoMdArrowBack } from 'react-icons/io';
-import { Row, Col } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
+import { Row, Alert } from 'react-bootstrap';
 
 const UserPage = () => {
     const [userData, setUserData] = useState({
         name: '',
         email: '',
         upiId: '',
-        upiNumber: ''
+        upiNumber: '',
+        uuid: ''
     });
     const [showLoader, setShowLoader] = useState(true);
 
@@ -34,7 +33,7 @@ const UserPage = () => {
         event.preventDefault();
         try {
             const result = await dataService.updateUserAccount(userData);
-            if(result){
+            if (result) {
                 alert('Updated successfully!')
             }
 
@@ -43,7 +42,10 @@ const UserPage = () => {
         }
     };
 
-
+    const handleCopyToClipboard = (text) => {
+        navigator.clipboard.writeText(text);
+        alert('Copied to clipboard!');
+    };
 
     const isMobile = window.innerWidth <= 500;
 
@@ -54,6 +56,11 @@ const UserPage = () => {
                     <button >Change Password <MdLockReset style={{ fontSize: 'x-large' }}></MdLockReset></button><button >Logout <IoLogOutOutline style={{ fontSize: 'x-large' }}></IoLogOutOutline ></button>
                 </Flex>
                 <h2>Edit User Information</h2>
+                <Row>
+                    <Alert key='light' variant='light' sx={{ width: '100%' }} >
+                        Share this unique friend code <a href="#" onClick={() => handleCopyToClipboard(userData.uuid)}>{userData.uuid}</a> with friends who want to add you on SplitLLM!
+                    </Alert>
+                </Row>
                 <form onSubmit={handleSubmit}>
                     <div>
                         <Label>Name:</Label>

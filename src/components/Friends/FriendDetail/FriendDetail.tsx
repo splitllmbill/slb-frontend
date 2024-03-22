@@ -1,17 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import dataService from '../../../services/DataService';
-import { ButtonText, Flex, FriendDetailWrapper } from './FriendDetail.styled';
+import { FriendDetailWrapper } from './FriendDetail.styled';
 import { IoMdArrowBack } from "react-icons/io";
 import { IoPersonRemoveOutline } from "react-icons/io5";
 import { Typography } from '@mui/material';
 import ExpenseCardNew from '../../Expenses/ExpenseCardNew/ExpenseCardNew';
 import { Row, Col } from 'react-bootstrap';
-import { BiEditAlt } from 'react-icons/bi';
-import { MdOutlineDelete, MdOutlinePlaylistAdd } from 'react-icons/md';
+import { MdOutlinePlaylistAdd } from 'react-icons/md';
 
 function FriendDetail() {
     const [friendData, setFriendData] = useState({
+        "uuid": "",
         "name": "",
         "overallOweAmount": "",
         "overallWhoOwes": "",
@@ -35,6 +35,12 @@ function FriendDetail() {
         navigate(`/createExpense/friend/${friendId}`);
     };
 
+    const handleRemoveFriend = async () => {
+        await dataService.deleteFriend(friendData.uuid).then((data) => {
+            alert(data.message)
+            navigate(-1)
+        })
+    }
     const navigate = useNavigate();
     const handleGoBack = () => {
         navigate(-1);
@@ -58,7 +64,7 @@ function FriendDetail() {
                     </button>
                 </Col>
                 <Col xs={3} md={3}>
-                    <button className="w-100">
+                    <button onClick={handleRemoveFriend} className="w-100">
                         <IoPersonRemoveOutline style={{ fontSize: 'x-large' }} />
                         {!isMobile && (<span> Remove Friend</span>)}
                     </button>
