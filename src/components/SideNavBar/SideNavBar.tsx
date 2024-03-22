@@ -6,6 +6,7 @@ import { TiGroup } from "react-icons/ti";
 import { RiAccountBoxFill } from "react-icons/ri";
 import { FaMoneyBill1Wave } from "react-icons/fa6";
 import { useNavigate } from 'react-router-dom';
+import { BiMoneyWithdraw } from 'react-icons/bi';
 
 
 interface SideNavBarProps {
@@ -57,7 +58,7 @@ const SideNavBar: FC<SideNavBarProps> = ({ onSelectContent }) => {
                   className={`nav-item ${activeItem === 'Personal Expenses' ? 'active' : ''}`}
                   onClick={() => handleItemClick('Personal Expenses')}
                >
-                  <FaMoneyBill1Wave style={{ fontSize: 'x-large', marginRight: '10px' }}></FaMoneyBill1Wave>
+                  <BiMoneyWithdraw style={{ fontSize: 'x-large', marginRight: '10px' }}></BiMoneyWithdraw>
                   Personal Expenses
                </div>
                <div

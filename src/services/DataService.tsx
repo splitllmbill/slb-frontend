@@ -263,28 +263,9 @@ const dataService = {
             throw error;
         }
     },
-    getUserByID: async () => {
-        try {
-            const response = await fetch(`${BASE_URL}/db/user`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + localStorage.getItem('authToken')
-                },
-            });
-
-            if (!response.ok) {
-                throw new Error(`Error: ${response.status}`);
-            }
-            return response.json();
-        } catch (error) {
-            console.error('Error fetching user events:', error);
-            throw error;
-        }
-    },
     getUserAccount: async () => {
         try {
-            const response = await fetch(`${BASE_URL}/db/account`, {
+            const response = await fetch(`${BASE_URL}/db/useraccount`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -301,37 +282,15 @@ const dataService = {
             throw error;
         }
     },
-    updateAccount: async (account: { upiId: string, upiNumber: string }) => {
+    updateUserAccount: async (account: { upiId: string, upiNumber: string }) => {
         try {
-            const response = await fetch(`${BASE_URL}/db/account`, {
+            const response = await fetch(`${BASE_URL}/db/useraccount`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': 'Bearer ' + localStorage.getItem('authToken')
                 },
                 body: JSON.stringify(account)
-
-            });
-
-            if (!response.ok) {
-                throw new Error(`Error: ${response.status}`);
-            }
-
-            return response.json();
-        } catch (error) {
-            console.error('Error fetching event expenses:', error);
-            throw error;
-        }
-    },
-    updateUser: async (user: User) => {
-        try {
-            const response = await fetch(`${BASE_URL}/db/user`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + localStorage.getItem('authToken')
-                },
-                body: JSON.stringify(user)
 
             });
 
@@ -429,6 +388,25 @@ const dataService = {
         try {
             const response = await fetch(`${BASE_URL}/db/${type}/${id}/users`, {
                 method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem('authToken')
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error(`Error: ${response.status}`);
+            }
+            return response.json();
+        } catch (error) {
+            console.error('Error fetching user events:', error);
+            throw error;
+        }
+    },
+    deleteEvent: async (eventId: string) => {
+        try {
+            const response = await fetch(`${BASE_URL}/db/event/${eventId}`, {
+                method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': 'Bearer ' + localStorage.getItem('authToken')
