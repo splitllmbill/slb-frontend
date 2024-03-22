@@ -14,7 +14,7 @@ interface SideNavBarProps {
 }
 
 const SideNavBar: FC<SideNavBarProps> = ({ onSelectContent }) => {
-   const [activeItem, setActiveItem] = useState('Events');
+   const [activeItem, setActiveItem] = useState(localStorage.getItem('selectedContent') || 'Events');
    const [isSmallScreen, setIsSmallScreen] = useState(false);
 
    const navigate = useNavigate();
@@ -24,6 +24,8 @@ const SideNavBar: FC<SideNavBarProps> = ({ onSelectContent }) => {
       navigate('/home');
    };
    useEffect(() => {
+      onSelectContent(localStorage.getItem('selectedContent') || 'Events');
+
       const handleResize = () => {
          setIsSmallScreen(window.innerWidth <= 500);
       };

@@ -40,6 +40,7 @@ const Login = () => {
                setEmail('');
                setPassword('');
                setRPassword('');
+               setButtonText('Login');
             }
          }
       } catch (error) {
