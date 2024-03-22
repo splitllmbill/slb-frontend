@@ -42,6 +42,7 @@ export const FriendDetails = styled.div`
 
 export const FriendsContainer = styled.div`
   padding: 20px;
+  margin: 10px;
 `;
 
 export const Flex = styled.div`

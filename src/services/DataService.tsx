@@ -422,6 +422,27 @@ const dataService = {
             throw error;
         }
     },
+    addFriend: async (friendCode: string) => {
+        try {
+            const response = await fetch(BASE_URL + `/db/addFriend`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem('authToken')
+                },
+                body: JSON.stringify({ "friendCode": friendCode }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Add friend failed');
+            }
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('Add friend failed:', error);
+            throw error;
+        }
+    },
 };
 
 export default dataService;
