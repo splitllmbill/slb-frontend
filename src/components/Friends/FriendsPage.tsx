@@ -1,14 +1,13 @@
-import { useState, useEffect, Key } from "react";
-import { Header, FriendList, FriendsContainer, Flex } from "./FriendsPage.styled";
-import { AiOutlineUsergroupAdd } from "react-icons/ai";
-import { IoMdSearch } from "react-icons/io";
-import FriendCard from "./FriendCard/FriendCard";
-import dataService from "../../services/DataService"; // Import your data service
+import React, { useState, useEffect } from "react";
 import { Alert, Col, Row } from "react-bootstrap";
 import { Box, Button, Input, List, Modal } from "@mui/material";
+import { AiOutlineUsergroupAdd } from "react-icons/ai";
+import { IoMdSearch } from "react-icons/io";
+import { FriendsContainer, Flex, Header, FriendList } from "./FriendsPage.styled";
 import { TbUserCode } from "react-icons/tb";
+import dataService from "../../services/DataService";
 import AddFriend from "./AddFriend/AddFriend";
-
+import FriendCard from "./FriendCard/FriendCard";
 
 const FriendsPage = () => {
     const [loadHeader, setLoadHeader] = useState(false);
@@ -31,15 +30,14 @@ const FriendsPage = () => {
 
     const handleCloseAddFriend = () => {
         setIsModalOpen(false);
+        fetchData();
     };
 
-    const fetchData = () => {
+    const fetchData = async () => {
         try {
-            dataService.getFriendsList()
-                .then(data => {
-                    setFriends(data);
-                    setLoadHeader(true);
-                });
+            const data = await dataService.getFriendsList();
+            setFriends(data);
+            setLoadHeader(true);
         } catch (error) {
             console.log("Error occurred");
         }
@@ -54,12 +52,7 @@ const FriendsPage = () => {
     };
 
     const handleCopyToClipboard = (text) => {
-        const textArea = document.createElement('textarea');
-        textArea.value = text;
-        document.body.appendChild(textArea);
-        textArea.select();
-        document.execCommand('copy');
-        document.body.removeChild(textArea);
+        navigator.clipboard.writeText(text);
         alert('Copied to clipboard!');
     };
 
@@ -73,31 +66,35 @@ const FriendsPage = () => {
                 </Col>
             </Flex>
             <br />
-            <Row>
-                {alertInfo.open && (
-                    <Alert key={variant} variant={variant} sx={{ width: '100%' }} dismissible>
-                        Share this unique friend code <a href="#" onClick={() => handleCopyToClipboard(friends.uuid)}>{friends.uuid}</a> with friends who want to add you on SpliLLM!
-                    </Alert>
-                )}
-            </Row>
-            {isModalOpen && <AddFriend onClose={handleCloseAddFriend} />}
 
-            {loadHeader && (<Header>
-                {parseFloat(friends.overallYouOwe) !== 0.0 && (
-                    <h3>Overall, you owe Rs.{friends.overallYouOwe}</h3>
-                )}
-                {parseFloat(friends.overallYouAreOwed) !== 0.0 && (
-                    <h3>Overall, you are owed Rs.{friends.overallYouAreOwed}</h3>
-                )}
-                {/* <MdFilterList style={{ fontSize: 'x-large' }} /> */}
-            </Header>)}
-            <FriendList>
-                <List>
-                    {friends.friendsList.map((friend: { name: string, oweAmount: number, whoOwes: string }) => (
-                        <FriendCard friend={friend} />
-                    ))}
-                </List>
-            </FriendList>
+            {loadHeader && (
+                <>
+                    <Row>
+                        {alertInfo.open && (
+                            <Alert key={variant} variant={variant} sx={{ width: '100%' }} dismissible>
+                                Share this unique friend code <a href="#" onClick={() => handleCopyToClipboard(friends.uuid)}>{friends.uuid}</a> with friends who want to add you on SplitLLM!
+                            </Alert>
+                        )}
+                    </Row>
+                    {isModalOpen && <AddFriend onClose={handleCloseAddFriend} />}
+                    <Header>
+                        {parseFloat(friends.overallYouOwe) !== 0.0 && (
+                            <h3>Overall, you owe Rs.{friends.overallYouOwe}</h3>
+                        )}
+                        {parseFloat(friends.overallYouAreOwed) !== 0.0 && (
+                            <h3>Overall, you are owed Rs.{friends.overallYouAreOwed}</h3>
+                        )}
+                        {/* <MdFilterList style={{ fontSize: 'x-large' }} /> */}
+                    </Header>
+                    <FriendList>
+                        <List>
+                            {friends.friendsList.map((friend, index) => (
+                                <FriendCard key={index} friend={friend} />
+                            ))}
+                        </List>
+                    </FriendList>
+                </>
+            )}
         </FriendsContainer>
     );
 };
