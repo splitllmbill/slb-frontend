@@ -15,7 +15,7 @@ import EventDetail from '../Events/EventDetail/EventDetail';
 import CreateExpenseDrawer from '../Expenses/CreateExpense/CreateExpense';
 import ExpenseDetail from '../Expenses/ExpenseDetail/ExpenseDetail';
 import { MdDashboard } from 'react-icons/md';
-import { FaMoneyBill1Wave } from 'react-icons/fa6';
+import { BiMoneyWithdraw } from "react-icons/bi";
 import { RiAccountBoxFill } from 'react-icons/ri';
 import { TiGroup } from 'react-icons/ti';
 
@@ -79,7 +79,7 @@ const Dashboard: FC<DashboardProps> = () => {
           <BottomNavigation showLabels value={value} onChange={handleNavigationChange}>
             <BottomNavigationAction label="Events" icon={<MdDashboard />} value="Events" />
             <BottomNavigationAction label="Friends" icon={<TiGroup />} value="Friends" />
-            <BottomNavigationAction label="Personal Expenses" icon={<FaMoneyBill1Wave />} value="Personal Expenses" />
+            <BottomNavigationAction label="Personal Expenses" icon={<BiMoneyWithdraw />} value="Personal Expenses" />
             <BottomNavigationAction label="Account" icon={<RiAccountBoxFill />} value="Account" />
           </BottomNavigation>
         )}
