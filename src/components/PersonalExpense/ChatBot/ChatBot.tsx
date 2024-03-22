@@ -124,13 +124,13 @@ const Chatbot = () => {
                            {expenses.map((row, index) => (
                               <tr key={index}>
                                  <TD>
-                                    <input type="text" value={row.Name} onChange={(e) => handleExpenseChange(index, 'name', e.target.value)} />
+                                    <input type="text" value={row.name | row.Name} onChange={(e) => handleExpenseChange(index, 'name', e.target.value)} />
                                  </TD>
                                  <TD>
-                                    <input type="text" value={row.Amount} onChange={(e) => handleExpenseChange(index, 'amount', e.target.value)} />
+                                    <input type="text" value={row.amount | row.Amount} onChange={(e) => handleExpenseChange(index, 'amount', e.target.value)} />
                                  </TD>
                                  <TD>
-                                    <input type="text" value={row.Category} onChange={(e) => handleExpenseChange(index, 'category', e.target.value)} />
+                                    <input type="text" value={row.category | row.Category} onChange={(e) => handleExpenseChange(index, 'category', e.target.value)} />
                                  </TD>
                                  <TD>
                                     <input type="text" value={formattedDate} onChange={(e) => handleExpenseChange(index, 'date', e.target.value)} />

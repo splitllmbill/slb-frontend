@@ -29,8 +29,8 @@ const Login = () => {
          if (result) {
             if (buttonText == 'Login') {
                localStorage.setItem('authToken', result.token);
-               const userResult =await apiService.getUserByEmail(formDataObject.email as unknown as string);
-               if(userResult){
+               const userResult = await apiService.getUserByEmail(formDataObject.email as unknown as string);
+               if (userResult) {
                   localStorage.setItem('userId', userResult.id);
                }
                return navigate('/home');
@@ -48,8 +48,7 @@ const Login = () => {
       }
    };
 
-   const appDesc = "Welcome to SplitLLMBill, your go-to app for seamless bill splitting. Easily manage shared expenses, split bills with friends, and keep track of your finances.";
-   const lorem = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.";
+   const appDesc = "Welcome to SplitLLM, your go-to app for seamless bill splitting. Easily manage shared expenses, split bills with friends, and keep track of your finances.";
 
    return (
       <>
@@ -76,7 +75,7 @@ const Login = () => {
                                  <FormGroup controlId="formBasicName">
                                     <Form.Control type="name" placeholder="Name" onChange={(event) => setName(event.target.value)} value={name} name="name" required />
                                  </FormGroup>
-                              }  
+                              }
                               <br></br>
                               <FormGroup controlId="formBasicEmail">
                                  <Form.Control type="email" placeholder="Enter email" onChange={(event) => setEmail(event.target.value)} value={email} name="email" required />
@@ -110,8 +109,8 @@ const Login = () => {
                <Col sm={5}>
                   <div>
                      <br></br>
+                     <br></br>
                      <p>{appDesc}</p>
-                     <p>{lorem}</p>
                   </div>
                </Col>
             </Row>

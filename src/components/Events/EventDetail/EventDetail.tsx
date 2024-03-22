@@ -3,12 +3,13 @@ import { EventDetailWrapper, Flex, NoExpensesWrapper } from "./EventDetail.style
 import dataService from "../../../services/DataService";
 import { List, Typography } from "@mui/material";
 import { Col, Row } from 'react-bootstrap';
-import { MdOutlinePlaylistAdd } from "react-icons/md";
+import { MdOutlineDelete, MdOutlinePlaylistAdd } from "react-icons/md";
 import { useNavigate, useParams } from "react-router-dom";
 import { IoMdArrowBack } from "react-icons/io";
 import { FiCornerDownRight } from "react-icons/fi";
 import ExpenseCardNew from "../../Expenses/ExpenseCardNew/ExpenseCardNew";
 import { TbFaceIdError } from "react-icons/tb";
+import { IoPersonRemoveOutline } from "react-icons/io5";
 
 interface Expense {
   id: string;
@@ -52,23 +53,44 @@ const EventDetail: FC = () => {
 
   const navigate = useNavigate();
   const handleGoBack = () => {
-    navigate(-1); 
+    navigate(-1);
   };
   const handleCreateExpense = () => {
     navigate(`/createExpense/event/${eventId}`);
   };
-  
+
+  const handleDeleteEvent = () => {
+    dataService.deleteEvent(eventId).then(() => {
+      alert('Event successfully deleted!')
+      navigate(-1);
+    });
+  }
+
+  const isMobile = window.innerWidth <= 500;
 
   return (
     <EventDetailWrapper>
-      <Flex>
-        <button onClick={handleGoBack}>
-          <IoMdArrowBack style={{ fontSize: 'x-large' }}></IoMdArrowBack> Go Back
-        </button>
-        <button onClick={handleCreateExpense}>
-          Add Expense <MdOutlinePlaylistAdd style={{ fontSize: 'x-large' }}></MdOutlinePlaylistAdd >
-        </button>
-      </Flex>
+      <Row>
+        <Col xs={3} md={3}>
+          <button onClick={handleGoBack} className="w-100">
+            <IoMdArrowBack style={{ fontSize: 'x-large' }} />
+            {!isMobile && (<span> Go Back</span>)}
+          </button>
+        </Col>
+        <Col xs={3} md={3}></Col>
+        <Col xs={3} md={3}>
+          <button className="w-100" onClick={handleCreateExpense}>
+            <MdOutlinePlaylistAdd style={{ fontSize: 'x-large' }} />
+            {!isMobile && (<span> Add Expense</span>)}
+          </button>
+        </Col>
+        <Col xs={3} md={3}>
+          <button className="w-100" onCLick={handleDeleteEvent}>
+            <MdOutlineDelete style={{ fontSize: 'x-large' }} />
+            {!isMobile && (<span> Delete Event</span>)}
+          </button>
+        </Col>
+      </Row>
       <br />
       <div>
         <Row>

@@ -444,6 +444,25 @@ const dataService = {
             throw error;
         }
     },
+    deleteEvent: async (eventId: string) => {
+        try {
+            const response = await fetch(`${BASE_URL}/db/event/${eventId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem('authToken')
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error(`Error: ${response.status}`);
+            }
+            return response.json();
+        } catch (error) {
+            console.error('Error fetching user events:', error);
+            throw error;
+        }
+    },
 };
 
 export default dataService;
