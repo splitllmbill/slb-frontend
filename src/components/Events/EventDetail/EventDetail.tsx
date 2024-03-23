@@ -109,7 +109,7 @@ const EventDetail: FC = () => {
         <Row>
           <Col>
             {(summary.totalDebt > summary.totalOwed) && <h5>Overall, you owe {summary.totalDebt - summary.totalOwed}</h5>}
-            {(summary.totalDebt < summary.totalOwed) && <h5>Overall, you owe {summary.totalOwed - summary.totalDebt}</h5>}
+            {(summary.totalDebt < summary.totalOwed) && <h5>Overall, you are owed {summary.totalOwed - summary.totalDebt}</h5>}
             {summary.isOwed.map(item => (
               <>
                 <FiCornerDownRight style={{ fontSize: 'x-large' }}></FiCornerDownRight> <span>{item.name} owes you Rs.{item.amount}</span>
