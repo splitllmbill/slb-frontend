@@ -8,7 +8,7 @@ import PersonalExpense from '../PersonalExpense/PersonalExpense';
 import Events from '../Events/Events';
 import Accountpage from '../Account/AccountPage';
 import FriendsPage from '../Friends/FriendsPage';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import FriendDetail from '../Friends/FriendDetail/FriendDetail';
 import CreateEventDrawer from '../Events/CreateEventDrawer/CreateEventDrawer';
 import EventDetail from '../Events/EventDetail/EventDetail';
@@ -50,6 +50,7 @@ const Dashboard: FC<DashboardProps> = () => {
     setValue(newValue);
     setSelectedContent(newValue);
   };
+  const { eventId } = useParams<{ eventId: string }>();
 
   return (
     <>
@@ -62,12 +63,12 @@ const Dashboard: FC<DashboardProps> = () => {
         <ContentArea>
           {(selectedContent === 'Friends' && location.pathname.startsWith('/friend')) && <FriendDetail />}
           {(selectedContent === 'Friends' && location.pathname.startsWith('/home')) && <FriendsPage />}
-          {(location.pathname.startsWith('/addFriend')) && <AddFriend onClose={undefined} />}
+          {(location.pathname.startsWith('/addFriend')) && <AddFriend onClose={undefined}/>}
 
-          {(selectedContent === 'Events' && location.pathname.startsWith('/createEvent')) && <CreateEventDrawer />}
+          {(selectedContent === 'Events' && location.pathname.startsWith('/createEvent')) && <CreateEventDrawer eventID=''/>}
+          {(selectedContent === 'Events' && location.pathname.startsWith('/event') &&  location.pathname.endsWith('edit'))   && <CreateEventDrawer eventID={eventId==undefined? "":eventId} />}
+          {(selectedContent === 'Events' && location.pathname.startsWith('/event')) &&   !location.pathname.endsWith('edit') && <EventDetail />}
           {(selectedContent === 'Events' && location.pathname.startsWith('/home')) && <Events currentEventID='' />}
-          
-          {(location.pathname.startsWith('/event')) && <EventDetail />}
           {(location.pathname.startsWith('/createExpense')) && <CreateExpenseDrawer />}
           {(location.pathname.startsWith('/expense/')) && <ExpenseDetail />}
 
