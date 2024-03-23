@@ -80,7 +80,7 @@ function FriendDetail() {
                     ) : (
                         ` ${friendData.name} owes you `
                     )}
-                    Rs.${friendData.overallOweAmount}
+                    Rs.{friendData.overallOweAmount}
                 </Typography>)}
                 <br></br>
                 {friendData.expenses && friendData.expenses.reverse().map((expense: { expenseDate: string, expenseName: string, expenseId: string, category: string, oweAmount: Float32Array, whoOwes: string }, index) => (

@@ -9,7 +9,8 @@ import { IoMdArrowBack } from "react-icons/io";
 import { FiCornerDownRight } from "react-icons/fi";
 import ExpenseCardNew from "../../Expenses/ExpenseCardNew/ExpenseCardNew";
 import { TbFaceIdError } from "react-icons/tb";
-import { IoPersonRemoveOutline } from "react-icons/io5";
+import { MdOutlineEdit } from "react-icons/md";
+
 
 interface Expense {
   id: string;
@@ -59,10 +60,10 @@ const EventDetail: FC = () => {
     navigate(`/createExpense/event/${eventId}`);
   };
 
-  const handleDeleteEvent = () => {
-    dataService.deleteEvent(eventId).then(() => {
-      alert('Event successfully deleted!')
-      navigate(-1);
+  const handleDeleteEvent = async () => {
+    await dataService.deleteEvent(eventId).then((data) => {
+      alert(data.message)
+      if (data.success == 'true') navigate(-2);
     });
   }
 
@@ -77,7 +78,6 @@ const EventDetail: FC = () => {
             {!isMobile && (<span> Go Back</span>)}
           </button>
         </Col>
-        <Col xs={3} md={3}></Col>
         <Col xs={3} md={3}>
           <button className="w-100" onClick={handleCreateExpense}>
             <MdOutlinePlaylistAdd style={{ fontSize: 'x-large' }} />
@@ -85,7 +85,13 @@ const EventDetail: FC = () => {
           </button>
         </Col>
         <Col xs={3} md={3}>
-          <button className="w-100" onCLick={handleDeleteEvent}>
+          <button className="w-100" >
+            <MdOutlineEdit style={{ fontSize: 'x-large' }} />
+            {!isMobile && (<span> Edit Event</span>)}
+          </button>
+        </Col>
+        <Col xs={3} md={3}>
+          <button className="w-100" onClick={handleDeleteEvent}>
             <MdOutlineDelete style={{ fontSize: 'x-large' }} />
             {!isMobile && (<span> Delete Event</span>)}
           </button>
@@ -109,7 +115,7 @@ const EventDetail: FC = () => {
         <Row>
           <Col>
             {(summary.totalDebt > summary.totalOwed) && <h5>Overall, you owe {summary.totalDebt - summary.totalOwed}</h5>}
-            {(summary.totalDebt < summary.totalOwed) && <h5>Overall, you owe {summary.totalOwed - summary.totalDebt}</h5>}
+            {(summary.totalDebt < summary.totalOwed) && <h5>Overall, you are owed {summary.totalOwed - summary.totalDebt}</h5>}
             {summary.isOwed.map(item => (
               <>
                 <FiCornerDownRight style={{ fontSize: 'x-large' }}></FiCornerDownRight> <span>{item.name} owes you Rs.{item.amount}</span>
