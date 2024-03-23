@@ -45,11 +45,11 @@ const CreateExpenseDrawer = () => {
     }, []); // Fetch data when eventId changes
 
     useEffect(() => {
-        if (users.length > 0) {
-            const initialShareDetails = users.map(user => ({ userId: user.id, amount: 0 }));
+        if (selectedUsers.length > 0) {
+            const initialShareDetails = selectedUsers.map(user => ({ userId: user.id!, amount: 0 }));
             setShareDetails(initialShareDetails);
         }
-    }, [users]);
+    }, [selectedUsers]);
 
     const handleCreateExpense = async () => {
         if (splitType == 'unequally') {
