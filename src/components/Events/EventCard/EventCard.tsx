@@ -56,7 +56,7 @@ const EventCard: FC<EventCardProps> = ({ eventSent }) => {
                                  <ul>
                                     {eventSent.dues?.inDebtTo?.map((item: any) => (
                                        <li key={item.id}>
-                                          <span><strong>You owe {item.name} Rs.${item.amount}</strong></span>
+                                          <span><strong>You owe {item.name} Rs.{item.amount}</strong></span>
                                        </li>
                                     ))}
                                  </ul>

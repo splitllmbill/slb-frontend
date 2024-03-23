@@ -62,12 +62,12 @@ const Dashboard: FC<DashboardProps> = () => {
         <ContentArea>
           {(selectedContent === 'Friends' && location.pathname.startsWith('/friend')) && <FriendDetail />}
           {(selectedContent === 'Friends' && location.pathname.startsWith('/home')) && <FriendsPage />}
-          {(location.pathname.startsWith('/addFriend')) && <AddFriend />}
+          {(location.pathname.startsWith('/addFriend')) && <AddFriend onClose={undefined} />}
 
           {(selectedContent === 'Events' && location.pathname.startsWith('/createEvent')) && <CreateEventDrawer />}
-          {(selectedContent === 'Events' && location.pathname.startsWith('/event')) && <EventDetail />}
           {(selectedContent === 'Events' && location.pathname.startsWith('/home')) && <Events currentEventID='' />}
-
+          
+          {(location.pathname.startsWith('/event')) && <EventDetail />}
           {(location.pathname.startsWith('/createExpense')) && <CreateExpenseDrawer />}
           {(location.pathname.startsWith('/expense/')) && <ExpenseDetail />}
 
