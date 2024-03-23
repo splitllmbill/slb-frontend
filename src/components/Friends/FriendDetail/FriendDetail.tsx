@@ -38,7 +38,8 @@ function FriendDetail() {
     const handleRemoveFriend = async () => {
         await dataService.deleteFriend(friendData.uuid).then((data) => {
             alert(data.message)
-            navigate(-1)
+            if(data.success == true)
+                navigate(-1)
         })
     }
     const navigate = useNavigate();
@@ -66,7 +67,7 @@ function FriendDetail() {
                 <Col xs={3} md={3}>
                     <button onClick={handleRemoveFriend} className="w-100">
                         <IoPersonRemoveOutline style={{ fontSize: 'x-large' }} />
-                        {!isMobile && (<span> Remove Friend</span>)}
+                        {!isMobile && (<span> Unfriend</span>)}
                     </button>
                 </Col>
             </Row>

@@ -44,7 +44,7 @@ const Login = () => {
             }
          }
       } catch (error) {
-         setAlertInfo({ open: true, severity: 'error', message: 'Unexpected error occured! Please try again.' });
+         setAlertInfo({ open: true, severity: 'error', message: error.message });
          console.error('Unexpected error during signup:', error);
       }
    };
