@@ -1,9 +1,11 @@
 import { KeyboardEventHandler, SetStateAction, useState } from 'react';
-import { Button, ChatbotContainer, ChatbotWindow, Input, InputContainer, Message, Table, TH, TD } from './ChatBot.styled';
+import { Button, ChatbotContainer, ChatbotWindow, Input, InputContainer, Message, TH, TD, ZoomOutTable } from './ChatBot.styled';
 import logo from '../../../assets/logo.png';
 import { PiUserCircleThin } from 'react-icons/pi';
 import dataService from '../../../services/DataService';
-import { personalExpenseAdded } from '../../../services/State';
+import { convertTimestampToISO, personalExpenseAdded } from '../../../services/State';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const Chatbot = () => {
    const [messages, setMessages] = useState<any[]>([
@@ -13,7 +15,7 @@ const Chatbot = () => {
    const [showTable, setShowTable] = useState(false);
    const [expenses, setExpenses] = useState<any[]>([]);
    const today = new Date();
-   const formattedDate = today.toLocaleDateString(); // Adjust the format as needed
+   // const formattedDate = today.toLocaleDateString(); // Adjust the format as needed
 
    const handleInputChange = (e: { target: { value: SetStateAction<string> } }) => {
       setInput(e.target.value);
@@ -32,24 +34,15 @@ const Chatbot = () => {
          setExpenses(botResponse.llmoutput);
          setShowTable(true);
       } catch (error) {
-         // Handle error state or display an error message to the user
          console.error('Error handling chatbot response:', error);
       }
    };
 
    const handleKeyDown: KeyboardEventHandler<HTMLInputElement> = (event) => {
-      // Ensure event is of type KeyboardEvent<HTMLInputElement>
       const keyboardEvent = event as React.KeyboardEvent<HTMLInputElement>;
-
-      // Access properties like 'key' and 'target' from the keyboard event
       const { key, currentTarget } = keyboardEvent;
-
-      // Ensure 'currentTarget' is of type HTMLInputElement
       const inputTarget = currentTarget as HTMLInputElement;
-
-      // Your existing logic using 'key' and 'currentTarget'
       if (key === 'Enter' && document.activeElement === inputTarget) {
-         // Check if the Enter key is pressed and the input has focus
          handleSendMessage();
       }
    };
@@ -67,11 +60,10 @@ const Chatbot = () => {
                updatedAt: today,
                createdBy: "",
                updatedBy: "",
-               category: exp.category,
-               date: formattedDate
+               category: exp.category || null,
+               date: convertTimestampToISO(exp.date)
             } as Expense;
             console.log("expenseData", expenseData);
-
             const createdExpense = await dataService.createExpense(expenseData as Expense);
             console.log('Expense created successfully:', createdExpense);
          }
@@ -81,7 +73,7 @@ const Chatbot = () => {
       } catch (error) {
          console.error('Error creating expense:', error);
          setShowTable(false);
-         setMessages([...messages, { text: 'An errror occured ', sender: 'bot' }]);
+         setMessages([...messages, { text: 'An error occured ', sender: 'bot' }]);
       }
    };
 
@@ -111,34 +103,53 @@ const Chatbot = () => {
                {showTable && (
                   <Message key='-1'>
                      <img src={logo} height={50} width={50} />
-                     <Table contentEditable="true">
+                     <ZoomOutTable striped bordered hover>
                         <thead>
                            <tr>
-                              <TH contentEditable="false"><b>Expense</b></TH>
-                              <TH contentEditable="false"><b>Cost</b></TH>
-                              <TH contentEditable="false"><b>Category</b></TH>
-                              <TH contentEditable="false"><b>Date</b></TH>
+                              <th><b>Expense</b></th>
+                              <th><b>Cost</b></th>
+                              <th><b>Category</b></th>
+                              <th><b>Date</b></th>
                            </tr>
                         </thead>
                         <tbody>
                            {expenses.map((row, index) => (
                               <tr key={index}>
-                                 <TD>
-                                    <input type="text" value={row.name | row.Name} onChange={(e) => handleExpenseChange(index, 'name', e.target.value)} />
-                                 </TD>
-                                 <TD>
-                                    <input type="text" value={row.amount | row.Amount} onChange={(e) => handleExpenseChange(index, 'amount', e.target.value)} />
-                                 </TD>
-                                 <TD>
-                                    <input type="text" value={row.category | row.Category} onChange={(e) => handleExpenseChange(index, 'category', e.target.value)} />
-                                 </TD>
-                                 <TD>
-                                    <input type="text" value={formattedDate} onChange={(e) => handleExpenseChange(index, 'date', e.target.value)} />
-                                 </TD>
+                                 <td>
+                                    <input
+                                       type="text"
+                                       className="small-input"
+                                       value={row.name || row.Name}
+                                       onChange={(e) => handleExpenseChange(index, 'name', e.target.value)}
+                                    />
+                                 </td>
+                                 <td>
+                                    <input
+                                       type="text"
+                                       className="small-input"
+                                       value={row.amount || row.Amount}
+                                       onChange={(e) => handleExpenseChange(index, 'amount', e.target.value)}
+                                    />
+                                 </td>
+                                 <td>
+                                    <input
+                                       type="text"
+                                       className="small-input"
+                                       value={row.category || row.Category}
+                                       onChange={(e) => handleExpenseChange(index, 'category', e.target.value)}
+                                    />
+                                 </td>
+                                 <td>
+                                    <DatePicker
+                                       selected={row.date ? new Date(row.date) : new Date()}
+                                       onChange={(date) => handleExpenseChange(index, 'date', date)}
+                                       className="small-input"
+                                    />
+                                 </td>
                               </tr>
                            ))}
                         </tbody>
-                     </Table>
+                     </ZoomOutTable>
                   </Message>
                )}
                {showTable && (
@@ -156,6 +167,7 @@ const Chatbot = () => {
                value={input}
                onChange={handleInputChange}
                onKeyDown={handleKeyDown}
+               disabled={showTable} // Disable the input field when showTable is true
             />
          </InputContainer>
       </ChatbotContainer >

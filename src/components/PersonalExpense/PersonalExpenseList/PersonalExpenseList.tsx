@@ -32,7 +32,7 @@ const PersonalExpenseList: FC<PersonalExpenseListProps> = () => {
   }, []);
 
   const columns: GridColDef[] = [
-    { field: 'updatedAt', headerName: 'Date', flex: 1 },
+    { field: 'date', headerName: 'Date', flex: 1 },
     { field: 'expenseName', headerName: 'Expense Name', flex: 1 },
     { field: 'category', headerName: 'Category', flex: 1 },
     { field: 'amount', headerName: 'Cost', flex: 1 },

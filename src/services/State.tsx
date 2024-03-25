@@ -13,3 +13,7 @@ export function formatDate(dateString: string) {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-GB', options).replace(/(\d+)(th|st|nd|rd)/, '$1');
 }
+
+export function convertTimestampToISO(timestamp) {
+    return new Date(timestamp).toISOString();
+}
