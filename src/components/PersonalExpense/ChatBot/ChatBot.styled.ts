@@ -1,10 +1,10 @@
 import styled from 'styled-components';
+import { Table } from 'react-bootstrap'
 
 export const ChatbotContainer = styled.div`
   display: flex;
   flex-direction: column; 
-  margin-top: 50px;
-  margin: 5vh;
+  margin-top: 1px;
   background-color:white;
 `;
 
@@ -13,7 +13,6 @@ export const ChatbotWindow = styled.div`
   overflow-y: auto;
   border: 1px solid #ccc;
   padding: 10px;
-  margin-bottom: 10px;
 `;
 
 export const Message = styled.div`
@@ -26,21 +25,21 @@ export const Message = styled.div`
 
 export const InputContainer = styled.div`
   display: flex;
+  padding-top:10px;
   justify-content: space-between;
+  border-bottom: 1px solid #ccc;
+  border-left: 1px solid #ccc;
+  border-right: 1px solid #ccc;
 `;
 
 export const Input = styled.input`
   flex: 1;
   padding: 8px;
-  margin:4px;
+  margin: -2px 20px 10px 20px;
 `;
 
 export const Button = styled.button`
   background-color: darkgrey;
-`;
-
-export const Table = styled.table`
-  /* Your styling for the table */
 `;
 
 export const TH = styled.th`
@@ -51,4 +50,10 @@ export const TH = styled.th`
 export const TD = styled.td`
   padding:10px;
   border: 1px solid grey !important;
+`;
+
+export const ZoomOutTable = styled(Table)`
+  display: block; 
+  overflow-x: auto; 
+  white-space: nowrap; 
 `;
