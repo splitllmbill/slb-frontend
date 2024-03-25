@@ -17,3 +17,18 @@ export function formatDate(dateString: string) {
 export function convertTimestampToISO(timestamp) {
     return new Date(timestamp).toISOString();
 }
+
+export const formatDateForTransactions = (dateString) => {
+    const date = new Date(dateString);
+    const day = date.getDate();
+    const month = new Intl.DateTimeFormat('en', { month: 'short' }).format(date);
+    const year = date.getFullYear();
+
+    return (
+        <div>
+            {`${day} ${month}`}
+            <br />
+            {year}
+        </div>
+    );
+};

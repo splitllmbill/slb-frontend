@@ -1,13 +1,16 @@
 import { FC, useState, useEffect } from 'react';
-import { H3, PersonalExpenseListWrapper } from './PersonalExpenseList.styled';
+import { ExpenseRow, ExpenseRowItem, H3, PaginationContainer, PersonalExpenseListWrapper } from './PersonalExpenseList.styled';
 import dataService from '../../../services/DataService';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import { personalExpenseAdded } from '../../../services/State';
+import { formatDate, formatDateForTransactions, personalExpenseAdded, toTitleCase } from '../../../services/State';
+import { AiOutlineDoubleRight } from "react-icons/ai";
+import Pagination from '@mui/material/Pagination';
 
 interface PersonalExpenseListProps { }
 
 const PersonalExpenseList: FC<PersonalExpenseListProps> = () => {
   const [expenses, setExpenses] = useState<Expense[]>([]);
+  const [page, setPage] = useState(1);
+  const itemsPerPage = 10; // Number of items per page
 
   useEffect(() => {
     const fetchData = async () => {
@@ -31,22 +34,44 @@ const PersonalExpenseList: FC<PersonalExpenseListProps> = () => {
     };
   }, []);
 
-  const columns: GridColDef[] = [
-    { field: 'date', headerName: 'Date', flex: 1 },
-    { field: 'expenseName', headerName: 'Expense Name', flex: 1 },
-    { field: 'category', headerName: 'Category', flex: 1 },
-    { field: 'amount', headerName: 'Cost', flex: 1 },
-  ];
-
   const totalAmount = expenses.reduce((total, expense) => total + expense.amount, 0);
   const totalRow = { id: 'total', updatedAt: 'Total', expenseName: '', category: '', amount: totalAmount };
+
+  const handleChangePage = (event: React.ChangeEvent<unknown>, newPage: number) => {
+    setPage(newPage);
+  };
+
+  const startIndex = (page - 1) * itemsPerPage;
+  const endIndex = page * itemsPerPage;
 
   return (
     <PersonalExpenseListWrapper>
       <H3>Personal Expenses</H3>
-      <div style={{ height: 400, width: '100%' }}> 
-        <DataGrid rows={[...expenses, totalRow]} columns={columns} autoHeight />
-      </div>
+      {expenses.slice(startIndex, endIndex).map((expense) => (
+        <ExpenseRow key={expense.id}>
+          <ExpenseRowItem>
+            <AiOutlineDoubleRight style={{ fontSize: 'x-large' }} />
+          </ExpenseRowItem>
+          <div style={{ flex: '1' }}>
+            <div>{formatDateForTransactions(formatDate(expense.date))}</div>
+          </div>
+          <div style={{ flex: '2' }}>
+            {/* Details component */}
+            <div>{toTitleCase(expense.expenseName)}</div>
+            <div>{toTitleCase(expense.category)}</div>
+          </div>
+          <div style={{ marginLeft: '10px' }}>Rs. {expense.amount}</div>
+        </ExpenseRow>
+      ))}
+      <PaginationContainer>
+        <Pagination
+          count={Math.ceil(expenses.length / itemsPerPage)}
+          page={page}
+          onChange={handleChangePage}
+          shape="rounded"
+          size="large"
+        />
+      </PaginationContainer>
     </PersonalExpenseListWrapper>
   );
 };

@@ -13,7 +13,6 @@ export const ChatbotWindow = styled.div`
   overflow-y: auto;
   border: 1px solid #ccc;
   padding: 10px;
-  margin-bottom: 10px;
 `;
 
 export const Message = styled.div`
@@ -26,8 +25,11 @@ export const Message = styled.div`
 
 export const InputContainer = styled.div`
   display: flex;
-  // padding:10px;
+  padding-top:10px;
   justify-content: space-between;
+  border-bottom: 1px solid #ccc;
+  border-left: 1px solid #ccc;
+  border-right: 1px solid #ccc;
 `;
 
 export const Input = styled.input`
