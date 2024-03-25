@@ -168,6 +168,28 @@ const dataService = {
             throw error;
         }
     },
+    editEvent: async (eventData: EventObject) => {
+        console.log(eventData)
+        try {
+            const response = await fetch(`${BASE_URL}/db/event`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem('authToken')
+                },
+                body: JSON.stringify(eventData),
+            });
+
+            if (!response.ok) {
+                console.log(response.json())
+                throw new Error(`Error: ${response.status}`);
+            }
+            return response.json();
+        } catch (error) {
+            console.error('Error fetching user events:', error);
+            throw error;
+        }
+    },
     getUserByEmail: async (emailID: string) => {
         try {
             const response = await fetch(`${BASE_URL}/db/user-by-email/${emailID}`, {

@@ -3,7 +3,7 @@ import { EventDetailWrapper, Flex, NoExpensesWrapper } from "./EventDetail.style
 import dataService from "../../../services/DataService";
 import { List, Typography } from "@mui/material";
 import { Col, Row } from 'react-bootstrap';
-import { MdOutlineDelete, MdOutlinePlaylistAdd } from "react-icons/md";
+import { MdOutlineDelete, MdOutlinePlaylistAdd, MdBorderColor } from "react-icons/md";
 import { useNavigate, useParams } from "react-router-dom";
 import { IoMdArrowBack } from "react-icons/io";
 import { FiCornerDownRight } from "react-icons/fi";
@@ -59,6 +59,9 @@ const EventDetail: FC = () => {
   const handleCreateExpense = () => {
     navigate(`/createExpense/event/${eventId}`);
   };
+  const handleEditEvent = () => {
+    navigate(`/event/${eventId}/edit`);
+  };
 
   const handleDeleteEvent = async () => {
     await dataService.deleteEvent(eventId).then((data) => {
@@ -79,15 +82,15 @@ const EventDetail: FC = () => {
           </button>
         </Col>
         <Col xs={3} md={3}>
-          <button className="w-100" onClick={handleCreateExpense}>
-            <MdOutlinePlaylistAdd style={{ fontSize: 'x-large' }} />
-            {!isMobile && (<span> Add Expense</span>)}
+          <button className="w-100" onClick={handleEditEvent}>
+            < MdBorderColor style={{ fontSize: 'x-large' }} />
+            {!isMobile && (<span> Edit Event</span>)}
           </button>
         </Col>
         <Col xs={3} md={3}>
-          <button className="w-100" >
-            <MdOutlineEdit style={{ fontSize: 'x-large' }} />
-            {!isMobile && (<span> Edit Event</span>)}
+          <button className="w-100" onClick={handleCreateExpense}>
+            <MdOutlinePlaylistAdd style={{ fontSize: 'x-large' }} />
+            {!isMobile && (<span> Add Expense</span>)}
           </button>
         </Col>
         <Col xs={3} md={3}>
