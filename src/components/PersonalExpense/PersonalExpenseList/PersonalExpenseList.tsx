@@ -1,5 +1,5 @@
 import { FC, useState, useEffect } from 'react';
-import { PersonalExpenseListWrapper } from './PersonalExpenseList.styled';
+import { H3, PersonalExpenseListWrapper } from './PersonalExpenseList.styled';
 import dataService from '../../../services/DataService';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { personalExpenseAdded } from '../../../services/State';
@@ -43,8 +43,10 @@ const PersonalExpenseList: FC<PersonalExpenseListProps> = () => {
 
   return (
     <PersonalExpenseListWrapper>
-      <h3>Personal Expenses</h3>
-      <DataGrid rows={[...expenses, totalRow]} columns={columns} autoHeight />
+      <H3>Personal Expenses</H3>
+      <div style={{ height: 400, width: '100%' }}> 
+        <DataGrid rows={[...expenses, totalRow]} columns={columns} autoHeight />
+      </div>
     </PersonalExpenseListWrapper>
   );
 };

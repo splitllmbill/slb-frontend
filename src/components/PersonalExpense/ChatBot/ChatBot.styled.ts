@@ -3,8 +3,7 @@ import styled from 'styled-components';
 export const ChatbotContainer = styled.div`
   display: flex;
   flex-direction: column; 
-  margin-top: 50px;
-  margin: 5vh;
+  margin-top: 1px;
   background-color:white;
 `;
 
@@ -32,7 +31,7 @@ export const InputContainer = styled.div`
 export const Input = styled.input`
   flex: 1;
   padding: 8px;
-  margin:4px;
+  margin: -2px 20px 10px 20px;
 `;
 
 export const Button = styled.button`

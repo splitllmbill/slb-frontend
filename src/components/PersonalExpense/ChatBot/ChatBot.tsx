@@ -152,7 +152,7 @@ const Chatbot = () => {
          <InputContainer>
             <Input
                type="text"
-               placeholder="Type your message..."
+               placeholder="Type your expenses.."
                value={input}
                onChange={handleInputChange}
                onKeyDown={handleKeyDown}
