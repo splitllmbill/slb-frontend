@@ -49,6 +49,26 @@ const dataService = {
             throw error;
         }
     },
+    logout: async () => {
+        try {
+            const response = await fetch(`${BASE_URL}/db/logout`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem('authToken')
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Login failed');
+            }
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('Error during login:', error);
+            throw error;
+        }
+    },
     addPersonalExpenseViaLLM: async (userMessage: string) => {
         try {
             const response = await fetch(`${BASE_URL}/llm/expense`, {

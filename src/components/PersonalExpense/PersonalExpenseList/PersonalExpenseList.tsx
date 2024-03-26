@@ -57,10 +57,10 @@ const PersonalExpenseList: FC<PersonalExpenseListProps> = () => {
           </div>
           <div style={{ flex: '2' }}>
             {/* Details component */}
-            <div>{toTitleCase(expense.expenseName)}</div>
+            <div><b>{toTitleCase(expense.expenseName)}</b></div>
             <div>{toTitleCase(expense.category)}</div>
           </div>
-          <div style={{ marginLeft: '10px' }}>Rs. {expense.amount}</div>
+          <div style={{ marginLeft: '10px' }}><b>Rs. {expense.amount}</b></div>
         </ExpenseRow>
       ))}
       <PaginationContainer>
