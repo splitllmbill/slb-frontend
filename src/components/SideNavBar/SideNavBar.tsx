@@ -21,11 +21,11 @@ const SideNavBar: FC<SideNavBarProps> = ({ onSelectContent }) => {
    const handleItemClick = (itemName: string) => {
       setActiveItem(itemName);
       onSelectContent(itemName);
+      localStorage.setItem('selectedContent', itemName); // Update localStorage
       navigate('/home');
    };
-   useEffect(() => {
-      onSelectContent(localStorage.getItem('selectedContent') || 'Events');
 
+   useEffect(() => {
       const handleResize = () => {
          setIsSmallScreen(window.innerWidth <= 500);
       };

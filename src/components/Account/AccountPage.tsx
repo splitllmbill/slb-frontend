@@ -5,8 +5,10 @@ import { IoLogOutOutline } from "react-icons/io5";
 import { MdLockReset } from "react-icons/md";
 import { RiUpload2Line } from 'react-icons/ri';
 import { Row, Alert } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 
 const UserPage = () => {
+    let navigate = useNavigate();
     const [userData, setUserData] = useState({
         name: '',
         email: '',
@@ -47,13 +49,26 @@ const UserPage = () => {
         alert('Copied to clipboard!');
     };
 
+    const handleLogout = async () => {
+        try {
+            const result = await dataService.logout();
+            if (result) {
+                localStorage.clear();
+                navigate('/login');
+            }
+        } catch (error) {
+            console.error("Error occurred while updating user account", error);
+        }
+    };
+
     const isMobile = window.innerWidth <= 500;
 
     return (
         !showLoader && (
             <Container>
                 <Flex>
-                    <button >Change Password <MdLockReset style={{ fontSize: 'x-large' }}></MdLockReset></button><button >Logout <IoLogOutOutline style={{ fontSize: 'x-large' }}></IoLogOutOutline ></button>
+                    <button>Change Password <MdLockReset style={{ fontSize: 'x-large' }}></MdLockReset></button>
+                    <button onClick={handleLogout}>Logout <IoLogOutOutline style={{ fontSize: 'x-large' }}></IoLogOutOutline></button>
                 </Flex>
                 <h2>Edit User Information</h2>
                 <Row>

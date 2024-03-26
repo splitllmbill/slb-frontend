@@ -24,8 +24,8 @@ interface DashboardProps { }
 
 const Dashboard: FC<DashboardProps> = () => {
   const [isSmallScreen, setIsSmallScreen] = useState(false);
-  const [selectedContent, setSelectedContent] = useState('Events'); // Initial selected content
-  const [value, setValue] = useState('Events');
+  const [selectedContent, setSelectedContent] = useState<string>(() => localStorage.getItem('selectedContent') || 'Events');
+  const [value, setValue] = useState(selectedContent);
 
   const location = useLocation();
 
@@ -37,17 +37,17 @@ const Dashboard: FC<DashboardProps> = () => {
     handleResize(); // Initial check
     window.addEventListener('resize', handleResize);
 
-    if (location.pathname.startsWith('/friend')) {
-      setSelectedContent('Friends');
-    }
-
     return () => {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
 
+  useEffect(() => {
+    localStorage.setItem('selectedContent', selectedContent);
+    setValue(selectedContent); // Ensure value is updated along with selectedContent
+  }, [selectedContent]);
+
   const handleNavigationChange = (_event: React.ChangeEvent<{}>, newValue: string) => {
-    setValue(newValue);
     setSelectedContent(newValue);
   };
   const { eventId } = useParams<{ eventId: string }>();
@@ -64,13 +64,13 @@ const Dashboard: FC<DashboardProps> = () => {
           {(selectedContent === 'Friends' && location.pathname.startsWith('/friend')) && <FriendDetail />}
           {(selectedContent === 'Friends' && location.pathname.startsWith('/home')) && <FriendsPage />}
           {(location.pathname.startsWith('/addFriend')) && <AddFriend onClose={undefined} />}
-          
-          {(location.pathname.startsWith('/event')) && <EventDetail />}
-          {(location.pathname.startsWith('/addFriend')) && <AddFriend onClose={undefined}/>}
 
-          {(selectedContent === 'Events' && location.pathname.startsWith('/createEvent')) && <CreateEventDrawer eventID=''/>}
-          {(selectedContent === 'Events' && location.pathname.startsWith('/event') &&  location.pathname.endsWith('edit'))   && <CreateEventDrawer eventID={eventId==undefined? "":eventId} />}
-          {(selectedContent === 'Events' && location.pathname.startsWith('/event')) &&   !location.pathname.endsWith('edit') && <EventDetail />}
+          {(location.pathname.startsWith('/event')) && <EventDetail />}
+          {(location.pathname.startsWith('/addFriend')) && <AddFriend onClose={undefined} />}
+
+          {(selectedContent === 'Events' && location.pathname.startsWith('/createEvent')) && <CreateEventDrawer eventID='' />}
+          {(selectedContent === 'Events' && location.pathname.startsWith('/event') && location.pathname.endsWith('edit')) && <CreateEventDrawer eventID={eventId == undefined ? "" : eventId} />}
+          {(selectedContent === 'Events' && location.pathname.startsWith('/event')) && !location.pathname.endsWith('edit') && <EventDetail />}
           {(selectedContent === 'Events' && location.pathname.startsWith('/home')) && <Events currentEventID='' />}
           {(location.pathname.startsWith('/createExpense')) && <CreateExpenseDrawer />}
           {(location.pathname.startsWith('/expense/')) && <ExpenseDetail />}
