@@ -6,6 +6,7 @@ import { MdLockReset } from "react-icons/md";
 import { RiUpload2Line } from 'react-icons/ri';
 import { Row, Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import ChangePasswordModal from './ChangePasswordModal/ChangePasswordModal';
 
 const UserPage = () => {
     let navigate = useNavigate();
@@ -17,6 +18,7 @@ const UserPage = () => {
         uuid: ''
     });
     const [showLoader, setShowLoader] = useState(true);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -61,13 +63,21 @@ const UserPage = () => {
         }
     };
 
+    const handleChangePassword = () => {
+        setIsModalOpen(true);
+    }
+
+    const handleCloseChangePassword = () => {
+        setIsModalOpen(false);
+    }
+
     const isMobile = window.innerWidth <= 500;
 
     return (
         !showLoader && (
             <Container>
                 <Flex>
-                    <button>Change Password <MdLockReset style={{ fontSize: 'x-large' }}></MdLockReset></button>
+                    <button onClick={handleChangePassword}>Change Password <MdLockReset style={{ fontSize: 'x-large' }}></MdLockReset></button>
                     <button onClick={handleLogout}>Logout <IoLogOutOutline style={{ fontSize: 'x-large' }}></IoLogOutOutline></button>
                 </Flex>
                 <h2>Edit User Information</h2>
@@ -76,6 +86,7 @@ const UserPage = () => {
                         Share this unique friend code <a href="#" onClick={() => handleCopyToClipboard(userData.uuid)}>{userData.uuid}</a> with friends who want to add you on SplitLLM!
                     </Alert>
                 </Row>
+                {isModalOpen && <ChangePasswordModal onClose={handleCloseChangePassword} forgotPassword={false} />}
                 <form onSubmit={handleSubmit}>
                     <div>
                         <Label>Name:</Label>

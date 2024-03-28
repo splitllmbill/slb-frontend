@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Button, Container, Input } from '../../Account/AccountPage.styled';
+import { useState } from 'react';
+import { Button, Container, Input } from '../../../App.styled';
 import { Box, Modal } from '@mui/material';
 import { IoMdClose } from "react-icons/io";
 import { Col, Row } from 'react-bootstrap';
@@ -33,14 +33,17 @@ const AddFriend = ({ onClose }) => {
                             </Col>
                         </Row>
                         <p id="add-friend-modal-description">Enter your friend's unique friend code</p>
-                        <Input
-                            type="text"
-                            value={friendCode}
-                            onChange={(e) => setFriendCode(e.target.value)}
-                            placeholder="Friend Code"
-                        />
-                        <br />
-                        <Button onClick={handleAddFriend}>Add Friend</Button>
+                        <Row>
+                            <Input
+                                type="text"
+                                value={friendCode}
+                                onChange={(e) => setFriendCode(e.target.value)}
+                                placeholder="Friend Code"
+                            />
+                        </Row>
+                        <Row>
+                            <Button onClick={handleAddFriend}>Add Friend</Button>
+                        </Row>
                     </div>
                 </Box>
             </Modal>

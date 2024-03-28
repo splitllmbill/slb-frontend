@@ -1,17 +1,17 @@
 import { styled } from "styled-components";
 
-const Container = styled.div`
+export const Container = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
 `;
 
-const Input = styled.input`
+export const Input = styled.input`
     padding: 0.5rem;
     margin-bottom: 1rem;
 `;
 
-const Button = styled.button`
+export const Button = styled.button`
     padding: 0.5rem 1rem;
     background-color: #007bff;
     color: #fff;

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Form, Button, FormGroup } from 'react-bootstrap';
 import { Row, Col } from 'react-bootstrap';
 import { Alert, AlertColor } from '@mui/material';
@@ -6,6 +6,7 @@ import './Login.css';
 import Header from '../Header/Header';
 import apiService from '../../services/DataService';
 import { useNavigate } from 'react-router-dom';
+import ChangePasswordModal from '../Account/ChangePasswordModal/ChangePasswordModal';
 
 const Login = () => {
    let navigate = useNavigate();
@@ -15,6 +16,15 @@ const Login = () => {
    const [rpassword, setRPassword] = useState('');
    const [buttonText, setButtonText] = useState('Login');
    const [alertInfo, setAlertInfo] = useState({ open: false, severity: 'success', message: '' });
+   const [isModalOpen, setIsModalOpen] = useState(false);
+
+   const openModal = () => {
+      setIsModalOpen(true);
+   }
+
+   const closeModal = () => {
+      setIsModalOpen(false);
+   }
 
    const handleCloseAlert = () => {
       setAlertInfo({ ...alertInfo, open: false });
@@ -25,16 +35,16 @@ const Login = () => {
       const formData = new FormData(event.target);
       const formDataObject = Object.fromEntries(formData.entries());
       try {
-         const result = buttonText == 'Login' ? await apiService.login(formDataObject as unknown as User) : await apiService.signup(formDataObject as unknown as User);
+         const result = buttonText === 'Login' ? await apiService.login(formDataObject as unknown as User) : await apiService.signup(formDataObject as unknown as User);
          if (result) {
-            if (buttonText == 'Login') {
+            if (buttonText === 'Login') {
                localStorage.setItem('authToken', result.token);
                const userResult = await apiService.getUserByEmail(formDataObject.email as unknown as string);
                if (userResult) {
                   localStorage.setItem('userId', userResult.id);
                }
                return navigate('/home');
-            } else if (buttonText == 'Signup') {
+            } else if (buttonText === 'Signup') {
                setAlertInfo({ open: true, severity: 'success', message: 'Signup successful!' });
                setName('');
                setEmail('');
@@ -56,6 +66,7 @@ const Login = () => {
          <div className="login-container">
             <Header></Header>
             <br></br>
+            {isModalOpen && <ChangePasswordModal onClose={closeModal} forgotPassword={true} />}
             {alertInfo.open && (
                <Alert onClose={handleCloseAlert} severity={alertInfo.severity as AlertColor} sx={{ width: '100%' }}>
                   {alertInfo.message}
@@ -101,6 +112,7 @@ const Login = () => {
                               <Button variant="outline-primary" type="submit">
                                  <i className="fab fa-google" /> Google
                               </Button>
+                              <a href="#" onClick={openModal}>Forgot password?</a>
                            </Form>
                         </Col>
                      </Row>
