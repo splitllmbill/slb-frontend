@@ -69,6 +69,47 @@ const dataService = {
             throw error;
         }
     },
+    changePassword: async (requestData: { password: string }) => {
+        try {
+            const response = await fetch(`${BASE_URL}/db/changePassword`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem('authToken')
+                },
+                body: JSON.stringify(requestData)
+            });
+
+            if (!response.ok) {
+                throw new Error('Cannot change password');
+            }
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('Error during change password:', error);
+            throw error;
+        }
+    },
+    forgotPassword: async (requestData: { email: string }) => {
+        try {
+            const response = await fetch(`${BASE_URL}/db/forgotPassword`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(requestData) 
+            });
+    
+            if (!response.ok) {
+                throw new Error('Cannot change password');
+            }
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('Error during change password:', error);
+            throw error;
+        }
+    },    
     addPersonalExpenseViaLLM: async (userMessage: string) => {
         try {
             const response = await fetch(`${BASE_URL}/llm/expense`, {
