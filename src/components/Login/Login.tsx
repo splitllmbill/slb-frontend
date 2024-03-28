@@ -14,6 +14,7 @@ const Login = () => {
    const [email, setEmail] = useState('');
    const [password, setPassword] = useState('');
    const [rpassword, setRPassword] = useState('');
+   const [inviteCode, setInviteCode] = useState('');
    const [buttonText, setButtonText] = useState('Login');
    const [alertInfo, setAlertInfo] = useState({ open: false, severity: 'success', message: '' });
    const [isModalOpen, setIsModalOpen] = useState(false);
@@ -50,10 +51,11 @@ const Login = () => {
                setEmail('');
                setPassword('');
                setRPassword('');
+               setInviteCode('');
                setButtonText('Login');
             }
          }
-      } catch (error) {
+      } catch (error : any) {
          setAlertInfo({ open: true, severity: 'error', message: error.message });
          console.error('Unexpected error during signup:', error);
       }
@@ -85,7 +87,7 @@ const Login = () => {
                            <Form onSubmit={handleSignUpOrLogin}>
                               {buttonText === 'Signup' &&
                                  <FormGroup controlId="formBasicName">
-                                    <Form.Control type="name" placeholder="Name" onChange={(event) => setName(event.target.value)} value={name} name="name" required />
+                                    <Form.Control type="text" placeholder="Name" onChange={(event) => setName(event.target.value)} value={name} name="name" required />
                                  </FormGroup>
                               }
                               <br></br>
@@ -101,6 +103,10 @@ const Login = () => {
                                  <>
                                     <FormGroup controlId="formBasicPasswordRepeat">
                                        <Form.Control type="password" placeholder="Re-enter Password" onChange={(event) => setRPassword(event.target.value)} value={rpassword} required />
+                                    </FormGroup>
+                                    <br></br>
+                                    <FormGroup controlId="formBasicInviteCode">
+                                       <Form.Control type="text" placeholder="Enter invite code provided" onChange={(event) => setInviteCode(event.target.value)} value={inviteCode} name="inviteCode" required />
                                     </FormGroup>
                                     <br></br>
                                  </>
