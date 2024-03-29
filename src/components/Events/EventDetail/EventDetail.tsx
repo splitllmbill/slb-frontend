@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from "react";
-import { EventDetailWrapper, Flex, NoExpensesWrapper } from "./EventDetail.styled";
+import { EventDetailWrapper, NoExpensesWrapper } from "./EventDetail.styled";
 import dataService from "../../../services/DataService";
 import { List, Typography } from "@mui/material";
 import { Col, Row } from 'react-bootstrap';
@@ -9,43 +9,35 @@ import { IoMdArrowBack } from "react-icons/io";
 import { FiCornerDownRight } from "react-icons/fi";
 import ExpenseCardNew from "../../Expenses/ExpenseCardNew/ExpenseCardNew";
 import { TbFaceIdError } from "react-icons/tb";
-import { MdOutlineEdit } from "react-icons/md";
-
 
 interface Expense {
+  amount: number;
   id: string;
 }
 
 const EventDetail: FC = () => {
-  const [event, setEvent] = useState<{
-    eventName: string;
-    expenses: Expense[];
-  }>({
-    eventName: "",
-    expenses: [],
-  });
+  const [event, setEvent] = useState<{ eventName: string; expenses: Expense[]; }>({ eventName: "", expenses: [] });
   const [summary, setSummary] = useState<{
-    inDebtTo: [],
-    isOwed: [],
-    totalDebt: 0,
-    totalOwed: 0
-  }>({
-    inDebtTo: [],
-    isOwed: [],
-    totalDebt: 0,
-    totalOwed: 0
-  });
+    inDebtTo: { name: string; amount: number }[];
+    isOwed: { name: string; amount: number }[];
+    totalDebt: number;
+    totalOwed: number;
+  }>({ inDebtTo: [], isOwed: [], totalDebt: 0, totalOwed: 0 });
 
   const { eventId } = useParams<{ eventId: string }>();
 
   const fetchData = () => {
-    dataService.getUserSummaryForEvent(eventId).then(summary => setSummary(summary))
-    dataService.getEventExpenses(eventId).then(data => {
-      setEvent(data);
-    })
-      .catch(error => {
-        console.error("Error fetching event expenses:", error);
-      });
+    if (eventId) {
+      dataService.getUserSummaryForEvent(eventId).then(summary => setSummary(summary))
+      dataService.getEventExpenses(eventId).then(data => {
+        setEvent(data);
+      })
+        .catch(error => {
+          console.error("Error fetching event expenses:", error);
+        });
+    } else {
+      alert("Invalid event ID!")
+    }
   }
 
   useEffect(() => {
@@ -64,10 +56,14 @@ const EventDetail: FC = () => {
   };
 
   const handleDeleteEvent = async () => {
-    await dataService.deleteEvent(eventId).then((data) => {
-      alert(data.message)
-      if (data.success == 'true') navigate(-2);
-    });
+    if (eventId) {
+      await dataService.deleteEvent(eventId).then((data) => {
+        alert(data.message)
+        if (data.success == 'true') navigate(-2);
+      });
+    } else {
+      alert("Invalid event ID!")
+    }
   }
 
   const isMobile = window.innerWidth <= 500;

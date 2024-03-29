@@ -8,17 +8,17 @@ export const toTitleCase = (str: string) => {
     });
 };
 
-export function formatDate(dateString: string) {
-    const options = { day: '2-digit', month: 'short', year: 'numeric' };
+export function formatDate(dateString: any) {
+    const options: Intl.DateTimeFormatOptions = { day: '2-digit', month: 'short', year: 'numeric' };
     const date = new Date(dateString);
     return date.toLocaleDateString('en-GB', options).replace(/(\d+)(th|st|nd|rd)/, '$1');
 }
 
-export function convertTimestampToISO(timestamp) {
+export function convertTimestampToISO(timestamp: string | number | Date) {
     return new Date(timestamp).toISOString();
 }
 
-export const formatDateForTransactions = (dateString) => {
+export const formatDateForTransactions = (dateString: string | number | Date) => {
     const date = new Date(dateString);
     const day = date.getDate();
     const month = new Intl.DateTimeFormat('en', { month: 'short' }).format(date);

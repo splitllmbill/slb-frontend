@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from "react";
 import { CreateEventWrapper, Flex } from "./CreateEventDrawer.styled";
 import apiService from '../../../services/DataService';
-import { Autocomplete, Button, Checkbox, Stack, TextField, ThemeProvider } from "@mui/material";
+import { Autocomplete, Button, Checkbox, Stack, TextField } from "@mui/material";
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import { useNavigate } from "react-router-dom";

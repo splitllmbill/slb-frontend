@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import { FC } from 'react';
 import { EventCardWrapper } from './EventCard.styled';
 import { Card, CardContent, Typography } from '@mui/material';
 import { Col, Row } from 'react-bootstrap';
@@ -11,7 +11,6 @@ interface NonGroupExpenseCardProps {
 
 const NonGroupExpenseCard: FC<NonGroupExpenseCardProps> = ({ expenses }) => {
 
-    const navigate = useNavigate();
     const handleClick = () => {
      };
 

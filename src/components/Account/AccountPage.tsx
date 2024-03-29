@@ -33,7 +33,7 @@ const UserPage = () => {
         fetchData();
     }, []);
 
-    const handleSubmit = async (event) => {
+    const handleSubmit = async (event: any) => {
         event.preventDefault();
         try {
             const result = await dataService.updateUserAccount(userData);
@@ -46,7 +46,7 @@ const UserPage = () => {
         }
     };
 
-    const handleCopyToClipboard = (text) => {
+    const handleCopyToClipboard = (text: string) => {
         navigator.clipboard.writeText(text);
         alert('Copied to clipboard!');
     };
@@ -71,8 +71,6 @@ const UserPage = () => {
         setIsModalOpen(false);
     }
 
-    const isMobile = window.innerWidth <= 500;
-
     return (
         !showLoader && (
             <Container>
@@ -82,7 +80,7 @@ const UserPage = () => {
                 </Flex>
                 <h2>Edit User Information</h2>
                 <Row>
-                    <Alert key='light' variant='light' sx={{ width: '100%' }} >
+                    <Alert key='light' variant='light' style={{ width: '100%' }} >
                         Share this unique friend code <a href="#" onClick={() => handleCopyToClipboard(userData.uuid)}>{userData.uuid}</a> with friends who want to add you on SplitLLM!
                     </Alert>
                 </Row>
