@@ -5,7 +5,11 @@ import { IoMdClose } from "react-icons/io";
 import { Col, Row } from 'react-bootstrap';
 import dataService from '../../../services/DataService';
 
-const AddFriend = ({ onClose }) => {
+interface AddFriendProps {
+    onClose: () => void;
+}
+
+const AddFriend: React.FC<AddFriendProps> = ({ onClose }) => {
     const [friendCode, setFriendCode] = useState('');
     const handleAddFriend = async () => {
         await dataService.addFriend(friendCode).then((data) => {
