@@ -4,7 +4,6 @@ import './SideNavBar.css';
 import { MdDashboard } from "react-icons/md";
 import { TiGroup } from "react-icons/ti";
 import { RiAccountBoxFill } from "react-icons/ri";
-import { FaMoneyBill1Wave } from "react-icons/fa6";
 import { useNavigate } from 'react-router-dom';
 import { BiMoneyWithdraw } from 'react-icons/bi';
 

@@ -1,5 +1,5 @@
 import { KeyboardEventHandler, SetStateAction, useState } from 'react';
-import { Button, ChatbotContainer, ChatbotWindow, Input, InputContainer, Message, TH, TD, ZoomOutTable } from './ChatBot.styled';
+import { Button, ChatbotContainer, ChatbotWindow, Input, InputContainer, Message, ZoomOutTable } from './ChatBot.styled';
 import logo from '../../../assets/logo.png';
 import { PiUserCircleThin } from 'react-icons/pi';
 import dataService from '../../../services/DataService';
@@ -142,7 +142,7 @@ const Chatbot = () => {
                                  <td>
                                     <DatePicker
                                        selected={row.date ? new Date(row.date) : new Date()}
-                                       onChange={(date) => handleExpenseChange(index, 'date', date)}
+                                       onChange={(date: any) => handleExpenseChange(index, 'date', date)}
                                        className="small-input"
                                     />
                                  </td>

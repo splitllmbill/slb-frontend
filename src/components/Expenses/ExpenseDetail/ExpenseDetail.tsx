@@ -2,7 +2,7 @@ import { FC, useEffect, useState } from "react";
 import dataService from "../../../services/DataService";
 import { useNavigate, useParams } from "react-router-dom";
 import { IoMdArrowBack } from "react-icons/io";
-import { ExpenseDetailWrapper, Flex, Details, Small, UL } from "./ExpenseDetails.styled";
+import { ExpenseDetailWrapper, Small, UL } from "./ExpenseDetails.styled";
 import { MdOutlineDelete } from "react-icons/md";
 import { Col, Row } from "react-bootstrap";
 import { BiEditAlt } from "react-icons/bi";
@@ -10,23 +10,36 @@ import { TbListDetails } from "react-icons/tb";
 import { Card, CardContent } from "@mui/material";
 import { formatDate, toTitleCase } from "../../../services/State";
 import { MdOutlineArrowForwardIos } from "react-icons/md";
-import { BsArrowReturnRight } from "react-icons/bs";
 
 const ExpenseDetail: FC = () => {
-    const [expense, setExpense] = useState<Expense>({});
+    const [expense, setExpense] = useState<Expense>({
+        date: "",
+        expenseName: "",
+        amount: 0,
+        type: "",
+        paidBy: "", 
+        shares: [], 
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        createdBy: "",
+        updatedBy: "",
+        category: ""
+    });
     const [showDetails, setShowDetails] = useState<boolean>(false);
 
     const { expenseId } = useParams<{ expenseId: string }>();
 
     const fetchData = () => {
-        dataService.getExpenseById(expenseId)
-            .then(expense => {
-                setExpense(expense)
-                setShowDetails(true)
-            })
-            .catch(error => {
-                console.error("Error fetching event expenses:", error);
-            });
+        if (expenseId) {
+            dataService.getExpenseById(expenseId)
+                .then(expense => {
+                    setExpense(expense)
+                    setShowDetails(true)
+                })
+                .catch(error => {
+                    console.error("Error fetching event expenses:", error);
+                });
+        }
     }
 
     useEffect(() => {
@@ -81,7 +94,7 @@ const ExpenseDetail: FC = () => {
                                     <MdOutlineArrowForwardIos></MdOutlineArrowForwardIos><span><strong> {toTitleCase(expense.paidBy)} paid Rs.{expense.amount}</strong></span>
                                     <br></br>
                                     <UL>
-                                        {expense.shares.map((share, index) => (
+                                        {expense.shares.map((share) => (
                                             <li>
                                                 <span>
                                                     {share.name === 'you' && expense.paidBy !== 'you' ? 'You owe ' : ''}
