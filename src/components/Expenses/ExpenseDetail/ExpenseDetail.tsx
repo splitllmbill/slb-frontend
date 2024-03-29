@@ -43,6 +43,17 @@ const ExpenseDetail: FC = () => {
         }
     }
 
+    const handleDeleteExpense = async () => {
+        if (expenseId) {
+          await dataService.deleteExpense(expenseId).then((data) => {
+            alert(data.message)
+            if (data.success == 'true') navigate(-2);
+          });
+        } else {
+          alert("Invalid expense ID!")
+        }
+      }
+
     useEffect(() => {
         fetchData();
     }, [expenseId]); // Fetch data when eventId changes
@@ -73,7 +84,7 @@ const ExpenseDetail: FC = () => {
                             </button>
                         </Col>
                         <Col xs={3} md={3}>
-                            <button className="w-100">
+                            <button className="w-100" onClick={handleDeleteExpense}>
                                 <MdOutlineDelete style={{ fontSize: 'x-large' }} />
                                 {!isMobile && (<span> Delete</span>)}
                             </button>

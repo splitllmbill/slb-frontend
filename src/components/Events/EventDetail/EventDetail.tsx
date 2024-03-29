@@ -91,7 +91,7 @@ const EventDetail: FC = () => {
           </button>
         </Col>
         <Col xs={3} md={3}>
-          <button className="w-100" onClick={handleDeleteEvent}>
+          <button className="w-100" onClick={handleDeleteEvent}>  
             <MdOutlineDelete style={{ fontSize: 'x-large' }} />
             {!isMobile && (<span> Delete Event</span>)}
           </button>
