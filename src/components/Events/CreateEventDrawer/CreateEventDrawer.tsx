@@ -18,16 +18,6 @@ const CreateEventDrawer: FC<CreateEventDrawerProps>= ({eventID}) => {
     const [users, setUsers] = useState<User[]>([])
     const [eventData,setEventData] = useState<Partial<EventObject>>({});
 
-    const fetchEventUsers = async ()=>{
-        try {
-            await apiService.getEventUsers(eventID,"event")
-                .then(data => {
-                    setSelectedUsers(data)     
-                })
-        } catch (error) {
-            console.log("Error occurred");
-        }
-    }
     const fetchData = async () => {
         try {
             if (eventID != ""){
@@ -50,11 +40,6 @@ const CreateEventDrawer: FC<CreateEventDrawerProps>= ({eventID}) => {
     useEffect(() => {
         fetchData()
     }, []);// Initial data fetch
-
-    useEffect(()=>{
-        fetchEventUsers()
-        
-    },[setEventData]);
 
     const handleCreateEvent = async () => {
         const createEventObject = {

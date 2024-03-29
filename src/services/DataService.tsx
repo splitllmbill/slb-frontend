@@ -1,6 +1,4 @@
-import { environment } from "../environment";
-
-const BASE_URL = environment.domainUrl;
+const BASE_URL = import.meta.env.VITE_BACKEND_URL
 
 const dataService = {
     setBearerToken: () => {
@@ -30,7 +28,7 @@ const dataService = {
         }
     },
     login: async (loginData: User) => {
-        try {
+                try {
             const response = await fetch(`${BASE_URL}/db/login`, {
                 method: 'POST',
                 headers: {
@@ -429,7 +427,7 @@ const dataService = {
     },
     getNonGroupExpenses: async () => {
         try {
-            const response = await fetch(`${BASE_URL}//db/expense/nongroup`, {
+            const response = await fetch(`${BASE_URL}/db/expense/nongroup`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -448,7 +446,7 @@ const dataService = {
         }
     },
     getEventUsers: async (id: string, type: string) => {
-        try {
+                try {
             const response = await fetch(`${BASE_URL}/db/${type}/${id}/users`, {
                 method: 'GET',
                 headers: {
