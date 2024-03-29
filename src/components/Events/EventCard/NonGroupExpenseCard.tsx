@@ -2,7 +2,6 @@ import { FC } from 'react';
 import { EventCardWrapper } from './EventCard.styled';
 import { Card, CardContent, Typography } from '@mui/material';
 import { Col, Row } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
 import { HiRectangleGroup } from "react-icons/hi2";
 
 interface NonGroupExpenseCardProps {

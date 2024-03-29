@@ -18,7 +18,6 @@ import { MdDashboard } from 'react-icons/md';
 import { BiMoneyWithdraw } from "react-icons/bi";
 import { RiAccountBoxFill } from 'react-icons/ri';
 import { TiGroup } from 'react-icons/ti';
-import AddFriend from '../Friends/AddFriend/AddFriend';
 
 interface DashboardProps { }
 
@@ -63,8 +62,6 @@ const Dashboard: FC<DashboardProps> = () => {
         <ContentArea>
           {(selectedContent === 'Friends' && location.pathname.startsWith('/friend')) && <FriendDetail />}
           {(selectedContent === 'Friends' && location.pathname.startsWith('/home')) && <FriendsPage />}
-          {(location.pathname.startsWith('/addFriend')) && <AddFriend onClose={undefined} />}
-          {(location.pathname.startsWith('/addFriend')) && <AddFriend onClose={undefined} />}
           {(selectedContent === 'Events' && location.pathname.startsWith('/createEvent')) && <CreateEventDrawer eventID='' />}
           {(selectedContent === 'Events' && location.pathname.startsWith('/event') && location.pathname.endsWith('edit')) && <CreateEventDrawer eventID={eventId == undefined ? "" : eventId} />}
           {(selectedContent === 'Events' && location.pathname.startsWith('/event')) && !location.pathname.endsWith('edit') && <EventDetail />}
