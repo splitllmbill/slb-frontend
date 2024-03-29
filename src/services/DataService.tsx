@@ -525,6 +525,29 @@ const dataService = {
             throw error;
         }
     },
+
+
+    deleteExpense: async (expenseId: string) => {
+        try {
+            const response = await fetch(`${BASE_URL}/db/expense/${expenseId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem('authToken')
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error(`Error: ${response.status}`);
+            }
+            return response.json();
+        } catch (error) {
+            console.error('Error fetching user expenses:', error);
+            throw error;
+        }
+    },
+
+
 };
 
 export default dataService;
