@@ -38,11 +38,10 @@ const dataService = {
                 },
                 body: JSON.stringify(loginData),
             });
-
-            if (!response.ok) {
-                throw new Error('Login failed');
-            }
             const data = await response.json();
+            if (!response.ok) {
+                throw new Error(data.message);
+            }
             return data;
         } catch (error) {
             console.error('Error during login:', error);
