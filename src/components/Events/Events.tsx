@@ -1,4 +1,4 @@
-import { FC, useEffect, createRef, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { EventsWrapper, NoExpensesWrapper } from './Events.styled';
 import { MdOutlineGroupAdd } from "react-icons/md";
 import EventCard from './EventCard/EventCard';
@@ -15,11 +15,15 @@ interface EventsProps {
 }
 
 const Events: FC<EventsProps> = () => {
-  const [events, setEvents] = useState<EventsObject>();
+  const [events, setEvents] = useState<EventsObject>({
+    overallOweAmount: 0,
+    owingPerson: "",
+    events: []
+  });
   const [showEvents, setShowEvents] = useState(false);
   const [nonGroupExpenses, setNonGroupExpenses] = useState({
-    "overallYouOwe": "",
-    "overallYouAreOwed": "",
+    "overallYouOwe": 0,
+    "overallYouAreOwed": 0,
     "friendsList": []
   });
   const [owingPerson, setOwingPerson] = useState("");
@@ -33,7 +37,7 @@ const Events: FC<EventsProps> = () => {
           dataService.getNonGroupExpenses()
             .then(data => {
               setNonGroupExpenses(data);
-              calculateAmount(events?.overallOweAmount, events?.owingPerson, nonGroupExpenses.overallYouAreOwed, nonGroupExpenses.overallYouOwe);
+              calculateAmount(events.overallOweAmount, events.owingPerson, nonGroupExpenses.overallYouAreOwed, nonGroupExpenses.overallYouOwe);
               setShowEvents(true);
             });
         });
@@ -49,13 +53,13 @@ const Events: FC<EventsProps> = () => {
       user_owe += nonGroupOwe;
       setOweAmount(Math.abs(friend_owe - user_owe));
       setOwingPerson((friend_owe > user_owe) ? "friend" : "user");
-      console.log("amount",friend_owe,user_owe,oweAmount,owingPerson);
-      
+      console.log("amount", friend_owe, user_owe, oweAmount, owingPerson);
+
     }
   }
   useEffect(() => {
     fetchData();
-  }, [setEvents,oweAmount, owingPerson]);// Initial data fetch
+  }, [setEvents, oweAmount, owingPerson]);// Initial data fetch
 
   const navigate = useNavigate();
   const handleCreateEvent = () => {

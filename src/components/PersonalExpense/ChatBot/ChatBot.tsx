@@ -142,7 +142,7 @@ const Chatbot = () => {
                                  <td>
                                     <DatePicker
                                        selected={row.date ? new Date(row.date) : new Date()}
-                                       onChange={(date: Date | null) => handleExpenseChange(index, 'date', date)}
+                                       onChange={(date: any) => handleExpenseChange(index, 'date', date)}
                                        className="small-input"
                                     />
                                  </td>

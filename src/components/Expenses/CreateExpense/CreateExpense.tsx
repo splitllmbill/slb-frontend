@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { ChangeEvent, SetStateAction, useEffect, useState } from "react";
 import apiService from '../../../services/DataService';
 import { Button, FormControl, FormControlLabel, RadioGroup, Radio, Stack, TextField, Autocomplete, Checkbox } from "@mui/material";
 import { CreateExpenseWrapper, Flex, LabelForm } from "./CreateExpense.styled";
@@ -17,27 +17,29 @@ const CreateExpenseDrawer = () => {
     const [users, setUsers] = useState<User[]>([]);
     const [expenseName, setExpenseName] = useState('');
     const [amount, setAmount] = useState(0);
-    const [paidBy, setPaidBy] = useState<User>();
+    const [paidBy, setPaidBy] = useState<User>({ name: "", email: "" });
     const [showShareDetails, setShowShareDetails] = useState<boolean>(false);
     const [splitType, setSplitType] = useState('equally');
     const [shareDetails, setShareDetails] = useState<{ userId: string; amount: number }[]>([]);
-    const [selectedDate, setSelectedDate] = useState(null);
+    const [selectedDate, setSelectedDate] = useState(new Date());
     const [selectedUsers, setSelectedUsers] = useState<User[]>([])
     const { id } = useParams<{ id: string }>();
     const { type } = useParams<{ type: string }>();
 
-    const handleDateChange = (date) => {
-        setSelectedDate(date);
-    };
-
     const fetchData = () => {
-        apiService.getEvent(id).then(data => {
-            setEvent(data);
-        });
-        apiService.getEventUsers(id, type).then(data => {
-            setUsers(data);
-            setShowShareDetails(true);
-        });
+        if (id) {
+            apiService.getEvent(id).then(data => {
+                setEvent(data);
+            });
+            if (type) {
+                apiService.getEventUsers(id, type).then(data => {
+                    setUsers(data);
+                    setShowShareDetails(true);
+                });
+            }
+        } else {
+            alert("Invalid expense ID!")
+        }
     };
 
     useEffect(() => {
@@ -45,14 +47,14 @@ const CreateExpenseDrawer = () => {
     }, []); // Fetch data when eventId changes
 
     useEffect(() => {
-        if ( splitType=="unequally" && users.length > 0) {
+        if (splitType == "unequally" && users.length > 0) {
             const initialShareDetails = users.map(user => ({ userId: user.id!, amount: 0 }));
             setShareDetails(initialShareDetails);
-        }else if ( splitType=="equally" && selectedUsers.length > 0) {
+        } else if (splitType == "equally" && selectedUsers.length > 0) {
             const initialShareDetails = selectedUsers.map(user => ({ userId: user.id!, amount: 0 }));
             setShareDetails(initialShareDetails);
         }
-    }, [selectedUsers,users,splitType]);
+    }, [selectedUsers, users, splitType]);
 
     const handleCreateExpense = async () => {
         if (splitType == 'unequally') {
@@ -101,11 +103,11 @@ const CreateExpenseDrawer = () => {
         navigate(-1);
     };
 
-    const handleSplitTypeChange = (event) => {
+    const handleSplitTypeChange = (event: { target: { value: SetStateAction<string>; }; }) => {
         setSplitType(event.target.value);
     };
 
-    const handleAmountChange = (event, userId) => {
+    const handleAmountChange = (event: ChangeEvent<HTMLInputElement>, userId: string | undefined) => {
         const { value } = event.target;
 
         // Create a copy of the shareDetails array
@@ -139,7 +141,11 @@ const CreateExpenseDrawer = () => {
                 <span><strong>Expense Name</strong></span>
                 <TextField type="name" onChange={(event) => setExpenseName(event.target.value)} value={expenseName} name="name" required />
                 <span><strong>Date </strong></span>
-                <DatePicker selected={selectedDate} onChange={(date) => setSelectedDate(date)} className="custom-datepicker" />
+                <DatePicker
+                    selected={selectedDate}
+                    onChange={(date: Date) => setSelectedDate(date)}
+                    className="custom-datepicker"
+                />
                 <span><strong>Expense Amount</strong></span>
                 <TextField type="number" onChange={(event) => setAmount(parseFloat(event.target.value))} value={amount} name="amount" required />
                 <span><strong>Paid By</strong></span>
