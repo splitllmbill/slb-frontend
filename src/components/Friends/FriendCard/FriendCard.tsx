@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import { FriendCardWrapper, MarginLeft } from './FriendCard.styled.ts';
 import { Card, CardContent, Typography } from '@mui/material';
 import { toTitleCase } from '../../../services/State';
@@ -34,7 +34,7 @@ const FriendCard: FC<FriendCardProps> = ({ friend }) => {
                             </MarginLeft>
                         </Col>
                         <Col className="d-flex justify-content-end">
-                            <Typography variant="p" color="#785A53" sx={{ fontWeight: 'bold', textTransform: 'capitalize', textAlign: 'right' }}>
+                            <Typography variant="body1" color="#785A53" sx={{ fontWeight: 'bold', textTransform: 'capitalize', textAlign: 'right' }}>
                                 {(friend.whoOwes === 'user' && friend.oweAmount > 0) && (
                                     <>
                                         <div>You owe</div>
@@ -58,7 +58,7 @@ const FriendCard: FC<FriendCardProps> = ({ friend }) => {
                     </Row>
                 </CardContent>
             </Card>
-        </FriendCardWrapper>
+        </FriendCardWrapper >
     );
 };
 

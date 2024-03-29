@@ -34,10 +34,7 @@ const PersonalExpenseList: FC<PersonalExpenseListProps> = () => {
     };
   }, []);
 
-  const totalAmount = expenses.reduce((total, expense) => total + expense.amount, 0);
-  const totalRow = { id: 'total', updatedAt: 'Total', expenseName: '', category: '', amount: totalAmount };
-
-  const handleChangePage = (event: React.ChangeEvent<unknown>, newPage: number) => {
+  const handleChangePage = (_event: React.ChangeEvent<unknown>, newPage: number) => {
     setPage(newPage);
   };
 

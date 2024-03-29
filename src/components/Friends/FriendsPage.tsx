@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Alert, Col, Row } from "react-bootstrap";
-import { Box, Button, Input, List, Modal } from "@mui/material";
+import { List } from "@mui/material";
 import { AiOutlineUsergroupAdd } from "react-icons/ai";
 import { IoMdSearch } from "react-icons/io";
 import { FriendsContainer, Flex, Header, FriendList } from "./FriendsPage.styled";
@@ -21,7 +21,7 @@ const FriendsPage = () => {
         open: true,
         severity: 'light'
     });
-    const [variant, setVariant] = useState('light')
+    const [variant] = useState('light')
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const handleAddFriend = () => {
@@ -51,7 +51,7 @@ const FriendsPage = () => {
         setAlertInfo({ ...alertInfo, open: !alertInfo.open });
     };
 
-    const handleCopyToClipboard = (text) => {
+    const handleCopyToClipboard = (text: string) => {
         navigator.clipboard.writeText(text);
         alert('Copied to clipboard!');
     };
@@ -71,7 +71,7 @@ const FriendsPage = () => {
                 <>
                     <Row>
                         {alertInfo.open && (
-                            <Alert key={variant} variant={variant} sx={{ width: '100%' }} dismissible>
+                            <Alert key={variant} variant={variant} style={{ width: '100%' }} dismissible>
                                 Share this unique friend code <a href="#" onClick={() => handleCopyToClipboard(friends.uuid)}>{friends.uuid}</a> with friends who want to add you on SplitLLM!
                             </Alert>
                         )}

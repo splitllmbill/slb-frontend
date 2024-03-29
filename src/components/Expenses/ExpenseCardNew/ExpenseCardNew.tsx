@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import { Card, CardContent, Typography } from '@mui/material';
 import { Col, Row } from 'react-bootstrap';
 import { ExpenseCardWrapper, MarginLeft } from './ExpenseCardNew.styled';
@@ -13,7 +13,7 @@ interface ExpenseCardNewProps {
 const ExpenseCardNew: FC<ExpenseCardNewProps> = ({ expense }) => {
 
     function formatDate(dateString: string) {
-        const options = { day: '2-digit', month: 'short', year: 'numeric' };
+        const options: Intl.DateTimeFormatOptions = { day: '2-digit', month: 'short', year: 'numeric' };
         const date = new Date(dateString);
         return date.toLocaleDateString('en-GB', options).replace(/(\d+)(th|st|nd|rd)/, '$1');
     }
@@ -56,7 +56,7 @@ const ExpenseCardNew: FC<ExpenseCardNewProps> = ({ expense }) => {
                             </MarginLeft>
                         </Col>
                         <Col className="d-flex justify-content-end">
-                            {expense?.user_summary.oweAmount != '0.0' && <Typography variant="p" color="#785A53" sx={{ fontWeight: 'bold', textTransform: 'capitalize', textAlign: 'right' }}>
+                            {expense?.user_summary.oweAmount != '0.0' && <Typography variant="body1" color="#785A53" sx={{ fontWeight: 'bold', textTransform: 'capitalize', textAlign: 'right' }}>
                                 {expense.user_summary.owePerson === 'user' ? (
                                     <div> You borrowed </div>
                                 ) : (
@@ -64,7 +64,7 @@ const ExpenseCardNew: FC<ExpenseCardNewProps> = ({ expense }) => {
                                 )}
                                 <div>Rs.{expense?.user_summary?.oweAmount}</div>
                             </Typography>}
-                            {expense?.oweAmount == '0.0' && <Typography variant="p" color="#785A53" sx={{ fontWeight: 'bold', textTransform: 'capitalize', textAlign: 'right' }}>
+                            {expense?.oweAmount == '0.0' && <Typography variant="body1" color="#785A53" sx={{ fontWeight: 'bold', textTransform: 'capitalize', textAlign: 'right' }}>
                                 <div> Settled </div>
                             </Typography>}
                         </Col>

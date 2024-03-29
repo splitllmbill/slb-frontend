@@ -5,7 +5,12 @@ import { Col, Row } from 'react-bootstrap';
 import dataService from '../../../services/DataService';
 import { Button, Container, Input } from '../../../App.styled';
 
-const ChangePasswordModal = ({ onClose, forgotPassword }) => {
+interface ChangePasswordModalProps {
+    onClose: () => void; // Define onClose as a function that takes no arguments and returns void
+    forgotPassword: boolean;
+}
+
+const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ onClose, forgotPassword }) => {
     const [email, setEmail] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');

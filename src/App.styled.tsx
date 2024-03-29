@@ -20,10 +20,3 @@ export const Button = styled.button`
     cursor: pointer;
 `;
 
-const Alert = styled.div`
-    padding: 0.5rem;
-    background-color: #28a745;
-    color: #fff;
-    border-radius: 4px;
-    margin-top: 1rem;
-`;
