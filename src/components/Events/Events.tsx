@@ -53,8 +53,6 @@ const Events: FC<EventsProps> = () => {
       user_owe += nonGroupOwe;
       setOweAmount(Math.abs(friend_owe - user_owe));
       setOwingPerson((friend_owe > user_owe) ? "friend" : "user");
-      console.log("amount", friend_owe, user_owe, oweAmount, owingPerson);
-
     }
   }
   useEffect(() => {

@@ -4,7 +4,7 @@ import { Stack } from 'react-bootstrap';
 import logo from '../../assets/logo.png';
 
 interface HeaderProps { }
-const appName = 'splitLLM';
+const appName = import.meta.env.VITE_APP_TITLE;
 
 const Header: FC<HeaderProps> = () => (
    <HeaderWrapper>

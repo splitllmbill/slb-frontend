@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import ChangePasswordModal from './ChangePasswordModal/ChangePasswordModal';
 
 const UserPage = () => {
+    const appTitle = import.meta.env.VITE_APP_TITLE;
     let navigate = useNavigate();
     const [userData, setUserData] = useState({
         name: '',
@@ -81,7 +82,7 @@ const UserPage = () => {
                 <h2>Edit User Information</h2>
                 <Row>
                     <Alert key='light' variant='light' style={{ width: '100%' }} >
-                        Share this unique friend code <a href="#" onClick={() => handleCopyToClipboard(userData.uuid)}>{userData.uuid}</a> with friends who want to add you on SplitLLM!
+                        Share this unique friend code <a href="#" onClick={() => handleCopyToClipboard(userData.uuid)}>{userData.uuid}</a> with friends who want to add you on {appTitle} !
                     </Alert>
                 </Row>
                 {isModalOpen && <ChangePasswordModal onClose={handleCloseChangePassword} forgotPassword={false} />}

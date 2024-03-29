@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import ChangePasswordModal from '../Account/ChangePasswordModal/ChangePasswordModal';
 
 const Login = () => {
+   const appTitle = import.meta.env.VITE_APP_TITLE;
    let navigate = useNavigate();
    const [name, setName] = useState('');
    const [email, setEmail] = useState('');
@@ -61,7 +62,7 @@ const Login = () => {
       }
    };
 
-   const appDesc = "Welcome to SplitLLM, your go-to app for seamless bill splitting. Easily manage shared expenses, split bills with friends, and keep track of your finances.";
+   const appDesc = `Welcome to ${appTitle}, your go-to app for seamless bill splitting. Easily manage shared expenses, split bills with friends, and keep track of your finances.`;
 
    return (
       <>
