@@ -15,7 +15,6 @@ const Chatbot = () => {
    const [showTable, setShowTable] = useState(false);
    const [expenses, setExpenses] = useState<any[]>([]);
    const today = new Date();
-   // const formattedDate = today.toLocaleDateString(); // Adjust the format as needed
 
    const handleInputChange = (e: { target: { value: SetStateAction<string> } }) => {
       setInput(e.target.value);
@@ -31,7 +30,8 @@ const Chatbot = () => {
       try {
          const botResponse = await dataService.addPersonalExpenseViaLLM(input);
          setMessages([...newMessages, { text: 'Here is a simple table of the expenses listed by you. Please make corrections to the data if necessary and click OKAY to add the expense!', sender: 'bot' }]);
-         setExpenses(botResponse.llmoutput);
+         const expensesWithDate = botResponse.llmoutput.map((item: any) => ({ ...item, date: new Date() }));
+         setExpenses(expensesWithDate);
          setShowTable(true);
       } catch (error) {
          console.error('Error handling chatbot response:', error);
@@ -48,6 +48,8 @@ const Chatbot = () => {
    };
 
    const handleAddExpense = async () => {
+      console.log(expenses);
+
       try {
          for (const exp of expenses) {
             let expenseData = {
@@ -82,7 +84,7 @@ const Chatbot = () => {
       setMessages([messages[0]]);
    };
 
-   const handleExpenseChange = (index: number, key: string, value: string) => {
+   const handleExpenseChange = (index: number, key: string, value: any) => {
       const updatedExpenses = [...expenses];
       updatedExpenses[index][key] = value;
       setExpenses(updatedExpenses);
@@ -142,9 +144,10 @@ const Chatbot = () => {
                                  <td>
                                     <DatePicker
                                        selected={row.date ? new Date(row.date) : new Date()}
-                                       onChange={(date: any) => handleExpenseChange(index, 'date', date)}
+                                       onChange={(date) => handleExpenseChange(index, 'date', date)}
                                        className="small-input"
                                     />
+
                                  </td>
                               </tr>
                            ))}

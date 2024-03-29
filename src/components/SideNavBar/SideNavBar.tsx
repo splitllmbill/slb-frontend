@@ -21,9 +21,9 @@ const SideNavBar: FC<SideNavBarProps> = ({ onSelectContent }) => {
       setActiveItem(itemName);
       onSelectContent(itemName);
       localStorage.setItem('selectedContent', itemName); // Update localStorage
-      navigate('/home');
+      navigate('/home'); // Navigate to the home route
    };
-
+   
    useEffect(() => {
       const handleResize = () => {
          setIsSmallScreen(window.innerWidth <= 500);

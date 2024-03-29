@@ -24,10 +24,21 @@ const CreateExpenseDrawer = () => {
     const [shareDetails, setShareDetails] = useState<{ userId: string; amount: number }[]>([]);
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [selectedUsers, setSelectedUsers] = useState<User[]>([])
+    const [typeToPass, setTypeToPass] = useState<string>("");
     const { id } = useParams<{ id: string }>();
     const { type } = useParams<{ type: string }>();
 
     const fetchData = () => {
+        if (type) {
+            switch (type) {
+                case 'event':
+                    setTypeToPass('group');
+                    break;
+                case 'friend':
+                    setTypeToPass('friend');
+                    break;
+            }
+        }
         if (id && type) {
             if (type == 'event') {
                 apiService.getEvent(id).then(data => {
@@ -43,7 +54,7 @@ const CreateExpenseDrawer = () => {
 
     useEffect(() => {
         fetchData();
-    }, []); // Fetch data when eventId changes
+    }, []); 
 
     useEffect(() => {
         if (splitType == "unequally" && users.length > 0) {
@@ -67,15 +78,6 @@ const CreateExpenseDrawer = () => {
             userId: share.userId,
             amount: splitType == 'equally' ? amount / (selectedUsers.length) : share.amount
         }));
-        let typeToPass;
-        switch (type) {
-            case 'event':
-                typeToPass = 'group';
-                break;
-            case 'friend':
-                typeToPass = 'friend';
-                break;
-        }
         const createExpenseObject = {
             expenseName: expenseName,
             amount: amount,
@@ -104,7 +106,7 @@ const CreateExpenseDrawer = () => {
     };
 
     const handleShareBill = () => {
-        navigate('/shareBill', { state: { users } });
+        navigate('/shareBill', { state: { "users": users, "type": typeToPass, "id": id } });
     }
 
     const handleSplitTypeChange = (event: { target: { value: SetStateAction<string>; }; }) => {
