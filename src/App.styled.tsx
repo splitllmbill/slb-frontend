@@ -33,3 +33,12 @@ export const Flex = styled.div`
     gap: 10px;
 `;
 
+export const TableLikeRow = styled.div`
+display: flex;
+// gap: 10px;
+padding: 20px;
+`
+
+export const TableLikeRowItem = styled.div`
+margin-right: 10px;
+`;

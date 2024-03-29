@@ -104,7 +104,7 @@ const CreateExpenseDrawer = () => {
     };
 
     const handleShareBill = () => {
-        navigate('/shareBill');
+        navigate('/shareBill', { state: { users } });
     }
 
     const handleSplitTypeChange = (event: { target: { value: SetStateAction<string>; }; }) => {
@@ -136,11 +136,11 @@ const CreateExpenseDrawer = () => {
     return (
         <DashboardContainer>
             <Flex>
-                <button >
-                    <IoMdArrowBack onClick={handleGoBack} style={{ fontSize: 'x-large' }}></IoMdArrowBack> Go Back
+                <button onClick={handleGoBack}>
+                    <IoMdArrowBack style={{ fontSize: 'x-large' }}></IoMdArrowBack> Go Back
                 </button>
-                <button >
-                    <MdOutlineReceiptLong onClick={handleShareBill} style={{ fontSize: 'x-large' }}></MdOutlineReceiptLong> Share a bill
+                <button onClick={handleShareBill} >
+                    <MdOutlineReceiptLong style={{ fontSize: 'x-large' }}></MdOutlineReceiptLong> Share a bill
                 </button>
             </Flex>
             <Stack spacing={2} useFlexGap direction="column">

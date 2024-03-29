@@ -527,6 +527,30 @@ const dataService = {
             throw error;
         }
     },
+    fileUpload: async (file: File) => {
+        try {
+            const formData = new FormData();
+            formData.append('file', file);
+
+            const response = await fetch(BASE_URL + `/llm/upload`, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('authToken')
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('File upload failed');
+            }
+
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('File upload failed:', error);
+            throw error;
+        }
+    },
 };
 
 export default dataService;
