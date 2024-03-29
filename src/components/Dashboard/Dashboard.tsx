@@ -18,6 +18,7 @@ import { MdDashboard } from 'react-icons/md';
 import { BiMoneyWithdraw } from "react-icons/bi";
 import { RiAccountBoxFill } from 'react-icons/ri';
 import { TiGroup } from 'react-icons/ti';
+import ShareBill from '../Expenses/ShareBill/ShareBill';
 
 interface DashboardProps { }
 
@@ -68,6 +69,7 @@ const Dashboard: FC<DashboardProps> = () => {
           {(selectedContent === 'Events' && location.pathname.startsWith('/home')) && <Events currentEventID='' />}
           {(location.pathname.startsWith('/createExpense')) && <CreateExpenseDrawer />}
           {(location.pathname.startsWith('/expense/')) && <ExpenseDetail />}
+          {(location.pathname.startsWith('/shareBill')) && <ShareBill />}
           {selectedContent === 'Personal Expenses' && <PersonalExpense />}
           {selectedContent === 'Account' && <Accountpage />}
         </ContentArea>

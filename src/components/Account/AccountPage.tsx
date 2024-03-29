@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Container, Label, Input, Button, Flex } from './AccountPage.styled'; // Import styled components
+import { Container, Label, Input } from './AccountPage.styled'; // Import styled components
 import dataService from '../../services/DataService';
 import { IoLogOutOutline } from "react-icons/io5";
 import { MdLockReset } from "react-icons/md";
@@ -7,6 +7,7 @@ import { RiUpload2Line } from 'react-icons/ri';
 import { Row, Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import ChangePasswordModal from './ChangePasswordModal/ChangePasswordModal';
+import { Flex, Button } from '../../App.styled';
 
 const UserPage = () => {
     let navigate = useNavigate();

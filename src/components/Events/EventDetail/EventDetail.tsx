@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from "react";
-import { EventDetailWrapper, NoExpensesWrapper } from "./EventDetail.styled";
+import { NoExpensesWrapper } from "./EventDetail.styled";
 import dataService from "../../../services/DataService";
 import { List, Typography } from "@mui/material";
 import { Col, Row } from 'react-bootstrap';
@@ -9,6 +9,7 @@ import { IoMdArrowBack } from "react-icons/io";
 import { FiCornerDownRight } from "react-icons/fi";
 import ExpenseCardNew from "../../Expenses/ExpenseCardNew/ExpenseCardNew";
 import { TbFaceIdError } from "react-icons/tb";
+import { DashboardContainer } from "../../../App.styled";
 
 interface Expense {
   amount: number;
@@ -69,7 +70,7 @@ const EventDetail: FC = () => {
   const isMobile = window.innerWidth <= 500;
 
   return (
-    <EventDetailWrapper>
+    <DashboardContainer>
       <Row>
         <Col xs={3} md={3}>
           <button onClick={handleGoBack} className="w-100">
@@ -141,7 +142,7 @@ const EventDetail: FC = () => {
             </NoExpensesWrapper>)}
         </List>
       </div>
-    </EventDetailWrapper >
+    </DashboardContainer >
   );
 }
 

@@ -1,5 +1,4 @@
 import { FC, useEffect, useState } from "react";
-import { CreateEventWrapper, Flex } from "./CreateEventDrawer.styled";
 import apiService from '../../../services/DataService';
 import { Autocomplete, Button, Checkbox, Stack, TextField } from "@mui/material";
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
@@ -7,35 +6,26 @@ import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import { useNavigate } from "react-router-dom";
 import { IoMdArrowBack } from "react-icons/io";
 import './CreateEventDrawer.styles.css';
+import { DashboardContainer, Flex } from "../../../App.styled";
 
 interface CreateEventDrawerProps {
     eventID: string;
- }
+}
 
-const CreateEventDrawer: FC<CreateEventDrawerProps>= ({eventID}) => {
+const CreateEventDrawer: FC<CreateEventDrawerProps> = ({ eventID }) => {
     const [eventName, setEventName] = useState('')
     const [selectedUsers, setSelectedUsers] = useState<User[]>([])
     const [users, setUsers] = useState<User[]>([])
-    const [eventData,setEventData] = useState<Partial<EventObject>>({});
+    const [eventData, setEventData] = useState<Partial<EventObject>>({});
 
-    const fetchEventUsers = async ()=>{
-        try {
-            await apiService.getEventUsers(eventID,"event")
-                .then(data => {
-                    setSelectedUsers(data)     
-                })
-        } catch (error) {
-            console.log("Error occurred");
-        }
-    }
     const fetchData = async () => {
         try {
-            if (eventID != ""){
+            if (eventID != "") {
                 await apiService.getEvent(eventID)
-                .then(data => {
-                    setEventData(data)  
-                    setEventName(data.eventName!)  
-                });
+                    .then(data => {
+                        setEventData(data)
+                        setEventName(data.eventName!)
+                    });
             }
             await apiService.getFriendsList()
                 .then(data => {
@@ -50,11 +40,6 @@ const CreateEventDrawer: FC<CreateEventDrawerProps>= ({eventID}) => {
     useEffect(() => {
         fetchData()
     }, []);// Initial data fetch
-
-    useEffect(()=>{
-        fetchEventUsers()
-        
-    },[setEventData]);
 
     const handleCreateEvent = async () => {
         const createEventObject = {
@@ -79,7 +64,7 @@ const CreateEventDrawer: FC<CreateEventDrawerProps>= ({eventID}) => {
             id: eventID,
             expenses: eventData.expenses,
             eventName: eventName,
-            users: [ ...(selectedUsers.map(selectedUser => selectedUser.id))],
+            users: [...(selectedUsers.map(selectedUser => selectedUser.id))],
         }
         try {
             const result = await apiService.editEvent(ediEventObject as unknown as EventObject)
@@ -96,14 +81,14 @@ const CreateEventDrawer: FC<CreateEventDrawerProps>= ({eventID}) => {
 
     const navigate = useNavigate();
     const handleGoBack = () => {
-        navigate(-1); 
+        navigate(-1);
     };
 
     const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
     const checkedIcon = <CheckBoxIcon fontSize="small" />;
     return (
 
-        <CreateEventWrapper >
+        <DashboardContainer >
             <Flex>
                 <button onClick={handleGoBack}>
                     <IoMdArrowBack style={{ fontSize: 'x-large' }}></IoMdArrowBack> Go Back
@@ -115,7 +100,7 @@ const CreateEventDrawer: FC<CreateEventDrawerProps>= ({eventID}) => {
             </Row> */}
             <div>
                 <Stack spacing={2} useFlexGap direction="column">
-                    <h3>{eventID==""?"Add a New Event": "Edit Event"}</h3>
+                    <h3>{eventID == "" ? "Add a New Event" : "Edit Event"}</h3>
 
                     <TextField type="name" placeholder="Event Name" onChange={(event) => setEventName(event.target.value)} value={eventName} name="name" required />
                     <Autocomplete
@@ -148,9 +133,9 @@ const CreateEventDrawer: FC<CreateEventDrawerProps>= ({eventID}) => {
 
                 </Stack>
                 <br />
-                <Button variant="contained" onClick={eventID ==""?handleCreateEvent:handleEditEvent}>{eventID ==""? "Add":"Edit"}</Button>
+                <Button variant="contained" onClick={eventID == "" ? handleCreateEvent : handleEditEvent}>{eventID == "" ? "Add" : "Edit"}</Button>
             </div>
-        </CreateEventWrapper>
+        </DashboardContainer>
 
 
     );

@@ -3,11 +3,12 @@ import { Alert, Col, Row } from "react-bootstrap";
 import { List } from "@mui/material";
 import { AiOutlineUsergroupAdd } from "react-icons/ai";
 import { IoMdSearch } from "react-icons/io";
-import { FriendsContainer, Flex, Header, FriendList } from "./FriendsPage.styled";
+import { Header, FriendList } from "./FriendsPage.styled";
 import { TbUserCode } from "react-icons/tb";
 import dataService from "../../services/DataService";
 import AddFriend from "./AddFriend/AddFriend";
 import FriendCard from "./FriendCard/FriendCard";
+import { DashboardContainer, Flex } from "../../App.styled";
 
 const FriendsPage = () => {
     const [loadHeader, setLoadHeader] = useState(false);
@@ -57,7 +58,7 @@ const FriendsPage = () => {
     };
 
     return (
-        <FriendsContainer>
+        <DashboardContainer>
             <Flex>
                 <button onClick={handleAddFriend}>Add Friend <AiOutlineUsergroupAdd style={{ fontSize: 'x-large' }} /></button>
                 <button>Search <IoMdSearch style={{ fontSize: 'x-large' }} /></button>
@@ -95,7 +96,7 @@ const FriendsPage = () => {
                     </FriendList>
                 </>
             )}
-        </FriendsContainer>
+        </DashboardContainer>
     );
 };
 

@@ -39,11 +39,6 @@ export const FriendDetails = styled.div`
   /* Add your styles for friend details here */
 `;
 
-export const FriendsContainer = styled.div`
-  padding: 20px;
-  margin: 10px;
-`;
-
 export const Flex = styled.div`
     display: flex;
     gap: 10px;

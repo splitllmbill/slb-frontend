@@ -17,6 +17,7 @@ function App() {
         <Route path="event/:eventId/edit"  element={<Dashboard/>} />
         <Route path="createExpense/:type/:id"  element={<Dashboard/>} />
         <Route path="expense/:expenseId"  element={<Dashboard/>} />
+        <Route path="shareBill"  element={<Dashboard/>} />
       </Routes>
     </BrowserRouter>
   );
