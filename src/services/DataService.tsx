@@ -16,11 +16,10 @@ const dataService = {
                 },
                 body: JSON.stringify(userData),
             });
-
-            if (!response.ok) {
-                throw new Error('Signup failed');
-            }
             const data = await response.json();
+            if (!response.ok) {
+                throw new Error(data['message']);
+            }
             return data;
         } catch (error) {
             console.error('Error during signup:', error);
@@ -326,7 +325,7 @@ const dataService = {
     },
     getUserAccount: async () => {
         try {
-            const response = await fetch(`${BASE_URL}/db/useraccount`, {
+            const response = await fetch(`${BASE_URL}/db/user/account`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -343,9 +342,9 @@ const dataService = {
             throw error;
         }
     },
-    updateUserAccount: async (account: { upiId: string, upiNumber: string }) => {
+    updateUserAccount: async (account: { upiId: string, name: string }) => {
         try {
-            const response = await fetch(`${BASE_URL}/db/useraccount`, {
+            const response = await fetch(`${BASE_URL}/db/user/account`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -525,6 +524,50 @@ const dataService = {
             throw error;
         }
     },
+    generateVerificationCode: async (type: string) => {
+        try {
+            const response = await fetch(BASE_URL + `/db/verification/generate`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem('authToken')
+                },
+                body: JSON.stringify({ "type": type }),
+            });
+            if (!response.ok) {
+                throw new Error('Verification failed');
+            }
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('Verification failed:', error);
+            throw error;
+        }
+    },
+    validateVerificationCode: async (type: string, code: string, field: number) => {
+        try {
+            const response = await fetch(BASE_URL + `/db/verification/validate`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem('authToken')
+                },
+                body: JSON.stringify({
+                    "type": type,
+                    "code": code,
+                    "field": field
+                }),
+            });
+            if (!response.ok) {
+                throw new Error('Verification failed');
+            }
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('Verification failed:', error);
+            throw error;
+        }
+    },
     fileUpload: async (file: File) => {
         try {
             const formData = new FormData();
@@ -568,8 +611,6 @@ const dataService = {
             throw error;
         }
     },
-
-
 };
 
 export default dataService;

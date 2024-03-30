@@ -3,10 +3,18 @@ import { Container, Label, Input } from './AccountPage.styled'; // Import styled
 import dataService from '../../services/DataService';
 import { IoLogOutOutline } from "react-icons/io5";
 import { MdLockReset } from "react-icons/md";
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
+import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
+import ContentCopyOutlinedIcon from '@mui/icons-material/ContentCopyOutlined';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
+import VerifiedUserOutlinedIcon from '@mui/icons-material/VerifiedUserOutlined';
 import { RiUpload2Line } from 'react-icons/ri';
-import { Row, Alert } from 'react-bootstrap';
+import { Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import ChangePasswordModal from './ChangePasswordModal/ChangePasswordModal';
+import VerificationModal from './VerificationModal/VerificationModal';
 import { Flex, Button } from '../../App.styled';
 
 const UserPage = () => {
@@ -15,32 +23,61 @@ const UserPage = () => {
     const [userData, setUserData] = useState({
         name: '',
         email: '',
+        mobile: '',
         upiId: '',
         upiNumber: '',
-        uuid: ''
+        uuid: '',
+        inviteCode: '',
+        referralCount: 0,
+        emailVerified: false,
+        upiNumberVerified: false,
+        mobileVerified: false
     });
+    const [verificationFields, setverificationFields] = useState({
+        mobileEdit: false,
+        upiNumberEdit: false,
+        type: ''
+    })
+    const [apiData, setApiData] = useState({
+        mobile: '',
+        upiNumber: '',
+        refresh: false,
+    })
     const [showLoader, setShowLoader] = useState(true);
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isPasswordModalOpen, setisPasswordModalOpen] = useState(false);
+    const [isVerificationModalOpen, setisVerificationModalOpen] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const data = await dataService.getUserAccount();
                 setUserData(data);
+                setApiData({
+                    ...apiData,
+                    mobile: data.mobile,
+                    upiNumber: data.upiNumber
+                })
                 setShowLoader(false);
             } catch (error) {
                 console.log("Error occurred", error);
             }
         };
         fetchData();
-    }, []);
+    }, [apiData.refresh]);
 
     const handleSubmit = async (event: any) => {
         event.preventDefault();
         try {
-            const result = await dataService.updateUserAccount(userData);
+            const result = await dataService.updateUserAccount({
+                upiId: userData.upiId,
+                name: userData.name
+            });
             if (result) {
                 alert('Updated successfully!')
+                setApiData({
+                    ...apiData,
+                    refresh: !apiData.refresh
+                })
             }
 
         } catch (error) {
@@ -48,9 +85,9 @@ const UserPage = () => {
         }
     };
 
-    const handleCopyToClipboard = (text: string) => {
+    const handleCopyToClipboard = (text: string, type: string) => {
         navigator.clipboard.writeText(text);
-        alert('Copied to clipboard!');
+        alert('Copied ' + type + ' code to clipboard!');
     };
 
     const handleLogout = async () => {
@@ -66,11 +103,91 @@ const UserPage = () => {
     };
 
     const handleChangePassword = () => {
-        setIsModalOpen(true);
+        setisPasswordModalOpen(true);
     }
 
     const handleCloseChangePassword = () => {
-        setIsModalOpen(false);
+        setisPasswordModalOpen(false);
+    }
+
+    const handleCloseVerification = () => {
+        setisVerificationModalOpen(false);
+        setApiData({
+            ...apiData,
+            refresh: !apiData.refresh 
+        })
+    }
+
+    const handleMobileEditClick = () => {
+        if(!verificationFields.upiNumberEdit)
+            setverificationFields({...verificationFields, mobileEdit: true});
+    }
+
+    const handleMobileSave = async () => {
+        const valid = validateNumber(userData.mobile);
+        if(!valid){
+            alert('Invalid mobile number. Please try again.')
+            return;
+        }
+        try {
+            const result = await dataService.generateVerificationCode('mobile');
+            if (result) {
+                tempDisplayCode(result.mobileCode);
+                setisVerificationModalOpen(true);
+                setverificationFields({...verificationFields, mobileEdit: false, type: 'Mobile'});
+            }
+
+        } catch (error) {
+            console.error("Error while generating verification code", error);
+        }
+    }
+
+    const handleCloseMobileEdit = () => {
+        setverificationFields({...verificationFields, mobileEdit: false});
+        setUserData({...userData, mobile: apiData.mobile})
+    }
+
+    const handleDuplicateClick = () => {
+        alert('2')
+    }
+
+    const handleUPINumberEditClick = () => {
+        if(!verificationFields.mobileEdit)
+            setverificationFields({...verificationFields, upiNumberEdit: true})
+    }
+
+    const handleUPINumberSave = async () => {
+        const valid = validateNumber(userData.upiNumber);
+        if(!valid){
+            alert('Invalid UPI number. Please try again.')
+            return;
+        }
+        try {
+            const result = await dataService.generateVerificationCode('upiNumber');
+            if (result) {
+                tempDisplayCode(result.upiNumberCode);
+                setisVerificationModalOpen(true);
+                setverificationFields({...verificationFields, upiNumberEdit: false, type: 'UPI Number'})    
+            }
+
+        } catch (error) {
+            console.error("Error while generating verification code", error);
+        }
+        
+    }
+
+    const handleCloseUPINumberEdit = () => {
+        setverificationFields({...verificationFields, upiNumberEdit: false});
+        setUserData({...userData, upiNumber: apiData.upiNumber})
+    }
+
+    const validateNumber = (value : string) => {
+        const mobileRegex = /^[0-9]{10}$/; // Regex for 10-digit numbers
+        return mobileRegex.test(value);
+      };
+    
+    const tempDisplayCode = (code: string) => {
+        alert(code);
     }
 
     return (
@@ -81,12 +198,19 @@ const UserPage = () => {
                     <button onClick={handleLogout}>Logout <IoLogOutOutline style={{ fontSize: 'x-large' }}></IoLogOutOutline></button>
                 </Flex>
                 <h2>Edit User Information</h2>
-                <Row>
-                    <Alert key='light' variant='light' style={{ width: '100%' }} >
-                        Share this unique friend code <a href="#" onClick={() => handleCopyToClipboard(userData.uuid)}>{userData.uuid}</a> with friends who want to add you on {appTitle} !
+                <Alert key='light' variant='light' style={{ width: '100%' }} >
+                    Share this unique friend code <a style={{ color: '#007bff', cursor: 'pointer' }} onClick={() => handleCopyToClipboard(userData.uuid, 'friend')}>{userData.uuid} </a> with friends who want to add you on {appTitle} !
+                </Alert>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <Alert key='light' variant='light' style={{ width: '67.5%' }} >
+                        Share this unique invite code <a style={{ color: '#007bff', cursor: 'pointer' }} onClick={() => handleCopyToClipboard(userData.inviteCode, 'invite')}>{userData.inviteCode} </a> to refer your friends and family and get exciting rewards in {appTitle}.
                     </Alert>
-                </Row>
-                {isModalOpen && <ChangePasswordModal onClose={handleCloseChangePassword} forgotPassword={false} />}
+                    <Alert key='light' variant='success' style={{ width: '9.5%' }} >
+                        Referrals: <b>{userData.referralCount}</b>
+                    </Alert>
+                </div>
+                {isPasswordModalOpen && <ChangePasswordModal onClose={handleCloseChangePassword} forgotPassword={false} />}
+                {isVerificationModalOpen && <VerificationModal handleClose={handleCloseVerification} type={verificationFields.type} userData={userData} />}
                 <form onSubmit={handleSubmit}>
                     <div>
                         <Label>Name:</Label>
@@ -99,11 +223,160 @@ const UserPage = () => {
                     </div>
                     <div>
                         <Label>Email:</Label>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
                         <Input
                             type="email"
+                            style={{ 
+                                marginRight: '10px' ,
+                            }}
                             value={userData.email}
                             disabled
                         />
+                        <Tooltip 
+                            title={userData.emailVerified ? 'Verified' : 'Not Verified'}
+                        >
+                            <VerifiedUserOutlinedIcon
+                                color={userData.emailVerified ? 'success' : 'error'}
+                                style={{ width: 'auto', marginBottom: '10px' }}
+                            />
+                        </Tooltip>
+                    </div>
+                    <div>
+                        <Label >Mobile:</Label>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <Input
+                            style={{ 
+                                marginRight: '10px' ,
+                            }}
+                            type="number"
+                            value={userData.mobile}
+                            disabled={!verificationFields.mobileEdit}
+                            onChange={(e) => {
+                                if(e.target.value.length <= 10)
+                                    setUserData({ ...userData, mobile: e.target.value });
+                            }}
+                        />
+                        {
+                            !verificationFields.mobileEdit && 
+                            <Tooltip title={"Edit mobile"}>
+                                <IconButton 
+                                    size="small" 
+                                    style={{ width: 'auto', height: 'auto', marginBottom: '10px' , marginRight: '10px' }}
+                                    onClick={handleMobileEditClick}
+                                >  
+                                    <EditOutlinedIcon style={{ 
+                                        color: verificationFields.upiNumberEdit ? 'grey' : 'black' 
+                                    }}/>
+                                </IconButton>
+                            </Tooltip>
+                        }
+                        {
+                            verificationFields.mobileEdit && 
+                            <Tooltip title="Save mobile">
+                                <IconButton 
+                                    size="small" 
+                                    style={{ width: 'auto', height: 'auto', marginBottom: '10px' , marginRight: '10px' }}
+                                    onClick={handleMobileSave}
+                                >
+                                    <SaveOutlinedIcon style={{ color: 'black' }}/>
+                                </IconButton>
+                            </Tooltip>
+                        }
+                        {
+                            !verificationFields.mobileEdit && 
+                            <Tooltip title="Copy mobile to UPI number">
+                                <IconButton
+                                    size="small"
+                                    style={{ width: 'auto', height: 'auto', marginBottom: '10px' , marginRight: '10px' }}
+                                    onClick={handleDuplicateClick}
+                                >
+                                    <ContentCopyOutlinedIcon style={{ color: 'black' }} />
+                                </IconButton>
+                            </Tooltip>
+                        }
+                        {
+                            verificationFields.mobileEdit && 
+                            <Tooltip title="Cancel">
+                                <IconButton
+                                    size="small"
+                                    style={{ width: 'auto', height: 'auto', marginBottom: '10px' , marginRight: '10px' }}
+                                    onClick={handleCloseMobileEdit}
+                                >
+                                    <CloseOutlinedIcon style={{ color: 'black' }} />
+                                </IconButton>
+                            </Tooltip>
+                        }
+                        <Tooltip 
+                            title={userData.mobileVerified ? 'Verified' : 'Not Verified'}
+                        >
+                            <VerifiedUserOutlinedIcon
+                                color={userData.mobileVerified ? 'success' : 'error'}
+                                style={{ width: 'auto', marginBottom: '10px' }}
+                            />
+                        </Tooltip>
+                    </div>
+                    <div>
+                        <Label >UPI Number:</Label>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <Input
+                            style={{ marginRight: '10px' }}
+                            type="number"
+                            value={userData.upiNumber}
+                            disabled={!verificationFields.upiNumberEdit}
+                            onChange={(e) => {
+                                if(e.target.value.length <= 10)
+                                    setUserData({ ...userData, upiNumber: e.target.value });
+                            }}
+                        />
+                        {
+                            !verificationFields.upiNumberEdit && 
+                            <Tooltip title="Edit UPI number">
+                                <IconButton 
+                                    size="small" 
+                                    style={{ width: 'auto', height: 'auto', marginBottom: '10px' , marginRight: '10px' }}
+                                    onClick={handleUPINumberEditClick}
+                                >
+                                    <EditOutlinedIcon style={{ 
+                                        color: verificationFields.mobileEdit ? 'grey' : 'black' 
+                                    }}/>
+                                </IconButton>
+                            </Tooltip>
+                        }
+                        {
+                            verificationFields.upiNumberEdit && 
+                            <Tooltip title="Save UPI number">
+                                <IconButton 
+                                    size="small" 
+                                    style={{ width: 'auto', height: 'auto', marginBottom: '10px' , marginRight: '10px' }}
+                                    onClick={handleUPINumberSave}
+                                >
+                                    <SaveOutlinedIcon style={{ color: 'black' }}/>
+                                </IconButton>
+                            </Tooltip>
+                        }
+                        {
+                            verificationFields.upiNumberEdit && 
+                            <Tooltip title="Cancel">
+                                <IconButton
+                                    size="small"
+                                    style={{ width: 'auto', height: 'auto', marginBottom: '10px' , marginRight: '10px' }}
+                                    onClick={handleCloseUPINumberEdit}
+                                >
+                                    <CloseOutlinedIcon style={{ color: 'black' }} />
+                                </IconButton>
+                            </Tooltip>
+                        }
+                        <Tooltip 
+                            title={userData.upiNumberVerified ? 'Verified' : 'Not Verified'}
+                        >
+                            <VerifiedUserOutlinedIcon
+                                color={userData.upiNumberVerified ? 'success' : 'error'}
+                                style={{ width: 'auto', marginBottom: '10px' }}
+                            />
+                        </Tooltip>
                     </div>
                     <div>
                         <Label>UPI ID:</Label>
@@ -113,16 +386,8 @@ const UserPage = () => {
                             onChange={(e) => setUserData({ ...userData, upiId: e.target.value })}
                         />
                     </div>
-                    <div>
-                        <Label>UPI Number:</Label>
-                        <Input
-                            type="text"
-                            value={userData.upiNumber}
-                            onChange={(e) => setUserData({ ...userData, upiNumber: e.target.value })}
-                        />
-                    </div>
                     <br />
-                    <Button type="submit">Submit <RiUpload2Line style={{ fontSize: 'x-large' }} /></Button>
+                    <Button type="submit" disabled={verificationFields.mobileEdit || verificationFields.upiNumberEdit}>Submit <RiUpload2Line style={{ fontSize: 'x-large' }} /></Button>
                 </form>
             </Container>
         )
