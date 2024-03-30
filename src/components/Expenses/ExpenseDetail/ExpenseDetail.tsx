@@ -45,14 +45,14 @@ const ExpenseDetail: FC = () => {
 
     const handleDeleteExpense = async () => {
         if (expenseId) {
-          await dataService.deleteExpense(expenseId).then((data) => {
-            alert(data.message)
-            if (data.success == 'true') navigate(-2);
-          });
+            await dataService.deleteExpense(expenseId).then((data) => {
+                alert(data.message)
+                if (data.success == 'true') navigate(-2);
+            });
         } else {
-          alert("Invalid expense ID!")
+            alert("Invalid expense ID!")
         }
-      }
+    }
 
     useEffect(() => {
         fetchData();
@@ -111,7 +111,7 @@ const ExpenseDetail: FC = () => {
                                                 <span>
                                                     {share.name === 'you' && expense.paidBy !== 'you' ? 'You owe ' : ''}
                                                     {share.name === 'you' && expense.paidBy === 'you' ? 'You paid ' : ''}
-                                                    {share.name !== 'you' ? `${toTitleCase(share.name)} owes ` : ''}
+                                                    {share.name && share.name !== 'you' ? `${toTitleCase(share.name)} owes ` : ''}
                                                     Rs.{share.amount}
                                                 </span>
                                             </li>
