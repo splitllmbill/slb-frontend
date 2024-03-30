@@ -10,12 +10,15 @@ import ContentCopyOutlinedIcon from '@mui/icons-material/ContentCopyOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import VerifiedUserOutlinedIcon from '@mui/icons-material/VerifiedUserOutlined';
+import QrCode2OutlinedIcon from '@mui/icons-material/QrCode2Outlined';
+
 import { RiUpload2Line } from 'react-icons/ri';
 import { Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import ChangePasswordModal from './ChangePasswordModal/ChangePasswordModal';
 import VerificationModal from './VerificationModal/VerificationModal';
 import { Flex, Button } from '../../App.styled';
+import QRModal from './QRModal/QRModal';
 
 const UserPage = () => {
     const appTitle = import.meta.env.VITE_APP_TITLE;
@@ -45,6 +48,7 @@ const UserPage = () => {
     })
     const [showLoader, setShowLoader] = useState(true);
     const [isPasswordModalOpen, setisPasswordModalOpen] = useState(false);
+    const [isQRModalOpen, setisQRModalOpen] = useState(false);
     const [isVerificationModalOpen, setisVerificationModalOpen] = useState(false);
 
     useEffect(() => {
@@ -86,9 +90,40 @@ const UserPage = () => {
     };
 
     const handleCopyToClipboard = (text: string, type: string) => {
-        navigator.clipboard.writeText(text);
-        alert('Copied ' + type + ' code to clipboard!');
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText(text)
+                .then(() => {
+                    alert('Copied ' + type + ' code to clipboard!');
+                })
+                .catch((err) => {
+                    console.error('Failed to copy: ', err);
+                    fallbackCopyTextToClipboard(text,type);
+                });
+        } else {
+            fallbackCopyTextToClipboard(text,type);
+        }
     };
+    
+    function fallbackCopyTextToClipboard(text: string, type: string) {
+        const textArea = document.createElement('textarea');
+        textArea.value = text;
+        textArea.style.position = 'fixed';
+        textArea.style.top = '0';
+        textArea.style.left = '0';
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        try {
+            document.execCommand('copy');
+            // if(type !== 'code')
+                alert('Copied ' + type + ' code to clipboard!');
+        } catch (err) {
+            console.error('Failed to copy ', err);
+        }
+        document.body.removeChild(textArea);
+    }
+
+
 
     const handleLogout = async () => {
         try {
@@ -180,6 +215,14 @@ const UserPage = () => {
         setverificationFields({...verificationFields, upiNumberEdit: false});
         setUserData({...userData, upiNumber: apiData.upiNumber})
     }
+    
+    const handleGenerateQR = () => {
+        setisQRModalOpen(true);
+    }
+
+    const handleCloseQR = () => {
+        setisQRModalOpen(false);
+    }
 
     const validateNumber = (value : string) => {
         const mobileRegex = /^[0-9]{10}$/; // Regex for 10-digit numbers
@@ -187,7 +230,8 @@ const UserPage = () => {
       };
     
     const tempDisplayCode = (code: string) => {
-        alert(code);
+        // handleCopyToClipboard(code,'code');
+        alert('Verification Code: ' + code);
     }
 
     return (
@@ -205,12 +249,13 @@ const UserPage = () => {
                     <Alert key='light' variant='light' style={{ width: '67.5%' }} >
                         Share this unique invite code <a style={{ color: '#007bff', cursor: 'pointer' }} onClick={() => handleCopyToClipboard(userData.inviteCode, 'invite')}>{userData.inviteCode} </a> to refer your friends and family and get exciting rewards in {appTitle}.
                     </Alert>
-                    <Alert key='light' variant='success' style={{ width: '9.5%' }} >
+                    <Alert key='light' variant='success' style={{ width: '9.5%' , minWidth: '100px'}} >
                         Referrals: <b>{userData.referralCount}</b>
                     </Alert>
                 </div>
                 {isPasswordModalOpen && <ChangePasswordModal onClose={handleCloseChangePassword} forgotPassword={false} />}
                 {isVerificationModalOpen && <VerificationModal handleClose={handleCloseVerification} type={verificationFields.type} userData={userData} />}
+                {isQRModalOpen && <QRModal onClose={handleCloseQR} upiId={userData?.upiId}/>}
                 <form onSubmit={handleSubmit}>
                     <div>
                         <Label>Name:</Label>
@@ -285,7 +330,7 @@ const UserPage = () => {
                             </Tooltip>
                         }
                         {
-                            !verificationFields.mobileEdit && 
+                            false && 
                             <Tooltip title="Copy mobile to UPI number">
                                 <IconButton
                                     size="small"
@@ -380,11 +425,23 @@ const UserPage = () => {
                     </div>
                     <div>
                         <Label>UPI ID:</Label>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
                         <Input
+                            style={{ marginRight: '10px' }}
                             type="text"
                             value={userData.upiId}
                             onChange={(e) => setUserData({ ...userData, upiId: e.target.value })}
                         />
+                        <Tooltip title="View QR">
+                            <IconButton
+                                size="small"
+                                style={{ width: 'auto', height: 'auto', marginBottom: '10px', marginRight: '10px' }}
+                                onClick={handleGenerateQR}
+                            >
+                                <QrCode2OutlinedIcon style={{ color: 'black' }} />
+                            </IconButton>
+                        </Tooltip>
                     </div>
                     <br />
                     <Button type="submit" disabled={verificationFields.mobileEdit || verificationFields.upiNumberEdit}>Submit <RiUpload2Line style={{ fontSize: 'x-large' }} /></Button>
