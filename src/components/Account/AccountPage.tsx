@@ -11,6 +11,7 @@ import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import VerifiedUserOutlinedIcon from '@mui/icons-material/VerifiedUserOutlined';
 import QrCode2OutlinedIcon from '@mui/icons-material/QrCode2Outlined';
+
 import { RiUpload2Line } from 'react-icons/ri';
 import { Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
@@ -88,16 +89,11 @@ const UserPage = () => {
         }
     };
 
-    // const handleCopyToClipboard = (text: string, type: string) => {
-    //     navigator.clipboard.writeText(text);
-    //     alert('Copied ' + type + ' code to clipboard!');
-    // };
     const handleCopyToClipboard = (text: string, type: string) => {
         if (navigator.clipboard) {
             navigator.clipboard.writeText(text)
                 .then(() => {
-                    // if(type !== 'code')
-                        alert('Copied ' + type + ' code to clipboard!');
+                    alert('Copied ' + type + ' code to clipboard!');
                 })
                 .catch((err) => {
                     console.error('Failed to copy: ', err);
@@ -222,23 +218,11 @@ const UserPage = () => {
     
     const handleGenerateQR = () => {
         setisQRModalOpen(true);
-        // try {
-        //     const result = await dataService.generateVerificationCode('upiNumber');
-        //     if (result) {
-        //         tempDisplayCode(result.upiNumberCode);
-        //         setisVerificationModalOpen(true);
-        //         setverificationFields({...verificationFields, upiNumberEdit: false, type: 'UPI Number'})    
-        //     }
-
-        // } catch (error) {
-        //     console.error("Error while generating verification code", error);
-        // }
     }
 
     const handleCloseQR = () => {
         setisQRModalOpen(false);
     }
-    
 
     const validateNumber = (value : string) => {
         const mobileRegex = /^[0-9]{10}$/; // Regex for 10-digit numbers
@@ -248,7 +232,6 @@ const UserPage = () => {
     const tempDisplayCode = (code: string) => {
         // handleCopyToClipboard(code,'code');
         alert('Verification Code: ' + code);
-        // alert('Verification Code: ' + code + '\n It has been copied to clipboard');
     }
 
     return (
@@ -462,7 +445,6 @@ const UserPage = () => {
                     </div>
                     <br />
                     <Button type="submit" disabled={verificationFields.mobileEdit || verificationFields.upiNumberEdit}>Submit <RiUpload2Line style={{ fontSize: 'x-large' }} /></Button>
-                    <br />
                 </form>
             </Container>
         )
