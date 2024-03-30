@@ -1,7 +1,7 @@
 import { ChangeEvent, SetStateAction, useEffect, useState } from "react";
 import apiService from '../../../services/DataService';
 import { Button, FormControl, FormControlLabel, RadioGroup, Radio, Stack, TextField, Autocomplete, Checkbox } from "@mui/material";
-import { CreateExpenseWrapper, Flex, LabelForm } from "./CreateExpense.styled";
+import { LabelForm } from "./CreateExpense.styled";
 import { IoMdArrowBack } from "react-icons/io";
 import { useNavigate, useParams } from "react-router-dom";
 import { Col, Row } from "react-bootstrap";
@@ -10,7 +10,8 @@ import "react-datepicker/dist/react-datepicker.css";
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import './CreateExpense.styles.css';
-
+import { MdOutlineReceiptLong } from "react-icons/md";
+import { DashboardContainer, Flex } from "../../../App.styled";
 
 const CreateExpenseDrawer = () => {
     const [event, setEvent] = useState<Partial<EventObject>>({});
@@ -23,28 +24,37 @@ const CreateExpenseDrawer = () => {
     const [shareDetails, setShareDetails] = useState<{ userId: string; amount: number }[]>([]);
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [selectedUsers, setSelectedUsers] = useState<User[]>([])
+    const [typeToPass, setTypeToPass] = useState<string>("");
     const { id } = useParams<{ id: string }>();
     const { type } = useParams<{ type: string }>();
 
     const fetchData = () => {
-        if (id) {
-            apiService.getEvent(id).then(data => {
-                setEvent(data);
-            });
-            if (type) {
-                apiService.getEventUsers(id, type).then(data => {
-                    setUsers(data);
-                    setShowShareDetails(true);
+        if (type) {
+            switch (type) {
+                case 'event':
+                    setTypeToPass('group');
+                    break;
+                case 'friend':
+                    setTypeToPass('friend');
+                    break;
+            }
+        }
+        if (id && type) {
+            if (type == 'event') {
+                apiService.getEvent(id).then(data => {
+                    setEvent(data);
                 });
             }
-        } else {
-            alert("Invalid expense ID!")
+            apiService.getPossibleUsersForExpense(id, type).then(data => {
+                setUsers(data);
+                setShowShareDetails(true);
+            });
         }
     };
 
     useEffect(() => {
         fetchData();
-    }, []); // Fetch data when eventId changes
+    }, []); 
 
     useEffect(() => {
         if (splitType == "unequally" && users.length > 0) {
@@ -68,15 +78,6 @@ const CreateExpenseDrawer = () => {
             userId: share.userId,
             amount: splitType == 'equally' ? amount / (selectedUsers.length) : share.amount
         }));
-        let typeToPass;
-        switch (type) {
-            case 'event':
-                typeToPass = 'group';
-                break;
-            case 'friend':
-                typeToPass = 'friend';
-                break;
-        }
         const createExpenseObject = {
             expenseName: expenseName,
             amount: amount,
@@ -99,9 +100,14 @@ const CreateExpenseDrawer = () => {
     };
 
     const navigate = useNavigate();
+
     const handleGoBack = () => {
         navigate(-1);
     };
+
+    const handleShareBill = () => {
+        navigate('/shareBill', { state: { "users": users, "type": typeToPass, "id": id } });
+    }
 
     const handleSplitTypeChange = (event: { target: { value: SetStateAction<string>; }; }) => {
         setSplitType(event.target.value);
@@ -130,10 +136,13 @@ const CreateExpenseDrawer = () => {
 
 
     return (
-        <CreateExpenseWrapper>
+        <DashboardContainer>
             <Flex>
-                <button >
-                    <IoMdArrowBack onClick={handleGoBack} style={{ fontSize: 'x-large' }}></IoMdArrowBack> Go Back
+                <button onClick={handleGoBack}>
+                    <IoMdArrowBack style={{ fontSize: 'x-large' }}></IoMdArrowBack> Go Back
+                </button>
+                <button onClick={handleShareBill} >
+                    <MdOutlineReceiptLong style={{ fontSize: 'x-large' }}></MdOutlineReceiptLong> Share a bill
                 </button>
             </Flex>
             <Stack spacing={2} useFlexGap direction="column">
@@ -222,7 +231,7 @@ const CreateExpenseDrawer = () => {
             </Stack>
             <br />
             <Button variant="contained" onClick={handleCreateExpense}>Add</Button>
-        </CreateExpenseWrapper>
+        </DashboardContainer>
     );
 }
 

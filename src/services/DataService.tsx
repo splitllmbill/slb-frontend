@@ -94,9 +94,9 @@ const dataService = {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(requestData) 
+                body: JSON.stringify(requestData)
             });
-    
+
             if (!response.ok) {
                 throw new Error('Cannot change password');
             }
@@ -106,7 +106,7 @@ const dataService = {
             console.error('Error during change password:', error);
             throw error;
         }
-    },    
+    },
     addPersonalExpenseViaLLM: async (userMessage: string) => {
         try {
             const response = await fetch(`${BASE_URL}/llm/expense`, {
@@ -445,8 +445,8 @@ const dataService = {
             throw error;
         }
     },
-    getEventUsers: async (id: string, type: string) => {
-                try {
+    getPossibleUsersForExpense: async (id: string, type: string) => {
+        try {
             const response = await fetch(`${BASE_URL}/db/${type}/${id}/users`, {
                 method: 'GET',
                 headers: {
@@ -525,8 +525,30 @@ const dataService = {
             throw error;
         }
     },
+    fileUpload: async (file: File) => {
+        try {
+            const formData = new FormData();
+            formData.append('file', file);
 
+            const response = await fetch(BASE_URL + `/llm/upload`, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('authToken')
+                }
+            });
 
+            if (!response.ok) {
+                throw new Error('File upload failed');
+            }
+
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('File upload failed:', error);
+            throw error;
+        }
+    },
     deleteExpense: async (expenseId: string) => {
         try {
             const response = await fetch(`${BASE_URL}/db/expense/${expenseId}`, {

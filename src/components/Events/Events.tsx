@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from 'react';
-import { EventsWrapper, NoExpensesWrapper } from './Events.styled';
+import { NoExpensesWrapper } from './Events.styled';
 import { MdOutlineGroupAdd } from "react-icons/md";
 import EventCard from './EventCard/EventCard';
 import dataService from '../../services/DataService';
@@ -8,6 +8,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { useNavigate } from 'react-router-dom';
 import { TbFaceIdError } from "react-icons/tb";
 import NonGroupExpenseCard from './EventCard/NonGroupExpenseCard';
+import { DashboardContainer } from '../../App.styled';
 
 
 interface EventsProps {
@@ -65,7 +66,7 @@ const Events: FC<EventsProps> = () => {
   };
 
   return (
-    <EventsWrapper>
+    <DashboardContainer>
       <>
         <button onClick={handleCreateEvent}>Create Event <MdOutlineGroupAdd style={{ fontSize: 'x-large' }}></MdOutlineGroupAdd></button>
         {!showEvents && (<div className="d-flex justify-content-center align-items-center"><CircularProgress color="secondary" variant="indeterminate" /></div>)}
@@ -89,7 +90,7 @@ const Events: FC<EventsProps> = () => {
             <h6>No events yet!</h6>
           </NoExpensesWrapper>)}
       </>
-    </EventsWrapper>
+    </DashboardContainer>
   );
 };
 
