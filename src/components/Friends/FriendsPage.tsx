@@ -3,7 +3,7 @@ import { Alert, Col, Row } from "react-bootstrap";
 import { CircularProgress, List } from "@mui/material";
 import { AiOutlineUsergroupAdd } from "react-icons/ai";
 import { IoMdSearch } from "react-icons/io";
-import { Header, FriendList } from "./FriendsPage.styled";
+import { FriendList } from "./FriendsPage.styled";
 import { TbFaceIdError, TbUserCode } from "react-icons/tb";
 import dataService from "../../services/DataService";
 import AddFriend from "./AddFriend/AddFriend";
