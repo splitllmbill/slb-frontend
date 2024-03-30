@@ -42,3 +42,8 @@ padding: 20px;
 export const TableLikeRowItem = styled.div`
 margin-right: 10px;
 `;
+
+export const NoItemsWrapper = styled.div`
+margin-top: 30px;
+text-align: center;
+`;
