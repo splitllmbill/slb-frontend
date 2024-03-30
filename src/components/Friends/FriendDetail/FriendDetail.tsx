@@ -13,12 +13,24 @@ function FriendDetail() {
     const [friendData, setFriendData] = useState({
         "uuid": "",
         "name": "",
-        "overallOweAmount": "",
+        "overallOweAmount": 0,
         "overallWhoOwes": "",
         "expenses": []
     });
     const [showData, setShowData] = useState(false);
     const { friendId } = useParams<{ friendId: string }>();
+
+    const navigate = useNavigate();
+    const handleGoBack = () => {
+        navigate(-1);
+    };
+    const handleSettleUpFriend =async()=>{
+        if(friendId!=undefined){
+            await dataService.settleUpWithFriend(friendId).then((data) => {
+                alert(data.message)
+            })
+        }
+    }
 
     useEffect(() => {
         if (friendId) { // Ensure friendId is not undefined
@@ -29,7 +41,7 @@ function FriendDetail() {
                 })
                 .catch(error => console.error('Error fetching friend data:', error));
         }
-    }, [friendId]); // useEffect dependency
+    }, [handleSettleUpFriend]); // useEffect dependency
 
     const handleCreateExpense = () => {
         navigate(`/createExpense/friend/${friendId}`);
@@ -42,10 +54,9 @@ function FriendDetail() {
                 navigate(-1)
         })
     }
-    const navigate = useNavigate();
-    const handleGoBack = () => {
-        navigate(-1);
-    };
+
+    
+   
     const isMobile = window.innerWidth <= 500;
 
     return (
@@ -73,19 +84,34 @@ function FriendDetail() {
             </Row>
             <div>
                 <h2>{friendData.name}</h2>
-                {showData && (<Typography variant="h6">
-                    Overall,
-                    {friendData.overallWhoOwes === 'user' ? (
-                        'you owe '
-                    ) : (
-                        ` ${friendData.name} owes you `
-                    )}
-                    Rs.{friendData.overallOweAmount}
-                </Typography>)}
+                <Row className="align-items-center">
+                    <Col xs={6} md={9} className="d-flex align-items-center">
+                        {showData && (<Typography variant="h6">
+                            Overall,
+                            {friendData.overallWhoOwes === 'user' ? (
+                                'you owe '
+                            ) : (
+                                ` ${friendData.name} owes you `
+                            )}
+                            Rs.{friendData.overallOweAmount}
+                        </Typography>)}
+                    </Col>
+                    { (friendData.overallWhoOwes === 'user'  && friendData.overallOweAmount!=0) &&
+            <Col xs={6} md={3} className="d-flex align-items-center">
+              <Row className="align-items-center">
+                <div> You have unsetlled dues...
+                    <button className="w-100" onClick={handleSettleUpFriend}>
+                        <span>Settle Up!</span>
+                    </button>
+                </div>
+              </Row>
+            </Col>}
+                </Row>
                 <br></br>
-                {friendData.expenses && friendData.expenses.reverse().map((expense: { expenseDate: string, expenseName: string, expenseId: string, category: string, oweAmount: Float32Array, whoOwes: string }) => (
+                {friendData.expenses && friendData.expenses.reverse().map( (expense) => {
+                    return (
                     <ExpenseCardNew expense={expense} />
-                ))}
+                )})}
 
             </div>
         </FriendDetailWrapper>

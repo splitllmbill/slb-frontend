@@ -611,6 +611,26 @@ const dataService = {
             throw error;
         }
     },
+    settleUpWithFriend: async (friendId: string) => {
+        try {
+            const response = await fetch(BASE_URL + `/db/user/expense/friend/`+friendId+`/settleup`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem('authToken')
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error('Settle failed');
+            }
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('Settle failed:', error);
+            throw error;
+        }
+    },
 };
 
 export default dataService;

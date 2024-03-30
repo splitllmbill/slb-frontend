@@ -144,18 +144,18 @@ const EventDetail: FC = () => {
         <Row>
           <Col>
           <Row className="align-items-center"> {/* This ensures that all items in the row align vertically in the center */}
-            <Col xs={3} md={9} className="d-flex align-items-center"> {/* This makes sure the column itself is a flex container, aligning items vertically */}
+            <Col xs={6} md={9} className="d-flex align-items-center"> {/* This makes sure the column itself is a flex container, aligning items vertically */}
               {(summary.totalDebt > summary.totalOwed) && 
-                <h5>Overall, you owe {summary.totalDebt - summary.totalOwed}</h5>}
+                <h5>Overall, you owe Rs.{summary.totalDebt - summary.totalOwed}</h5>}
               {(summary.totalDebt < summary.totalOwed) &&
-                <h5>Overall, you are owed {summary.totalOwed - summary.totalDebt}</h5>}
+                <h5>Overall, you are owed Rs.{summary.totalOwed - summary.totalDebt}</h5>}
                 
             </Col>
 
-             { (summary.totalOwed!=0) &&
-            <Col xs={3} md={3} className="d-flex align-items-center">
+             { (summary.totalDebt!=0) &&
+            <Col xs={6} md={3} className="d-flex align-items-center">
               <Row className="align-items-center">
-                { (summary.totalOwed!=0) &&( <div> You have unsetlled dues...
+                { (summary.totalDebt!=0) &&( <div> You have unsetlled dues...
                   <button className="w-100" onClick={handleSettleUp}>
                       {!isMobile && (<span>Settle Up!</span>)}
                     </button> </div>)}
