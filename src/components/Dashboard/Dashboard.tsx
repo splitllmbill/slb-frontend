@@ -2,22 +2,22 @@ import React, { FC, useEffect, useState } from 'react';
 import { BottomNavWrapper, ContentArea, DashboardWrapper, HeaderWrapper } from './Dashboard.styled';
 import SideNavBar from '../SideNavBar/SideNavBar';
 import Header from '../Header/Header';
-import { BottomNavigation } from '@mui/material';
-import { BottomNavigationAction } from '@mui/material';
+import { BottomNavigation, BottomNavigationAction } from '@mui/material';
 import PersonalExpense from '../PersonalExpense/PersonalExpense';
 import Events from '../Events/Events';
-import Accountpage from '../Account/AccountPage';
+import AccountPage from '../Account/AccountPage';
 import FriendsPage from '../Friends/FriendsPage';
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import FriendDetail from '../Friends/FriendDetail/FriendDetail';
 import CreateEventDrawer from '../Events/CreateEventDrawer/CreateEventDrawer';
 import EventDetail from '../Events/EventDetail/EventDetail';
 import CreateExpenseDrawer from '../Expenses/CreateExpense/CreateExpense';
 import ExpenseDetail from '../Expenses/ExpenseDetail/ExpenseDetail';
 import { MdDashboard } from 'react-icons/md';
-import { BiMoneyWithdraw } from "react-icons/bi";
+import { BiMoneyWithdraw } from 'react-icons/bi';
 import { RiAccountBoxFill } from 'react-icons/ri';
 import { TiGroup } from 'react-icons/ti';
+import ShareBill from '../Expenses/ShareBill/ShareBill';
 
 interface DashboardProps { }
 
@@ -27,6 +27,7 @@ const Dashboard: FC<DashboardProps> = () => {
   const [value, setValue] = useState(selectedContent);
 
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleResize = () => {
@@ -48,7 +49,9 @@ const Dashboard: FC<DashboardProps> = () => {
 
   const handleNavigationChange = (_event: React.ChangeEvent<{}>, newValue: string) => {
     setSelectedContent(newValue);
+    navigate('/home');
   };
+
   const { eventId } = useParams<{ eventId: string }>();
 
   return (
@@ -63,13 +66,14 @@ const Dashboard: FC<DashboardProps> = () => {
           {(selectedContent === 'Friends' && location.pathname.startsWith('/friend')) && <FriendDetail />}
           {(selectedContent === 'Friends' && location.pathname.startsWith('/home')) && <FriendsPage />}
           {(selectedContent === 'Events' && location.pathname.startsWith('/createEvent')) && <CreateEventDrawer eventID='' />}
-          {(selectedContent === 'Events' && location.pathname.startsWith('/event') && location.pathname.endsWith('edit')) && <CreateEventDrawer eventID={eventId == undefined ? "" : eventId} />}
+          {(selectedContent === 'Events' && location.pathname.startsWith('/event') && location.pathname.endsWith('edit')) && <CreateEventDrawer eventID={eventId || ""} />}
           {(selectedContent === 'Events' && location.pathname.startsWith('/event')) && !location.pathname.endsWith('edit') && <EventDetail />}
           {(selectedContent === 'Events' && location.pathname.startsWith('/home')) && <Events currentEventID='' />}
-          {(location.pathname.startsWith('/createExpense')) && <CreateExpenseDrawer />}
+          {(selectedContent === 'Events' || selectedContent === 'Friends') && location.pathname.startsWith('/createExpense') && <CreateExpenseDrawer />}
           {(location.pathname.startsWith('/expense/')) && <ExpenseDetail />}
+          {(selectedContent === 'Events' || selectedContent === 'Friends') && location.pathname.startsWith('/shareBill') && <ShareBill />}
           {selectedContent === 'Personal Expenses' && <PersonalExpense />}
-          {selectedContent === 'Account' && <Accountpage />}
+          {selectedContent === 'Account' && <AccountPage />}
         </ContentArea>
       </DashboardWrapper>
 

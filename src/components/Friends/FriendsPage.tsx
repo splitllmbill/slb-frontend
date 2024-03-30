@@ -1,13 +1,14 @@
 import { useState, useEffect } from "react";
 import { Alert, Col, Row } from "react-bootstrap";
-import { List } from "@mui/material";
+import { CircularProgress, List } from "@mui/material";
 import { AiOutlineUsergroupAdd } from "react-icons/ai";
 import { IoMdSearch } from "react-icons/io";
-import { FriendsContainer, Flex, Header, FriendList } from "./FriendsPage.styled";
-import { TbUserCode } from "react-icons/tb";
+import { FriendList } from "./FriendsPage.styled";
+import { TbFaceIdError, TbUserCode } from "react-icons/tb";
 import dataService from "../../services/DataService";
 import AddFriend from "./AddFriend/AddFriend";
 import FriendCard from "./FriendCard/FriendCard";
+import { DashboardContainer, Flex, NoItemsWrapper } from "../../App.styled";
 
 const FriendsPage = () => {
     const [loadHeader, setLoadHeader] = useState(false);
@@ -23,6 +24,7 @@ const FriendsPage = () => {
     });
     const [variant] = useState('light')
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [showLoader, setShowLoader] = useState(true);
 
     const handleAddFriend = () => {
         setIsModalOpen(true);
@@ -38,8 +40,10 @@ const FriendsPage = () => {
             const data = await dataService.getFriendsList();
             setFriends(data);
             setLoadHeader(true);
+            setShowLoader(false);
         } catch (error) {
             console.log("Error occurred");
+            setShowLoader(false);
         }
     }
 
@@ -57,7 +61,7 @@ const FriendsPage = () => {
     };
 
     return (
-        <FriendsContainer>
+        <DashboardContainer>
             <Flex>
                 <button onClick={handleAddFriend}>Add Friend <AiOutlineUsergroupAdd style={{ fontSize: 'x-large' }} /></button>
                 <button>Search <IoMdSearch style={{ fontSize: 'x-large' }} /></button>
@@ -66,8 +70,8 @@ const FriendsPage = () => {
                 </Col>
             </Flex>
             <br />
-
-            {loadHeader && (
+            {showLoader && (<div className="d-flex justify-content-center align-items-center"><CircularProgress color="secondary" variant="indeterminate" /></div>)}
+            {!showLoader && loadHeader && (
                 <>
                     <Row>
                         {alertInfo.open && (
@@ -77,16 +81,22 @@ const FriendsPage = () => {
                         )}
                     </Row>
                     {isModalOpen && <AddFriend onClose={handleCloseAddFriend} />}
-                    <Header>
+                    <div>
                         {parseFloat(friends.overallYouOwe) !== 0.0 && (
-                            <h3>Overall, you owe Rs.{friends.overallYouOwe}</h3>
+                            <h4>Overall, you owe Rs.{friends.overallYouOwe}</h4>
                         )}
+
                         {parseFloat(friends.overallYouAreOwed) !== 0.0 && (
-                            <h3>Overall, you are owed Rs.{friends.overallYouAreOwed}</h3>
+                            <h4>Overall, you are owed Rs.{friends.overallYouAreOwed}</h4>
                         )}
-                        {/* <MdFilterList style={{ fontSize: 'x-large' }} /> */}
-                    </Header>
+                    </div>
                     <FriendList>
+                        {friends && friends?.friendsList.length == 0 && (
+                            <NoItemsWrapper>
+                                <TbFaceIdError style={{ fontSize: 'xx-large' }}></TbFaceIdError>
+                                <h6>No friends yet!</h6>
+                            </NoItemsWrapper>
+                        )}
                         <List>
                             {friends.friendsList.map((friend, index) => (
                                 <FriendCard key={index} friend={friend} />
@@ -95,7 +105,7 @@ const FriendsPage = () => {
                     </FriendList>
                 </>
             )}
-        </FriendsContainer>
+        </DashboardContainer>
     );
 };
 

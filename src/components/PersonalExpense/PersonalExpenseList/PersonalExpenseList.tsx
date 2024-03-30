@@ -1,9 +1,10 @@
 import { FC, useState, useEffect } from 'react';
-import { ExpenseRow, ExpenseRowItem, H3, PaginationContainer, PersonalExpenseListWrapper } from './PersonalExpenseList.styled';
+import { H3, PaginationContainer, PersonalExpenseListWrapper } from './PersonalExpenseList.styled';
 import dataService from '../../../services/DataService';
 import { formatDate, formatDateForTransactions, personalExpenseAdded, toTitleCase } from '../../../services/State';
 import { AiOutlineDoubleRight } from "react-icons/ai";
 import Pagination from '@mui/material/Pagination';
+import { TableLikeRow, TableLikeRowItem } from '../../../App.styled';
 
 interface PersonalExpenseListProps { }
 
@@ -45,10 +46,10 @@ const PersonalExpenseList: FC<PersonalExpenseListProps> = () => {
     <PersonalExpenseListWrapper>
       <H3>Personal Expenses</H3>
       {expenses.slice(startIndex, endIndex).map((expense) => (
-        <ExpenseRow key={expense.id}>
-          <ExpenseRowItem>
+        <TableLikeRow key={expense.id}>
+          <TableLikeRowItem>
             <AiOutlineDoubleRight style={{ fontSize: 'x-large' }} />
-          </ExpenseRowItem>
+          </TableLikeRowItem>
           <div style={{ flex: '1' }}>
             <div>{formatDateForTransactions(formatDate(expense.date))}</div>
           </div>
@@ -58,7 +59,7 @@ const PersonalExpenseList: FC<PersonalExpenseListProps> = () => {
             <div>{toTitleCase(expense.category)}</div>
           </div>
           <div style={{ marginLeft: '10px' }}><b>Rs. {expense.amount}</b></div>
-        </ExpenseRow>
+        </TableLikeRow>
       ))}
       <PaginationContainer>
         <Pagination

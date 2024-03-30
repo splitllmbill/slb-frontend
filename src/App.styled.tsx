@@ -12,11 +12,38 @@ export const Input = styled.input`
 `;
 
 export const Button = styled.button`
-    padding: 0.5rem 1rem;
+    padding: 10px 20px;
     background-color: #007bff;
     color: #fff;
     border: none;
-    border-radius: 4px;
+    border-radius: 5px;
     cursor: pointer;
+
+    &:hover {
+        background-color: #0056b3;
+    }
 `;
 
+export const DashboardContainer = styled.div`
+padding: 20px;
+`;
+
+export const Flex = styled.div`
+    display: flex;
+    gap: 10px;
+`;
+
+export const TableLikeRow = styled.div`
+display: flex;
+// gap: 10px;
+padding: 20px;
+`
+
+export const TableLikeRowItem = styled.div`
+margin-right: 10px;
+`;
+
+export const NoItemsWrapper = styled.div`
+margin-top: 30px;
+text-align: center;
+`;

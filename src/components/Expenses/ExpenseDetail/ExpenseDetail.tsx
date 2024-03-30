@@ -2,7 +2,7 @@ import { FC, useEffect, useState } from "react";
 import dataService from "../../../services/DataService";
 import { useNavigate, useParams } from "react-router-dom";
 import { IoMdArrowBack } from "react-icons/io";
-import { ExpenseDetailWrapper, Small, UL } from "./ExpenseDetails.styled";
+import { Small, UL } from "./ExpenseDetails.styled";
 import { MdOutlineDelete } from "react-icons/md";
 import { Col, Row } from "react-bootstrap";
 import { BiEditAlt } from "react-icons/bi";
@@ -10,6 +10,7 @@ import { TbListDetails } from "react-icons/tb";
 import { Card, CardContent } from "@mui/material";
 import { formatDate, toTitleCase } from "../../../services/State";
 import { MdOutlineArrowForwardIos } from "react-icons/md";
+import { DashboardContainer } from "../../../App.styled";
 
 const ExpenseDetail: FC = () => {
     const [expense, setExpense] = useState<Expense>({
@@ -17,8 +18,8 @@ const ExpenseDetail: FC = () => {
         expenseName: "",
         amount: 0,
         type: "",
-        paidBy: "", 
-        shares: [], 
+        paidBy: "",
+        shares: [],
         createdAt: new Date(),
         updatedAt: new Date(),
         createdBy: "",
@@ -42,6 +43,19 @@ const ExpenseDetail: FC = () => {
         }
     }
 
+    const handleDeleteExpense = async () => {
+        if (expenseId) {
+            await dataService.deleteExpense(expenseId).then((data) => {
+                alert(data.message)
+                if (data.success == 'true') {
+                    navigate(-2);
+                }
+            });
+        } else {
+            alert("Invalid expense ID!")
+        }
+    }
+
     useEffect(() => {
         fetchData();
     }, [expenseId]); // Fetch data when eventId changes
@@ -56,7 +70,7 @@ const ExpenseDetail: FC = () => {
     return (
         <>
             {showDetails && (
-                <ExpenseDetailWrapper>
+                <DashboardContainer>
                     <Row>
                         <Col xs={3} md={3}>
                             <button onClick={handleGoBack} className="w-100">
@@ -72,7 +86,7 @@ const ExpenseDetail: FC = () => {
                             </button>
                         </Col>
                         <Col xs={3} md={3}>
-                            <button className="w-100">
+                            <button className="w-100" onClick={handleDeleteExpense}>
                                 <MdOutlineDelete style={{ fontSize: 'x-large' }} />
                                 {!isMobile && (<span> Delete</span>)}
                             </button>
@@ -99,7 +113,7 @@ const ExpenseDetail: FC = () => {
                                                 <span>
                                                     {share.name === 'you' && expense.paidBy !== 'you' ? 'You owe ' : ''}
                                                     {share.name === 'you' && expense.paidBy === 'you' ? 'You paid ' : ''}
-                                                    {share.name !== 'you' ? `${toTitleCase(share.name)} owes ` : ''}
+                                                    {share.name && share.name !== 'you' ? `${toTitleCase(share.name)} owes ` : ''}
                                                     Rs.{share.amount}
                                                 </span>
                                             </li>
@@ -110,7 +124,7 @@ const ExpenseDetail: FC = () => {
                         </CardContent>
                     </Card>
 
-                </ExpenseDetailWrapper >)
+                </DashboardContainer >)
             }
         </>
     );

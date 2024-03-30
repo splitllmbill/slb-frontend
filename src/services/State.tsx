@@ -3,9 +3,11 @@ import { Subject } from 'rxjs';
 export const personalExpenseAdded = new Subject<void>();
 
 export const toTitleCase = (str: string) => {
-    return str.replace(/\w\S*/g, (txt) => {
-        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-    });
+    if (str)
+        return str.replace(/\w\S*/g, (txt) => {
+            return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+        });
+    else return "--";
 };
 
 export function formatDate(dateString: any) {
@@ -15,7 +17,7 @@ export function formatDate(dateString: any) {
 }
 
 export function convertTimestampToISO(timestamp: string | number | Date) {
-    return new Date(timestamp).toISOString();
+    return new Date(timestamp)?.toISOString();
 }
 
 export const formatDateForTransactions = (dateString: string | number | Date) => {

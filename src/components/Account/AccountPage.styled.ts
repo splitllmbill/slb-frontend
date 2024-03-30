@@ -40,8 +40,3 @@ export const Button = styled.button`
         cursor: not-allowed;
     }
 `;
-
-export const Flex = styled.div`
-    display: flex;
-    gap: 10px;
-`;
