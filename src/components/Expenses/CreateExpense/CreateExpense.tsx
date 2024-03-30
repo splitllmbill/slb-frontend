@@ -54,7 +54,7 @@ const CreateExpenseDrawer = () => {
 
     useEffect(() => {
         fetchData();
-    }, []); 
+    }, []);
 
     useEffect(() => {
         if (splitType == "unequally" && users.length > 0) {
@@ -106,7 +106,7 @@ const CreateExpenseDrawer = () => {
     };
 
     const handleShareBill = () => {
-        navigate('/shareBill', { state: { "users": users, "type": typeToPass, "id": id } });
+        navigate(`/shareBill/${typeToPass}`, { state: { "users": users, "type": typeToPass, "id": id } });
     }
 
     const handleSplitTypeChange = (event: { target: { value: SetStateAction<string>; }; }) => {
