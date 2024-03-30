@@ -1,4 +1,4 @@
-import { ChangeEvent, SetStateAction, useEffect, useState } from "react";
+import { ChangeEvent, FC, SetStateAction, useEffect, useState } from "react";
 import apiService from '../../../services/DataService';
 import { Button, FormControl, FormControlLabel, RadioGroup, Radio, Stack, TextField, Autocomplete, Checkbox } from "@mui/material";
 import { LabelForm } from "./CreateExpense.styled";
@@ -10,10 +10,20 @@ import "react-datepicker/dist/react-datepicker.css";
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import './CreateExpense.styles.css';
+<<<<<<< Updated upstream
 import { MdOutlineReceiptLong } from "react-icons/md";
 import { DashboardContainer, Flex } from "../../../App.styled";
 
 const CreateExpenseDrawer = () => {
+=======
+import { share } from "rxjs";
+import { ElevatorSharp } from "@mui/icons-material";
+
+interface CreateExpenseDrawerProps {
+    expenseId: string;
+ }
+const CreateExpenseDrawer: FC<CreateExpenseDrawerProps>= ({expenseId}) => {
+>>>>>>> Stashed changes
     const [event, setEvent] = useState<Partial<EventObject>>({});
     const [users, setUsers] = useState<User[]>([]);
     const [expenseName, setExpenseName] = useState('');
@@ -27,6 +37,7 @@ const CreateExpenseDrawer = () => {
     const [typeToPass, setTypeToPass] = useState<string>("");
     const { id } = useParams<{ id: string }>();
     const { type } = useParams<{ type: string }>();
+    const [mapUserIdToShareDetails, setMapUserIdToShareDetails] = useState<Map<string, { userId: string; amount: number }>>(new Map());
 
     const fetchData = () => {
         if (type) {
@@ -45,22 +56,83 @@ const CreateExpenseDrawer = () => {
                     setEvent(data);
                 });
             }
+<<<<<<< Updated upstream
             apiService.getPossibleUsersForExpense(id, type).then(data => {
                 setUsers(data);
                 setShowShareDetails(true);
             });
+=======
+        }
+    };
+
+    const fetchData2 = () => {
+        if (expenseId) {
+            apiService.getEventUsers(id, "event").then(data => {
+                setUsers(data);
+                setShowShareDetails(true);
+            });
+            apiService.getExpenseById(expenseId).then(data => {
+                setExpenseName(data.expenseName);
+                setAmount(data.amount);
+                setSelectedDate(new Date(data.date));
+                const paidByDetail: { name: string; email: string; id: string } = { name: data.paidBy,  email: "", id: data.paidById}
+                setPaidBy(paidByDetail);
+                console.log("paid by value", data.paidById);
+                let splitTypeString: string = 'equally';
+                let t = -1;
+                const users: User[] = [];
+                const shareDetailsData: { userId: string; amount: number }[] = [];
+                for (const share of data.shares) {
+                    const user: User = {
+                        id: share.userId,
+                        email: " ", 
+                        name: share.name
+                    };
+                    const shareDetail = {
+                        userId: share.userId,
+                        amount: share.amount
+                    };
+                    users.push(user);
+                    mapUserIdToShareDetails.set(share.userId, shareDetail);
+                    console.log("printing mappppp 1: ", mapUserIdToShareDetails.get(share.userId)?.amount)
+                    shareDetailsData.push(shareDetail);
+                    if(t == -1){
+                        t = share.amount;
+                    }else{
+                        if(t != share.amount){
+                            splitTypeString = 'unequally';
+                        }
+                    }
+                }
+                setSplitType(splitTypeString);
+                setSelectedUsers(users);
+                setShareDetails(shareDetailsData);
+                setMapUserIdToShareDetails(mapUserIdToShareDetails)
+            });
+>>>>>>> Stashed changes
         }
     };
 
     useEffect(() => {
         fetchData();
+<<<<<<< Updated upstream
     }, []);
+=======
+        fetchData2();
+    }, []); // Fetch data when eventId changes
+>>>>>>> Stashed changes
 
     useEffect(() => {
-        if (splitType == "unequally" && users.length > 0) {
-            const initialShareDetails = users.map(user => ({ userId: user.id!, amount: 0 }));
+        if (splitType == "unequally" && users.length > 0 && expenseId == "") {
+            const initialShareDetails = users.map(user => {
+                const shareDetailsObj = { userId: user.id!, amount: 0 };
+                mapUserIdToShareDetails.set(user.id!, shareDetailsObj);
+                return shareDetailsObj
+            }
+            );
             setShareDetails(initialShareDetails);
-        } else if (splitType == "equally" && selectedUsers.length > 0) {
+            setMapUserIdToShareDetails(mapUserIdToShareDetails)
+        } else if (splitType == "equally" && selectedUsers.length > 0 && expenseId == "") {
             const initialShareDetails = selectedUsers.map(user => ({ userId: user.id!, amount: 0 }));
             setShareDetails(initialShareDetails);
         }
@@ -99,6 +171,49 @@ const CreateExpenseDrawer = () => {
         }
     };
 
+
+    const handleEditExpense = async () => {
+        if (splitType == 'unequally') {
+            const totalShareAmount = shareDetails.reduce((total, share) => total + share.amount, 0);
+            if (totalShareAmount !== amount) {
+                alert("Sum of individual user shares must be equal to the expense amount!");
+                return;
+            }
+        }
+        const shares = shareDetails.map(share => ({
+            userId: share.userId,
+            amount: splitType == 'equally' ? amount / (selectedUsers.length) : share.amount
+        }));
+        let typeToPass;
+        switch (type) {
+            case 'event':
+                typeToPass = 'group';
+                break;
+            case 'friend':
+                typeToPass = 'friend';
+                break;
+        }
+        const updateExpenseObject = {
+            id: expenseId,
+            expenseName: expenseName,
+            amount: amount,
+            type: typeToPass,
+            paidBy: paidBy.id,
+            category: "food",
+            shares: shares,
+            date: selectedDate.toDateString()
+        };
+
+        try {
+            const result = await apiService.editExpense(updateExpenseObject as unknown as Expense);
+            if (result) {
+                navigate(`/expense/${result.id}`)
+            }
+        } catch (error) {
+            console.error('Unexpected error event creation:', error);
+        }
+    };
+
     const navigate = useNavigate();
 
     const handleGoBack = () => {
@@ -118,6 +233,7 @@ const CreateExpenseDrawer = () => {
 
         // Create a copy of the shareDetails array
         const updatedShareDetails = shareDetails.map(share => {
+            mapUserIdToShareDetails.set(share.userId!, share);
             if (share.userId === userId) {
                 return {
                     ...share,
@@ -126,6 +242,8 @@ const CreateExpenseDrawer = () => {
             }
             return share;
         });
+
+        setMapUserIdToShareDetails(mapUserIdToShareDetails)
 
         // Update the shareDetails state with the modified array
         setShareDetails(updatedShareDetails);
@@ -168,6 +286,7 @@ const CreateExpenseDrawer = () => {
                     renderInput={(params) => (
                         <TextField {...params} placeholder="Enter the payee" />
                     )}
+                    value={paidBy}
                 />
                 <FormControl>
                     <RadioGroup row aria-labelledby="demo-row-radio-buttons-group-label" name="row-radio-buttons-group"
@@ -189,6 +308,7 @@ const CreateExpenseDrawer = () => {
                             defaultValue={[]}
                             disableCloseOnSelect
                             limitTags={4}
+                            value={selectedUsers}
                             // isOptionEqualToValue=
                             renderOption={(props, option, { selected }) => (
                                 <li {...props}>
@@ -210,7 +330,9 @@ const CreateExpenseDrawer = () => {
                 {splitType === 'unequally' && showShareDetails && (
                     <>
                         <span ><strong>Split Unequally Among</strong></span>
-                        {users.map((user, index) => (
+                        {users.map((user) => {
+                            console.log("printing mapp ahain", mapUserIdToShareDetails.get(user.id!))
+                            return (
                             <div key={user.id}>
                                 <Row>
                                     <Col>
@@ -219,19 +341,25 @@ const CreateExpenseDrawer = () => {
                                     <Col>
                                         <input
                                             type="number"
-                                            value={shareDetails[index] ? shareDetails[index].amount : 0}
+                                            value={mapUserIdToShareDetails.has(user.id!) ? mapUserIdToShareDetails.get(user.id!)?.amount : 0}
                                             onChange={(e) => handleAmountChange(e, user.id)}
                                         />
                                     </Col>
                                 </Row>
                             </div>
-                        ))}
+                        )})}
                     </>
                 )}
             </Stack>
             <br />
+<<<<<<< Updated upstream
             <Button variant="contained" onClick={handleCreateExpense}>Add</Button>
         </DashboardContainer>
+=======
+
+            <Button variant="contained" onClick={expenseId == ""? handleCreateExpense:handleEditExpense}>{expenseId ==""? "Add":"Edit"}</Button>
+        </CreateExpenseWrapper>
+>>>>>>> Stashed changes
     );
 }
 
