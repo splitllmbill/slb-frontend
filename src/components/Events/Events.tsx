@@ -1,5 +1,4 @@
 import { FC, useEffect, useState } from 'react';
-import { NoExpensesWrapper } from './Events.styled';
 import { MdOutlineGroupAdd } from "react-icons/md";
 import EventCard from './EventCard/EventCard';
 import dataService from '../../services/DataService';
@@ -8,7 +7,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { useNavigate } from 'react-router-dom';
 import { TbFaceIdError } from "react-icons/tb";
 import NonGroupExpenseCard from './EventCard/NonGroupExpenseCard';
-import { DashboardContainer } from '../../App.styled';
+import { DashboardContainer, NoItemsWrapper } from '../../App.styled';
 
 
 interface EventsProps {
@@ -85,10 +84,10 @@ const Events: FC<EventsProps> = () => {
             </List>
           </>)}
         {showEvents && events && events?.events.length == 0 && (
-          <NoExpensesWrapper>
+          <NoItemsWrapper>
             <TbFaceIdError style={{ fontSize: 'xx-large' }}></TbFaceIdError>
             <h6>No events yet!</h6>
-          </NoExpensesWrapper>)}
+          </NoItemsWrapper>)}
       </>
     </DashboardContainer>
   );

@@ -47,7 +47,9 @@ const ExpenseDetail: FC = () => {
         if (expenseId) {
             await dataService.deleteExpense(expenseId).then((data) => {
                 alert(data.message)
-                if (data.success == 'true') navigate(-2);
+                if (data.success == 'true') {
+                    navigate(-2);
+                }
             });
         } else {
             alert("Invalid expense ID!")
