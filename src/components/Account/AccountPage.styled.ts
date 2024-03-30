@@ -33,6 +33,12 @@ export const Button = styled.button`
     &:hover {
         background-color: #0056b3;
     }
+
+    &:disabled {
+        background-color: #ced4da;
+        color: #6c757d;
+        cursor: not-allowed;
+    }
 `;
 
 export const Flex = styled.div`
