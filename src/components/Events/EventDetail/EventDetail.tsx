@@ -13,17 +13,19 @@ import { DashboardContainer } from "../../../App.styled";
 
 interface Expense {
   amount: number;
+  paidBy: string;
   id: string;
 }
 
 const EventDetail: FC = () => {
   const [event, setEvent] = useState<{ eventName: string; expenses: Expense[]; }>({ eventName: "", expenses: [] });
   const [summary, setSummary] = useState<{
-    inDebtTo: { name: string; amount: number }[];
-    isOwed: { name: string; amount: number }[];
+    userName:string;
+    inDebtTo: { id:string;name: string; amount: number }[];
+    isOwed: {id:string; name: string; amount: number }[];
     totalDebt: number;
     totalOwed: number;
-  }>({ inDebtTo: [], isOwed: [], totalDebt: 0, totalOwed: 0 });
+  }>({userName:"", inDebtTo: [], isOwed: [], totalDebt: 0, totalOwed: 0 });
 
   const { eventId } = useParams<{ eventId: string }>();
 
@@ -64,6 +66,33 @@ const EventDetail: FC = () => {
       });
     } else {
       alert("Invalid event ID!")
+    }
+  }
+
+  const handleSettleUp = async () => {
+    
+    const shares = summary.inDebtTo.map(creditorDetail => ({
+      userId: creditorDetail.id,
+      amount: creditorDetail.amount,
+    }));
+    const createExpenseObject = {
+      expenseName: summary.userName + " Settled Up!",
+      amount: summary.totalDebt,
+      type: "settle",
+      paidBy: localStorage.getItem("userId"),
+      eventId: eventId,
+      category: "settle",
+      shares:shares,
+      date:  new Date().toDateString()
+    };
+
+    try {
+      const result = await dataService.createExpense(createExpenseObject as unknown as globalThis.Expense);
+      if (result) {
+        navigate(`/expense/${result.id}`)
+      }
+    } catch (error) {
+        console.error('Unexpected error expense creation:', error);
     }
   }
 
@@ -114,8 +143,25 @@ const EventDetail: FC = () => {
         <br />
         <Row>
           <Col>
-            {(summary.totalDebt > summary.totalOwed) && <h5>Overall, you owe {summary.totalDebt - summary.totalOwed}</h5>}
-            {(summary.totalDebt < summary.totalOwed) && <h5>Overall, you are owed {summary.totalOwed - summary.totalDebt}</h5>}
+          <Row className="align-items-center"> {/* This ensures that all items in the row align vertically in the center */}
+            <Col xs={3} md={9} className="d-flex align-items-center"> {/* This makes sure the column itself is a flex container, aligning items vertically */}
+              {(summary.totalDebt > summary.totalOwed) && 
+                <h5>Overall, you owe {summary.totalDebt - summary.totalOwed}</h5>}
+              {(summary.totalDebt < summary.totalOwed) &&
+                <h5>Overall, you are owed {summary.totalOwed - summary.totalDebt}</h5>}
+                
+            </Col>
+
+             { (summary.totalOwed!=0) &&
+            <Col xs={3} md={3} className="d-flex align-items-center">
+              <Row className="align-items-center">
+                { (summary.totalOwed!=0) &&( <div> You have unsetlled dues...
+                  <button className="w-100" onClick={handleSettleUp}>
+                      {!isMobile && (<span>Settle Up!</span>)}
+                    </button> </div>)}
+              </Row>
+            </Col>}
+          </Row>
             {summary.isOwed.map(item => (
               <>
                 <FiCornerDownRight style={{ fontSize: 'x-large' }}></FiCornerDownRight> <span>{item.name} owes you Rs.{item.amount}</span>
