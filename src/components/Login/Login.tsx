@@ -49,17 +49,15 @@ const Login = () => {
             tempDisplayCode(result.emailCode);
             setisVerificationModalOpen(true);
          }
-
       } catch (error) {
          console.error("Error while generating verification code", error);
       }
-
-      setisVerificationModalOpen(true);
    }
 
-   const handleCloseVerification = () => {
+   const handleCloseVerification = (check: boolean = false) => {
       setisVerificationModalOpen(false);
-      navigate('/home');
+      if(check)
+         navigate('/home')
    }
 
    const handleSignUpOrLogin = async (event: any) => {
@@ -73,7 +71,7 @@ const Login = () => {
                localStorage.setItem('authToken', result.token);
                localStorage.setItem('userId', result.id);
                if(result.verified)
-                  return navigate('/home');
+                  navigate('/home');
                else
                   handleVerificationModal();
             } else if (buttonText === 'Signup') {

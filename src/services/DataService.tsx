@@ -611,6 +611,30 @@ const dataService = {
             throw error;
         }
     },
+    generateUPIQR: async (amount: number, note: string, destination: string = 'self') => {
+        try {
+            const response = await fetch(BASE_URL + `/db/upi/QR`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem('authToken')
+                },
+                body: JSON.stringify({
+                    "destination": destination,
+                    "amount": amount,
+                    "note": note
+                }),
+            });
+            if (!response.ok) {
+                throw new Error('Unable to generate QR failed');
+            }
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('Verification failed:', error);
+            throw error;
+        }
+    },
 };
 
 export default dataService;

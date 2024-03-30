@@ -5,7 +5,7 @@ import dataService from '../../../services/DataService';
 import './VerificationModal.css';
 
 interface VerificationModalProps {
-    handleClose: () => void;
+    handleClose: (check: boolean) => void;
     type: string;
     userData: any
 }
@@ -41,7 +41,7 @@ const VerificationModal: React.FC<VerificationModalProps> = ({ handleClose, type
           }
           else {
             alert('Verified '+ type);
-            handleClose();
+            handleClose(true);
           }
         } catch (error) {
             console.error("Error while validating verification code", error);
@@ -88,13 +88,13 @@ const VerificationModal: React.FC<VerificationModalProps> = ({ handleClose, type
         <Container>
             <Modal
                 open={true}
-                onClose={handleClose}
+                onClose={() => handleClose(false)}
                 aria-labelledby="verification-modal-title"
                 aria-describedby="verification-modal-description"
             >
                 <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', minWidth : '25%' }}>
                     <form className="form">
-                        <span className="close" onClick={handleClose}>X</span>
+                        <span className="close" onClick={() => handleClose(false)}>X</span>
                         <div className="info">
                             <span className="title">{type} Verification</span>
                             <p className="description">Enter the verification code sent via {type !== 'Email' ? 'sms' : type.toLocaleLowerCase() }</p>
@@ -108,7 +108,7 @@ const VerificationModal: React.FC<VerificationModalProps> = ({ handleClose, type
                                     key={index}
                                     id={`input-${index}`}
                                     maxLength={1}
-                                    type="tel"
+                                    type="text"
                                     placeholder=""
                                     value={code}
                                     onChange={(e) => handleChange(index, e.target.value)}
@@ -122,7 +122,7 @@ const VerificationModal: React.FC<VerificationModalProps> = ({ handleClose, type
                         <div className="action-btns">
                             <button type="button" className="verify" onClick={handleVerify}>Verify</button>
                             <button type="button" className="clear" onClick={handleClear}>Clear</button>
-                            <button type="button" className="cancel" onClick={handleClose}>Cancel</button>
+                            <button type="button" className="cancel" onClick={() => handleClose(false)}>Cancel</button>
                         </div>
                     </form>
                 </Box>
