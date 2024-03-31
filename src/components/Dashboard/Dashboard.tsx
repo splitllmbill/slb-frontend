@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from 'react';
 import { BottomNavWrapper, ContentArea, DashboardWrapper, HeaderWrapper } from './Dashboard.styled';
 import Header from '../Header/Header';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import Homepage from '../Homepage/Homepage';
 import FriendsPage from '../Friends/FriendsPage';
 import CreateEventDrawer from '../Events/CreateEventDrawer/CreateEventDrawer';
@@ -15,7 +15,6 @@ import AccountPage from '../Account/AccountPage';
 import SideNavBar from '../NavBars/SideNavBar/SideNavBar';
 import BottomNavBar from '../NavBars/BottomNavBar/BottomNavBar';
 import FriendDetail from '../Friends/FriendDetail/FriendDetail';
-import { selectedContent } from '../../services/State';
 
 interface DashboardProps { }
 
