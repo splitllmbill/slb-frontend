@@ -7,6 +7,8 @@ import Header from '../Header/Header';
 import apiService from '../../services/DataService';
 import { useNavigate } from 'react-router-dom';
 import ChangePasswordModal from '../Account/ChangePasswordModal/ChangePasswordModal';
+import VerificationModal from '../Account/VerificationModal/VerificationModal';
+
 
 const Login = () => {
    const appTitle = import.meta.env.VITE_APP_TITLE;
@@ -19,6 +21,8 @@ const Login = () => {
    const [buttonText, setButtonText] = useState('Login');
    const [alertInfo, setAlertInfo] = useState({ open: false, severity: 'success', message: '' });
    const [isModalOpen, setIsModalOpen] = useState(false);
+   const [isVerificationModalOpen, setisVerificationModalOpen] = useState(false);
+
 
    const openModal = () => {
       setIsModalOpen(true);
@@ -32,6 +36,30 @@ const Login = () => {
       setAlertInfo({ ...alertInfo, open: false });
    };
 
+   const tempDisplayCode = (code: string) => {
+      alert(code);
+   }
+   
+
+   const handleVerificationModal = async() => {
+      alert('Email is not yet verified. Please verify to access all functionality.')
+      try {
+         const result = await apiService.generateVerificationCode('email');
+         if (result) {
+            tempDisplayCode(result.emailCode);
+            setisVerificationModalOpen(true);
+         }
+      } catch (error) {
+         console.error("Error while generating verification code", error);
+      }
+   }
+
+   const handleCloseVerification = (check: boolean = false) => {
+      setisVerificationModalOpen(false);
+      if(check)
+         navigate('/home')
+   }
+
    const handleSignUpOrLogin = async (event: any) => {
       event.preventDefault();
       const formData = new FormData(event.target);
@@ -41,11 +69,11 @@ const Login = () => {
          if (result) {
             if (buttonText === 'Login') {
                localStorage.setItem('authToken', result.token);
-               const userResult = await apiService.getUserByEmail(formDataObject.email as unknown as string);
-               if (userResult) {
-                  localStorage.setItem('userId', userResult.id);
-               }
-               return navigate('/home');
+               localStorage.setItem('userId', result.id);
+               if(result.verified)
+                  navigate('/home');
+               else
+                  handleVerificationModal();
             } else if (buttonText === 'Signup') {
                setAlertInfo({ open: true, severity: 'success', message: 'Signup successful!' });
                setName('');
@@ -70,6 +98,7 @@ const Login = () => {
             <Header></Header>
             <br></br>
             {isModalOpen && <ChangePasswordModal onClose={closeModal} forgotPassword={true} />}
+            {isVerificationModalOpen && <VerificationModal handleClose={handleCloseVerification} type={'Email'} userData={{email: email}}/>}
             {alertInfo.open && (
                <Alert onClose={handleCloseAlert} severity={alertInfo.severity as AlertColor} sx={{ width: '100%' }}>
                   {alertInfo.message}
