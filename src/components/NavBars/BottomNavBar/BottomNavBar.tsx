@@ -19,7 +19,6 @@ const BottomNavBar: FC<BottomNavBarProps> = () => {
         navigate(itemRoutes[newValue]);
         setActiveItem(newValue);
         localStorage.setItem('selectedContent', newValue);
-        selectedContent.next(newValue);
         if (Object.values(itemRoutes).includes(location.pathname))
             navigate(itemRoutes[newValue])
     };
