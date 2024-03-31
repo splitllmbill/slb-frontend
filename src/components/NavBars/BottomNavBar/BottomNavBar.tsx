@@ -6,6 +6,7 @@ import { RiAccountBoxFill } from 'react-icons/ri';
 import { BiMoneyWithdraw } from 'react-icons/bi';
 import { itemRoutes, routeItems } from '../routes';
 import { useNavigate } from 'react-router-dom';
+import './BottomNavBar.css';
 
 interface BottomNavBarProps { }
 
