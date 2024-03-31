@@ -18,7 +18,7 @@ const SideNavBar: FC<SideNavBarProps> = () => {
 
    const navigate = useNavigate();
    const handleItemClick = (itemName: string) => {
-      localStorage.setItem('selectedContent',itemName);
+      localStorage.setItem('selectedContent', itemName);
       selectedContent.next(itemName)
    };
 
@@ -31,9 +31,9 @@ const SideNavBar: FC<SideNavBarProps> = () => {
       window.addEventListener('resize', handleResize);
 
       const subscription = selectedContent.subscribe((content: string) => {
-         console.log("yes", content);
          setActiveItem(content);
-         navigate(itemRoutes[content]);
+         if (Object.values(itemRoutes).includes(location.pathname))
+            navigate(itemRoutes[content]);
       });
 
       return () => {

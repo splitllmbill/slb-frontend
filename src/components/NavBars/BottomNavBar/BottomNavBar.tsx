@@ -17,9 +17,10 @@ const BottomNavBar: FC<BottomNavBarProps> = () => {
 
     const handleNavigationChange = (_event: React.ChangeEvent<{}>, newValue: string) => {
         setActiveItem(newValue);
-        localStorage.setItem('selectedContent',newValue);
+        localStorage.setItem('selectedContent', newValue);
         selectedContent.next(newValue);
-        navigate(itemRoutes[newValue])
+        if (Object.values(itemRoutes).includes(location.pathname))
+            navigate(itemRoutes[newValue])
     };
 
     useEffect(() => {
