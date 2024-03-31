@@ -1,33 +1,27 @@
-import React, { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { BottomNavWrapper, ContentArea, DashboardWrapper, HeaderWrapper } from './Dashboard.styled';
-import SideNavBar from '../SideNavBar/SideNavBar';
 import Header from '../Header/Header';
-import { BottomNavigation, BottomNavigationAction } from '@mui/material';
-import PersonalExpense from '../PersonalExpense/PersonalExpense';
-import Events from '../Events/Events';
-import AccountPage from '../Account/AccountPage';
+import { useLocation, useParams } from 'react-router-dom';
+import Homepage from '../Homepage/Homepage';
 import FriendsPage from '../Friends/FriendsPage';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import FriendDetail from '../Friends/FriendDetail/FriendDetail';
 import CreateEventDrawer from '../Events/CreateEventDrawer/CreateEventDrawer';
 import EventDetail from '../Events/EventDetail/EventDetail';
+import Events from '../Events/Events';
 import CreateExpenseDrawer from '../Expenses/CreateExpense/CreateExpense';
 import ExpenseDetail from '../Expenses/ExpenseDetail/ExpenseDetail';
-import { MdDashboard } from 'react-icons/md';
-import { BiMoneyWithdraw } from 'react-icons/bi';
-import { RiAccountBoxFill } from 'react-icons/ri';
-import { TiGroup } from 'react-icons/ti';
 import ShareBill from '../Expenses/ShareBill/ShareBill';
+import PersonalExpense from '../PersonalExpense/PersonalExpense';
+import AccountPage from '../Account/AccountPage';
+import SideNavBar from '../NavBars/SideNavBar/SideNavBar';
+import BottomNavBar from '../NavBars/BottomNavBar/BottomNavBar';
+import FriendDetail from '../Friends/FriendDetail/FriendDetail';
 
 interface DashboardProps { }
 
 const Dashboard: FC<DashboardProps> = () => {
   const [isSmallScreen, setIsSmallScreen] = useState(false);
-  const [selectedContent, setSelectedContent] = useState<string>(() => localStorage.getItem('selectedContent') || 'Events');
-  const [value, setValue] = useState(selectedContent);
 
   const location = useLocation();
-  const navigate = useNavigate();
 
   useEffect(() => {
     const handleResize = () => {
@@ -40,17 +34,8 @@ const Dashboard: FC<DashboardProps> = () => {
     return () => {
       window.removeEventListener('resize', handleResize);
     };
+
   }, []);
-
-  useEffect(() => {
-    localStorage.setItem('selectedContent', selectedContent);
-    setValue(selectedContent); // Ensure value is updated along with selectedContent
-  }, [selectedContent]);
-
-  const handleNavigationChange = (_event: React.ChangeEvent<{}>, newValue: string) => {
-    setSelectedContent(newValue);
-    navigate('/home');
-  };
 
   const { eventId } = useParams<{ eventId: string }>();
 
@@ -61,31 +46,25 @@ const Dashboard: FC<DashboardProps> = () => {
       </HeaderWrapper>
 
       <DashboardWrapper>
-        {!isSmallScreen && <SideNavBar onSelectContent={setSelectedContent} />}
+        {!isSmallScreen && <SideNavBar />}
         <ContentArea>
-          {(selectedContent === 'Friends' && location.pathname.startsWith('/friend')) && <FriendDetail />}
-          {(selectedContent === 'Friends' && location.pathname.startsWith('/home')) && <FriendsPage />}
-          {(selectedContent === 'Events' && location.pathname.startsWith('/createEvent')) && <CreateEventDrawer eventID='' />}
-          {(selectedContent === 'Events' && location.pathname.startsWith('/event') && location.pathname.endsWith('edit')) && <CreateEventDrawer eventID={eventId || ""} />}
-          {(selectedContent === 'Events' && location.pathname.startsWith('/event')) && !location.pathname.endsWith('edit') && <EventDetail />}
-          {(selectedContent === 'Events' && location.pathname.startsWith('/home')) && <Events currentEventID='' />}
-          {(selectedContent === 'Events' || selectedContent === 'Friends') && location.pathname.startsWith('/createExpense') && <CreateExpenseDrawer />}
-          {(location.pathname.startsWith('/expense/')) && <ExpenseDetail />}
-          {(selectedContent === 'Events' || selectedContent === 'Friends') && location.pathname.startsWith('/shareBill') && <ShareBill />}
-          {selectedContent === 'Personal Expenses' && <PersonalExpense />}
-          {selectedContent === 'Account' && <AccountPage />}
+          {location.pathname.startsWith('/friends') && <FriendsPage />}
+          {location.pathname.startsWith('/friend/') && <FriendDetail />}
+          {location.pathname.startsWith('/home') && <Homepage />}
+          {location.pathname.startsWith('/create-event') && <CreateEventDrawer eventID='' />}
+          {location.pathname.startsWith('/event/') && !location.pathname.endsWith('edit') && <EventDetail />}
+          {location.pathname.startsWith('/event/') && location.pathname.endsWith('edit') && <CreateEventDrawer eventID={eventId || ""} />}
+          {location.pathname.startsWith('/events') && <Events currentEventID='' />}
+          {location.pathname.startsWith('/create-expense') && <CreateExpenseDrawer />}
+          {location.pathname.startsWith('/expense/') && <ExpenseDetail />}
+          {location.pathname.startsWith('/share-bill') && <ShareBill />}
+          {location.pathname === '/personal-expenses' && <PersonalExpense />}
+          {location.pathname === '/user-account' && <AccountPage />}
         </ContentArea>
       </DashboardWrapper>
 
       <BottomNavWrapper>
-        {isSmallScreen && (
-          <BottomNavigation showLabels value={value} onChange={handleNavigationChange}>
-            <BottomNavigationAction label="Events" icon={<MdDashboard />} value="Events" />
-            <BottomNavigationAction label="Friends" icon={<TiGroup />} value="Friends" />
-            <BottomNavigationAction label="Personal Expenses" icon={<BiMoneyWithdraw />} value="Personal Expenses" />
-            <BottomNavigationAction label="Account" icon={<RiAccountBoxFill />} value="Account" />
-          </BottomNavigation>
-        )}
+        {isSmallScreen && <BottomNavBar />}
       </BottomNavWrapper>
     </>
   );

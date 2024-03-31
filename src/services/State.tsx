@@ -1,6 +1,7 @@
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 export const personalExpenseAdded = new Subject<void>();
+export const selectedContent = new BehaviorSubject<string>('Home');
 
 export const toTitleCase = (str: string) => {
     if (str)
