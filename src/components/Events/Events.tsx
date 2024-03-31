@@ -10,9 +10,7 @@ import NonGroupExpenseCard from './EventCard/NonGroupExpenseCard';
 import { DashboardContainer, NoItemsWrapper } from '../../App.styled';
 
 
-interface EventsProps {
-  currentEventID: string,
-}
+interface EventsProps { }
 
 const Events: FC<EventsProps> = () => {
   const [events, setEvents] = useState<EventsObject>({
@@ -30,18 +28,14 @@ const Events: FC<EventsProps> = () => {
   const [oweAmount, setOweAmount] = useState<number>(0);
 
   const fetchData = async () => {
-    try {
-      const eventData = await dataService.getUserEvents();
-      const nonGroupExpenseData = await dataService.getNonGroupExpenses();
-
+    await dataService.getUserEvents().then(async (eventData) => {
       setEvents(eventData);
-      setNonGroupExpenses(nonGroupExpenseData);
-
-      calculateAmount(eventData.overallOweAmount, eventData.owingPerson, nonGroupExpenseData.overallYouAreOwed, nonGroupExpenseData.overallYouOwe);
-      setShowEvents(true);
-    } catch (error) {
-      console.log("Error occurred:", error);
-    }
+      await dataService.getNonGroupExpenses().then((nonGroupExpenseData) => {
+        setNonGroupExpenses(nonGroupExpenseData);
+        calculateAmount(eventData.overallOweAmount, eventData.owingPerson, nonGroupExpenseData.overallYouAreOwed, nonGroupExpenseData.overallYouOwe);
+        setShowEvents(true);
+      })
+    });
   }
 
 
@@ -57,7 +51,7 @@ const Events: FC<EventsProps> = () => {
 
   useEffect(() => {
     fetchData();
-  }, [setEvents, oweAmount, owingPerson]);// Initial data fetch
+  }, []);// Initial data fetch
 
   const navigate = useNavigate();
   const handleCreateEvent = () => {

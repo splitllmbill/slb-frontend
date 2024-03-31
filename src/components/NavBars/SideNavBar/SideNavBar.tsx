@@ -18,6 +18,7 @@ const SideNavBar: FC<SideNavBarProps> = () => {
 
    const navigate = useNavigate();
    const handleItemClick = (itemName: string) => {
+      localStorage.setItem('selectedContent',itemName);
       selectedContent.next(itemName)
    };
 
