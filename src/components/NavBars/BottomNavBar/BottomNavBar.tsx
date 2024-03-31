@@ -7,6 +7,7 @@ import { BiMoneyWithdraw } from 'react-icons/bi';
 import { selectedContent } from '../../../services/State';
 import { itemRoutes } from '../routes';
 import { useNavigate } from 'react-router-dom';
+import './BottomNavBar.css';
 
 interface BottomNavBarProps { }
 

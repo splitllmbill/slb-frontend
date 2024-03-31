@@ -1,10 +1,9 @@
 import { FC, useState, useEffect } from 'react';
-import { H3, PaginationContainer, PersonalExpenseListWrapper } from './PersonalExpenseList.styled';
 import dataService from '../../../services/DataService';
 import { formatDate, formatDateForTransactions, personalExpenseAdded, toTitleCase } from '../../../services/State';
 import { AiOutlineDoubleRight } from "react-icons/ai";
 import Pagination from '@mui/material/Pagination';
-import { TableLikeRow, TableLikeRowItem } from '../../../App.styled';
+import { TableLikeRow, TableLikeRowItem, H3, PaginationContainer, PersonalExpenseListWrapper } from '../../../App.styled';
 
 interface PersonalExpenseListProps { }
 
