@@ -6,11 +6,13 @@ import './Login.css';
 import Header from '../Header/Header';
 import apiService from '../../services/DataService';
 import { useNavigate } from 'react-router-dom';
-import ChangePasswordModal from '../Account/ChangePasswordModal/ChangePasswordModal';
+// import ChangePasswordModal from '../Account/ChangePasswordModal/ChangePasswordModal';
 import VerificationModal from '../Account/VerificationModal/VerificationModal';
 
-
-const Login = () => {
+interface LoginProps {
+   loginRefresh: () => void;
+}
+const Login: React.FC<LoginProps> = ({ loginRefresh }) => {
    const appTitle = import.meta.env.VITE_APP_TITLE;
    let navigate = useNavigate();
    const [name, setName] = useState('');
@@ -20,17 +22,17 @@ const Login = () => {
    const [inviteCode, setInviteCode] = useState('');
    const [buttonText, setButtonText] = useState('Login');
    const [alertInfo, setAlertInfo] = useState({ open: false, severity: 'success', message: '' });
-   const [isModalOpen, setIsModalOpen] = useState(false);
+   // const [isModalOpen, setIsModalOpen] = useState(false);
    const [isVerificationModalOpen, setisVerificationModalOpen] = useState(false);
 
 
-   const openModal = () => {
-      setIsModalOpen(true);
-   }
+   // const openModal = () => {
+   //    setIsModalOpen(true);
+   // }
 
-   const closeModal = () => {
-      setIsModalOpen(false);
-   }
+   // const closeModal = () => {
+   //    setIsModalOpen(false);
+   // }
 
    const handleCloseAlert = () => {
       setAlertInfo({ ...alertInfo, open: false });
@@ -70,8 +72,10 @@ const Login = () => {
             if (buttonText === 'Login') {
                localStorage.setItem('authToken', result.token);
                localStorage.setItem('userId', result.id);
-               if(result.verified)
+               if(result.verified){
+                  loginRefresh();
                   navigate('/home');
+               }
                else
                   handleVerificationModal();
             } else if (buttonText === 'Signup') {
@@ -97,7 +101,7 @@ const Login = () => {
          <div className="login-container">
             <Header></Header>
             <br></br>
-            {isModalOpen && <ChangePasswordModal onClose={closeModal} forgotPassword={true} />}
+            {/* {isModalOpen && <ChangePasswordModal onClose={closeModal} forgotPassword={true} />} */}
             {isVerificationModalOpen && <VerificationModal handleClose={handleCloseVerification} type={'Email'} userData={{email: email}}/>}
             {alertInfo.open && (
                <Alert onClose={handleCloseAlert} severity={alertInfo.severity as AlertColor} sx={{ width: '100%' }}>
@@ -144,11 +148,11 @@ const Login = () => {
                               <Button variant="primary" type="submit">
                                  {buttonText}
                               </Button>
-                              <p>Or sign up with</p>
+                              {/* <p>Or sign up with</p>
                               <Button variant="outline-primary" type="submit">
                                  <i className="fab fa-google" /> Google
                               </Button>
-                              <a href="#" onClick={openModal}>Forgot password?</a>
+                              <a href="#" onClick={openModal}>Forgot password?</a> */}
                            </Form>
                         </Col>
                      </Row>

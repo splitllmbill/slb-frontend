@@ -12,8 +12,6 @@ import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import './CreateExpense.styles.css';
 import { MdOutlineReceiptLong } from "react-icons/md";
 import { DashboardContainer, Flex } from "../../../App.styled";
-import { share } from "rxjs";
-import { ElevatorSharp } from "@mui/icons-material";
 
 interface CreateExpenseDrawerProps {
     expenseId: string;

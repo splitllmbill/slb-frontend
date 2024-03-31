@@ -6,8 +6,7 @@ import { TiGroup, TiHome } from "react-icons/ti";
 import { RiAccountBoxFill } from "react-icons/ri";
 import { useNavigate } from 'react-router-dom';
 import { BiMoneyWithdraw } from 'react-icons/bi';
-import { selectedContent } from '../../../services/State';
-import { itemRoutes } from '../routes';
+import { itemRoutes, routeItems } from '../routes';
 
 
 interface SideNavBarProps { }
@@ -18,27 +17,23 @@ const SideNavBar: FC<SideNavBarProps> = () => {
 
    const navigate = useNavigate();
    const handleItemClick = (itemName: string) => {
-      localStorage.setItem('selectedContent', itemName);
-      selectedContent.next(itemName)
+      navigate(itemRoutes[itemName]);
+      setActiveItem(itemName);
    };
 
    useEffect(() => {
       const handleResize = () => {
          setIsSmallScreen(window.innerWidth <= 500);
       };
-
       handleResize();
       window.addEventListener('resize', handleResize);
-
-      const subscription = selectedContent.subscribe((content: string) => {
-         setActiveItem(content);
-         if (Object.values(itemRoutes).includes(location.pathname))
-            navigate(itemRoutes[content]);
-      });
-
+      const url = location.pathname;
+      let [,navItem] = Object.entries(routeItems).find(([key, _]) => url.startsWith(key)) || [];
+      if(navItem){
+         setActiveItem(navItem);
+      }
       return () => {
          window.removeEventListener('resize', handleResize);
-         subscription.unsubscribe();
       };
    }, [activeItem]);
 

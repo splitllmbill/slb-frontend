@@ -4,8 +4,7 @@ import { TiHome, TiGroup } from 'react-icons/ti';
 import { MdDashboard } from 'react-icons/md';
 import { RiAccountBoxFill } from 'react-icons/ri';
 import { BiMoneyWithdraw } from 'react-icons/bi';
-import { selectedContent } from '../../../services/State';
-import { itemRoutes } from '../routes';
+import { itemRoutes, routeItems } from '../routes';
 import { useNavigate } from 'react-router-dom';
 
 interface BottomNavBarProps { }
@@ -16,21 +15,16 @@ const BottomNavBar: FC<BottomNavBarProps> = () => {
     const [activeItem, setActiveItem] = useState('');
 
     const handleNavigationChange = (_event: React.ChangeEvent<{}>, newValue: string) => {
+        navigate(itemRoutes[newValue]);
         setActiveItem(newValue);
-        localStorage.setItem('selectedContent', newValue);
-        selectedContent.next(newValue);
-        if (Object.values(itemRoutes).includes(location.pathname))
-            navigate(itemRoutes[newValue])
     };
 
     useEffect(() => {
-        const subscription = selectedContent.subscribe((content: string) => {
-            setActiveItem(content);
-        });
-
-        return () => {
-            subscription.unsubscribe();
-        };
+        const url = location.pathname;
+        let [, navItem] = Object.entries(routeItems).find(([key, _]) => url.startsWith(key)) || [];
+        if (navItem) {
+            setActiveItem(navItem);
+        }
     }, [activeItem]);
 
     return (
