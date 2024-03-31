@@ -55,9 +55,9 @@ const Dashboard: FC<DashboardProps> = () => {
           {location.pathname.startsWith('/event/') && !location.pathname.endsWith('edit') && <EventDetail />}
           {location.pathname.startsWith('/event/') && location.pathname.endsWith('edit') && <CreateEventDrawer eventID={eventId || ""} />}
           {location.pathname.startsWith('/events') && <Events/>}
-          {location.pathname.startsWith('/create-expense') && <CreateExpenseDrawer />}
+          {location.pathname.startsWith('/createExpense') && <CreateExpenseDrawer />}
           {location.pathname.startsWith('/expense/') && <ExpenseDetail />}
-          {location.pathname.startsWith('/share-bill') && <ShareBill />}
+          {location.pathname.startsWith('/shareBill') && <ShareBill />}
           {location.pathname === '/personal-expenses' && <PersonalExpense />}
           {location.pathname === '/user-account' && <AccountPage />}
         </ContentArea>

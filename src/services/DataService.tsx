@@ -1,12 +1,7 @@
-const BASE_URL = import.meta.env.VITE_BACKEND_URL
+const BASE_URL = import.meta.env.VITE_BACKEND_URL;
+import fetchInterceptor from "./Interceptor";
 
 const dataService = {
-    setBearerToken: () => {
-        const modifyHeaders = (headers: Headers) => {
-            headers.set('Authorization', `Bearer ${localStorage.getItem('authToken')}`);
-        };
-        return modifyHeaders;
-    },
     signup: async (userData: User) => {
         try {
             const response = await fetch(BASE_URL + `/db/signup`, {
@@ -47,14 +42,7 @@ const dataService = {
     },
     logout: async () => {
         try {
-            const response = await fetch(`${BASE_URL}/db/logout`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + localStorage.getItem('authToken')
-                }
-            });
-
+            const response = await fetchInterceptor(`${BASE_URL}/db/logout`, 'POST', false);
             if (!response.ok) {
                 throw new Error('Login failed');
             }
@@ -67,15 +55,7 @@ const dataService = {
     },
     changePassword: async (requestData: { password: string }) => {
         try {
-            const response = await fetch(`${BASE_URL}/db/changePassword`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + localStorage.getItem('authToken')
-                },
-                body: JSON.stringify(requestData)
-            });
-
+            const response = await fetchInterceptor(`${BASE_URL}/db/changePassword`, 'PUT', true, JSON.stringify(requestData));
             if (!response.ok) {
                 throw new Error('Cannot change password');
             }
@@ -108,18 +88,10 @@ const dataService = {
     },
     addPersonalExpenseViaLLM: async (userMessage: string) => {
         try {
-            const response = await fetch(`${BASE_URL}/llm/expense`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ requestData: { sentence: userMessage } }),
-            });
-
+            const response = await fetchInterceptor(`${BASE_URL}/llm/expense`, 'POST', true, JSON.stringify({ requestData: { sentence: userMessage } }));
             if (!response.ok) {
                 throw new Error('Expense conversion failed');
             }
-
             const data = await response.json();
             return data;
         } catch (error) {
@@ -129,18 +101,7 @@ const dataService = {
     },
     createExpense: async (expenseData: Expense) => {
         try {
-            const headers = new Headers();
-            const modifyHeaders = dataService.setBearerToken();
-            modifyHeaders(headers);
-            const response = await fetch(`${BASE_URL}/db/expense`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + localStorage.getItem('authToken')
-                },
-                body: JSON.stringify(expenseData),
-            });
-
+            const response = await fetchInterceptor(`${BASE_URL}/db/expense`, 'POST', true, JSON.stringify(expenseData));
             if (!response.ok) {
                 throw new Error('Failed to create expense');
             }
@@ -154,13 +115,7 @@ const dataService = {
     },
     getExpensesForUser: async () => {
         try {
-            const response = await fetch(`${BASE_URL}/db/expenses/personal`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + localStorage.getItem('authToken')
-                }
-            });
+            const response = await fetchInterceptor(`${BASE_URL}/db/expenses/personal`, 'GET', false);
             const data = await response.json();
             return data;
         } catch (error) {
@@ -170,13 +125,7 @@ const dataService = {
     },
     getExpenseById: async (expenseId: string) => {
         try {
-            const response = await fetch(`${BASE_URL}/db/expense/${expenseId}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + localStorage.getItem('authToken')
-                }
-            });
+            const response = await fetchInterceptor(`${BASE_URL}/db/expense/${expenseId}`, 'GET', false);
             const data = await response.json();
             return data;
         } catch (error) {
@@ -186,14 +135,7 @@ const dataService = {
     },
     getUserEvents: async () => {
         try {
-            const response = await fetch(`${BASE_URL}/db/user/events`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + localStorage.getItem('authToken')
-                },
-            });
-
+            const response = await fetchInterceptor(`${BASE_URL}/db/user/events`, 'GET', false);
             if (!response.ok) {
                 throw new Error(`Error: ${response.status}`);
             }
@@ -204,17 +146,8 @@ const dataService = {
         }
     },
     createEvent: async (eventData: EventObject) => {
-        console.log(eventData)
         try {
-            const response = await fetch(`${BASE_URL}/db/event`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + localStorage.getItem('authToken')
-                },
-                body: JSON.stringify(eventData),
-            });
-
+            const response = await fetchInterceptor(`${BASE_URL}/db/event`, 'POST', true, JSON.stringify(eventData));
             if (!response.ok) {
                 console.log(response.json())
                 throw new Error(`Error: ${response.status}`);
@@ -226,17 +159,8 @@ const dataService = {
         }
     },
     editEvent: async (eventData: EventObject) => {
-        console.log(eventData)
         try {
-            const response = await fetch(`${BASE_URL}/db/event`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + localStorage.getItem('authToken')
-                },
-                body: JSON.stringify(eventData),
-            });
-
+            const response = await fetchInterceptor(`${BASE_URL}/db/event`, 'PUT', true, JSON.stringify(eventData));
             if (!response.ok) {
                 console.log(response.json())
                 throw new Error(`Error: ${response.status}`);
@@ -249,14 +173,7 @@ const dataService = {
     },
     getUserByEmail: async (emailID: string) => {
         try {
-            const response = await fetch(`${BASE_URL}/db/user-by-email/${emailID}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + localStorage.getItem('authToken')
-                },
-            });
-
+            const response = await fetchInterceptor(`${BASE_URL}/db/user-by-email/${emailID}`, 'GET', false);
             if (!response.ok) {
                 throw new Error(`Error: ${response.status}`);
             }
@@ -268,14 +185,7 @@ const dataService = {
     },
     getAllUsers: async () => {
         try {
-            const response = await fetch(`${BASE_URL}/db/users`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + localStorage.getItem('authToken')
-                },
-            });
-
+            const response = await fetchInterceptor(`${BASE_URL}/db/users`, 'GET', false);
             if (!response.ok) {
                 throw new Error(`Error: ${response.status}`);
             }
@@ -287,14 +197,7 @@ const dataService = {
     },
     getEvent: async (event_id: string) => {
         try {
-            const response = await fetch(`${BASE_URL}/db/event/${event_id}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + localStorage.getItem('authToken')
-                },
-            });
-
+            const response = await fetchInterceptor(`${BASE_URL}/db/event/${event_id}`, 'GET', false);
             if (!response.ok) {
                 throw new Error(`Error: ${response.status}`);
             }
@@ -306,14 +209,7 @@ const dataService = {
     },
     getEventExpenses: async (event_id: string) => {
         try {
-            const response = await fetch(`${BASE_URL}/db/event/${event_id}/expenses`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + localStorage.getItem('authToken')
-                },
-            });
-
+            const response = await fetchInterceptor(`${BASE_URL}/db/event/${event_id}/expenses`, 'GET', false);
             if (!response.ok) {
                 throw new Error(`Error: ${response.status}`);
             }
@@ -325,14 +221,7 @@ const dataService = {
     },
     getUserAccount: async () => {
         try {
-            const response = await fetch(`${BASE_URL}/db/user/account`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + localStorage.getItem('authToken')
-                },
-            });
-
+            const response = await fetchInterceptor(`${BASE_URL}/db/user/account`, 'GET', false);
             if (!response.ok) {
                 throw new Error(`Error: ${response.status}`);
             }
@@ -344,20 +233,10 @@ const dataService = {
     },
     updateUserAccount: async (account: { upiId: string, name: string }) => {
         try {
-            const response = await fetch(`${BASE_URL}/db/user/account`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + localStorage.getItem('authToken')
-                },
-                body: JSON.stringify(account)
-
-            });
-
+            const response = await fetchInterceptor(`${BASE_URL}/db/user/account`, 'PUT', true, JSON.stringify(account));
             if (!response.ok) {
                 throw new Error(`Error: ${response.status}`);
             }
-
             return response.json();
         } catch (error) {
             console.error('Error fetching event expenses:', error);
@@ -366,18 +245,10 @@ const dataService = {
     },
     getFriendsList: async () => {
         try {
-            const response = await fetch(`${BASE_URL}/db/user/friends`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + localStorage.getItem('authToken')
-                }
-            });
-
+            const response = await fetchInterceptor(`${BASE_URL}/db/user/friends`, 'GET', false);
             if (!response.ok) {
                 throw new Error(`Error: ${response.status}`);
             }
-
             return response.json();
         } catch (error) {
             console.error('Error fetching event expenses:', error);
@@ -386,18 +257,10 @@ const dataService = {
     },
     getFriendDetails: async (friend_id: string) => {
         try {
-            const response = await fetch(`${BASE_URL}/db/user/expense/friend/${friend_id}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + localStorage.getItem('authToken')
-                }
-            });
-
+            const response = await fetchInterceptor(`${BASE_URL}/db/user/expense/friend/${friend_id}`, 'GET', false);
             if (!response.ok) {
                 throw new Error(`Error: ${response.status}`);
             }
-
             return response.json();
         } catch (error) {
             console.error('Error fetching event expenses:', error);
@@ -406,18 +269,10 @@ const dataService = {
     },
     getUserSummaryForEvent: async (event_id: string) => {
         try {
-            const response = await fetch(`${BASE_URL}/db/user/event/${event_id}/dues`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + localStorage.getItem('authToken')
-                }
-            });
-
+            const response = await fetchInterceptor(`${BASE_URL}/db/user/event/${event_id}/dues`, 'GET', false);
             if (!response.ok) {
                 throw new Error(`Error: ${response.status}`);
             }
-
             return response.json();
         } catch (error) {
             console.error('Error fetching event expenses:', error);
@@ -426,14 +281,7 @@ const dataService = {
     },
     getNonGroupExpenses: async () => {
         try {
-            const response = await fetch(`${BASE_URL}/db/expense/nongroup`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + localStorage.getItem('authToken')
-                }
-            });
-
+            const response = await fetchInterceptor(`${BASE_URL}/db/expense/nongroup`, 'GET', false);
             if (!response.ok) {
                 throw new Error(`Error: ${response.status}`);
             }
@@ -446,14 +294,7 @@ const dataService = {
     },
     getPossibleUsersForExpense: async (id: string, type: string) => {
         try {
-            const response = await fetch(`${BASE_URL}/db/${type}/${id}/users`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + localStorage.getItem('authToken')
-                },
-            });
-
+            const response = await fetchInterceptor(`${BASE_URL}/db/${type}/${id}/users`, 'GET', false);
             if (!response.ok) {
                 throw new Error(`Error: ${response.status}`);
             }
@@ -465,14 +306,7 @@ const dataService = {
     },
     deleteEvent: async (eventId: string) => {
         try {
-            const response = await fetch(`${BASE_URL}/db/event/${eventId}`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + localStorage.getItem('authToken')
-                },
-            });
-
+            const response = await fetchInterceptor(`${BASE_URL}/db/event/${eventId}`, 'DELETE', false);
             if (!response.ok) {
                 throw new Error(`Error: ${response.status}`);
             }
@@ -484,15 +318,7 @@ const dataService = {
     },
     addFriend: async (friendCode: string) => {
         try {
-            const response = await fetch(BASE_URL + `/db/addFriend`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + localStorage.getItem('authToken')
-                },
-                body: JSON.stringify({ "friendCode": friendCode }),
-            });
-
+            const response = await fetchInterceptor(`${BASE_URL}/db/addFriend`, 'POST', true, JSON.stringify({ "friendCode": friendCode }));
             if (!response.ok) {
                 throw new Error('Add friend failed');
             }
@@ -505,15 +331,7 @@ const dataService = {
     },
     deleteFriend: async (friendCode: string) => {
         try {
-            const response = await fetch(BASE_URL + `/db/deleteFriend`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + localStorage.getItem('authToken')
-                },
-                body: JSON.stringify({ "friendCode": friendCode }),
-            });
-
+            const response = await fetchInterceptor(`${BASE_URL}/db/deleteFriend`, 'DELETE', true, JSON.stringify({ "friendCode": friendCode }));
             if (!response.ok) {
                 throw new Error('Add friend failed');
             }
@@ -526,14 +344,7 @@ const dataService = {
     },
     generateVerificationCode: async (type: string) => {
         try {
-            const response = await fetch(BASE_URL + `/db/verification/generate`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + localStorage.getItem('authToken')
-                },
-                body: JSON.stringify({ "type": type }),
-            });
+            const response = await fetchInterceptor(`${BASE_URL}/db/verification/generate`, 'POST', true, JSON.stringify({ "type": type }));
             if (!response.ok) {
                 throw new Error('Verification failed');
             }
@@ -546,18 +357,11 @@ const dataService = {
     },
     validateVerificationCode: async (type: string, code: string, field: number) => {
         try {
-            const response = await fetch(BASE_URL + `/db/verification/validate`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + localStorage.getItem('authToken')
-                },
-                body: JSON.stringify({
-                    "type": type,
-                    "code": code,
-                    "field": field
-                }),
-            });
+            const response = await fetchInterceptor(`${BASE_URL}/db/verification/validate`, 'POST', true, JSON.stringify({
+                "type": type,
+                "code": code,
+                "field": field
+            }));
             if (!response.ok) {
                 throw new Error('Verification failed');
             }
@@ -572,15 +376,7 @@ const dataService = {
         try {
             const formData = new FormData();
             formData.append('file', file);
-
-            const response = await fetch(BASE_URL + `/llm/upload`, {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'Authorization': 'Bearer ' + localStorage.getItem('authToken')
-                }
-            });
-
+            const response = await fetchInterceptor(`${BASE_URL}/llm/upload`, 'POST', false, formData);
             if (!response.ok) {
                 throw new Error('File upload failed');
             }
@@ -594,14 +390,7 @@ const dataService = {
     },
     deleteExpense: async (expenseId: string) => {
         try {
-            const response = await fetch(`${BASE_URL}/db/expense/${expenseId}`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + localStorage.getItem('authToken')
-                },
-            });
-
+            const response = await fetchInterceptor(`${BASE_URL}/db/expense/${expenseId}`, 'DELETE', false);
             if (!response.ok) {
                 throw new Error(`Error: ${response.status}`);
             }
@@ -613,18 +402,11 @@ const dataService = {
     },
     generateUPIQR: async (amount: number, note: string, destination: string = 'self') => {
         try {
-            const response = await fetch(BASE_URL + `/db/upi/QR`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + localStorage.getItem('authToken')
-                },
-                body: JSON.stringify({
-                    "destination": destination,
-                    "amount": amount,
-                    "note": note
-                }),
-            });
+            const response = await fetchInterceptor(`${BASE_URL}/db/upi/QR`, 'POST', true, JSON.stringify({
+                "destination": destination,
+                "amount": amount,
+                "note": note
+            }));
             if (!response.ok) {
                 throw new Error('Failed to generate QR');
             }
@@ -636,20 +418,12 @@ const dataService = {
         }
     },
     generateUPILink: async (amount: number, note: string, destination: string = 'self') => {
-        console.log(amount,note,destination);
         try {
-            const response = await fetch(BASE_URL + `/db/upi/link`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + localStorage.getItem('authToken')
-                },
-                body: JSON.stringify({
-                    "destination": destination,
-                    "amount": amount,
-                    "note": note
-                }),
-            });
+            const response = await fetchInterceptor(`${BASE_URL}/db/upi/link`, 'POST', true, JSON.stringify({
+                "destination": destination,
+                "amount": amount,
+                "note": note
+            }));
             if (!response.ok) {
                 throw new Error('Failed to generate UPI link');
             }
@@ -662,14 +436,7 @@ const dataService = {
     },
     settleUpWithFriend: async (friendId: string) => {
         try {
-            const response = await fetch(BASE_URL + `/db/user/expense/friend/`+friendId+`/settleup`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + localStorage.getItem('authToken')
-                },
-            });
-
+            const response = await fetchInterceptor(`${BASE_URL}/db/user/expense/friend/${friendId}/settleup`, 'POST', false);
             if (!response.ok) {
                 throw new Error('Settle failed');
             }
