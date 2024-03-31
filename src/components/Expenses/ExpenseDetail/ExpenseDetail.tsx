@@ -27,7 +27,7 @@ const ExpenseDetail: FC = () => {
         category: ""
     });
     const [showDetails, setShowDetails] = useState<boolean>(false);
-
+    const queryParams = new URLSearchParams(location.search);
     const { expenseId } = useParams<{ expenseId: string }>();
 
     const fetchData = () => {
@@ -56,13 +56,18 @@ const ExpenseDetail: FC = () => {
         }
     }
 
+    const handleEditExpense = async () => {
+      
+        navigate(`/expense/${expense.id}/edit?${queryParams.toString()}`);
+    }
+
     useEffect(() => {
         fetchData();
     }, [expenseId]); // Fetch data when eventId changes
 
     const navigate = useNavigate();
-    const handleGoBack = () => {
-        navigate(-1);
+    const handleGoBack = () => { 
+            navigate(-1);
     };
 
     const isMobile = window.innerWidth <= 500;
@@ -80,7 +85,7 @@ const ExpenseDetail: FC = () => {
                         </Col>
                         <Col xs={3} md={3}></Col>
                         <Col xs={3} md={3}>
-                            <button className="w-100">
+                            <button onClick={handleEditExpense} className="w-100">
                                 <BiEditAlt style={{ fontSize: 'x-large' }} />
                                 {!isMobile && (<span> Edit</span>)}
                             </button>
