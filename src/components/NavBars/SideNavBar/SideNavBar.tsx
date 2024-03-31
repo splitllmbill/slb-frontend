@@ -2,45 +2,57 @@ import { FC, useEffect, useState } from 'react';
 import { NavBar, SideNavBarWrapper } from './SideNavBar.styled';
 import './SideNavBar.css';
 import { MdDashboard } from "react-icons/md";
-import { TiGroup } from "react-icons/ti";
+import { TiGroup, TiHome } from "react-icons/ti";
 import { RiAccountBoxFill } from "react-icons/ri";
 import { useNavigate } from 'react-router-dom';
 import { BiMoneyWithdraw } from 'react-icons/bi';
+import { selectedContent } from '../../../services/State';
+import { itemRoutes } from '../routes';
 
 
-interface SideNavBarProps {
-   onSelectContent: (content: string) => void;
-}
+interface SideNavBarProps { }
 
-const SideNavBar: FC<SideNavBarProps> = ({ onSelectContent }) => {
-   const [activeItem, setActiveItem] = useState(localStorage.getItem('selectedContent') || 'Events');
+const SideNavBar: FC<SideNavBarProps> = () => {
+   const [activeItem, setActiveItem] = useState('');
    const [isSmallScreen, setIsSmallScreen] = useState(false);
 
    const navigate = useNavigate();
    const handleItemClick = (itemName: string) => {
-      setActiveItem(itemName);
-      onSelectContent(itemName);
-      localStorage.setItem('selectedContent', itemName); // Update localStorage
-      navigate('/home'); // Navigate to the home route
+      selectedContent.next(itemName)
    };
-   
+
    useEffect(() => {
       const handleResize = () => {
          setIsSmallScreen(window.innerWidth <= 500);
       };
 
-      handleResize(); // Initial check
+      handleResize();
       window.addEventListener('resize', handleResize);
+
+      const subscription = selectedContent.subscribe((content: string) => {
+         console.log("yes", content);
+         setActiveItem(content);
+         navigate(itemRoutes[content]);
+      });
 
       return () => {
          window.removeEventListener('resize', handleResize);
+         subscription.unsubscribe();
       };
-   }, []);
+   }, [activeItem]);
 
    return (
       <>
          <SideNavBarWrapper>
             <NavBar className={!isSmallScreen ? 'show' : ''}>
+
+               <div
+                  className={`nav-item ${activeItem === 'Home' ? 'active' : ''}`}
+                  onClick={() => handleItemClick('Home')}
+               >
+                  <TiHome style={{ fontSize: 'x-large', marginRight: '10px' }}></TiHome >
+                  Home
+               </div>
                <div
                   className={`nav-item ${activeItem === 'Events' ? 'active' : ''}`}
                   onClick={() => handleItemClick('Events')}
