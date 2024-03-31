@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from "react";
 import { NoExpensesWrapper } from "./EventDetail.styled";
 import dataService from "../../../services/DataService";
-import { List, Typography } from "@mui/material";
+import { CircularProgress, List, Typography } from "@mui/material";
 import { Col, Row } from 'react-bootstrap';
 import { MdOutlineDelete, MdOutlinePlaylistAdd, MdBorderColor } from "react-icons/md";
 import { useNavigate, useParams } from "react-router-dom";
@@ -10,6 +10,7 @@ import { FiCornerDownRight } from "react-icons/fi";
 import ExpenseCardNew from "../../Expenses/ExpenseCardNew/ExpenseCardNew";
 import { TbFaceIdError } from "react-icons/tb";
 import { DashboardContainer } from "../../../App.styled";
+import Pagination from '@mui/material/Pagination';
 
 interface Expense {
   amount: number;
@@ -19,13 +20,16 @@ interface Expense {
 
 const EventDetail: FC = () => {
   const [event, setEvent] = useState<{ eventName: string; expenses: Expense[]; }>({ eventName: "", expenses: [] });
+  const [showLoader, setShowLoader] = useState<boolean>(true);
   const [summary, setSummary] = useState<{
-    userName:string;
-    inDebtTo: { id:string;name: string; amount: number }[];
-    isOwed: {id:string; name: string; amount: number }[];
+    userName: string;
+    inDebtTo: { id: string; name: string; amount: number }[];
+    isOwed: { id: string; name: string; amount: number }[];
     totalDebt: number;
     totalOwed: number;
-  }>({userName:"", inDebtTo: [], isOwed: [], totalDebt: 0, totalOwed: 0 });
+  }>({ userName: "", inDebtTo: [], isOwed: [], totalDebt: 0, totalOwed: 0 });
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5; // Change this according to your preference
 
   const { eventId } = useParams<{ eventId: string }>();
 
@@ -34,6 +38,7 @@ const EventDetail: FC = () => {
       dataService.getUserSummaryForEvent(eventId).then(summary => setSummary(summary))
       dataService.getEventExpenses(eventId).then(data => {
         setEvent(data);
+        setShowLoader(false);
       })
         .catch(error => {
           console.error("Error fetching event expenses:", error);
@@ -70,7 +75,7 @@ const EventDetail: FC = () => {
   }
 
   const handleSettleUp = async () => {
-    
+
     const shares = summary.inDebtTo.map(creditorDetail => ({
       userId: creditorDetail.id,
       amount: creditorDetail.amount,
@@ -82,8 +87,8 @@ const EventDetail: FC = () => {
       paidBy: localStorage.getItem("userId"),
       eventId: eventId,
       category: "settle",
-      shares:shares,
-      date:  new Date().toDateString()
+      shares: shares,
+      date: new Date().toDateString()
     };
 
     try {
@@ -92,11 +97,19 @@ const EventDetail: FC = () => {
         navigate(`/expense/${result.id}`)
       }
     } catch (error) {
-        console.error('Unexpected error expense creation:', error);
+      console.error('Unexpected error expense creation:', error);
     }
   }
 
   const isMobile = window.innerWidth <= 500;
+
+  const handleChangePage = (_event: React.ChangeEvent<unknown>, page: number) => {
+    setCurrentPage(page);
+  };
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentExpenses = event.expenses.slice(indexOfFirstItem, indexOfLastItem);
 
   return (
     <DashboardContainer>
@@ -120,74 +133,78 @@ const EventDetail: FC = () => {
           </button>
         </Col>
         <Col xs={3} md={3}>
-          <button className="w-100" onClick={handleDeleteEvent}>  
+          <button className="w-100" onClick={handleDeleteEvent}>
             <MdOutlineDelete style={{ fontSize: 'x-large' }} />
             {!isMobile && (<span> Delete Event</span>)}
           </button>
         </Col>
       </Row>
       <br />
-      <div>
-        <Row>
-          <Col xs={12} sm={6}>
-            <Typography variant="h5" sx={{ fontWeight: 'bold', textTransform: 'capitalize' }}>
-              {event.eventName}
-            </Typography>
-          </Col>
-          <Col xs={12} sm={6} className="text-sm-end">
-            <Typography variant="h5" sx={{ fontWeight: 'bold', textTransform: 'capitalize' }}>
-              Total Expense: Rs. {event.expenses.reduce((a, v) => a + v.amount, 0)}
-            </Typography>
-          </Col>
-        </Row>
-        <br />
-        <Row>
-          <Col>
-          <Row className="align-items-center"> {/* This ensures that all items in the row align vertically in the center */}
-            <Col xs={6} md={9} className="d-flex align-items-center"> {/* This makes sure the column itself is a flex container, aligning items vertically */}
-              {(summary.totalDebt > summary.totalOwed) && 
-                <h5>Overall, you owe Rs.{summary.totalDebt - summary.totalOwed}</h5>}
-              {(summary.totalDebt < summary.totalOwed) &&
-                <h5>Overall, you are owed Rs.{summary.totalOwed - summary.totalDebt}</h5>}
-                
+      {showLoader && (<div className="d-flex justify-content-center align-items-center"><CircularProgress color="secondary" variant="indeterminate" /></div>)}
+      {!showLoader && (
+        <div>
+          <Row>
+            <Col xs={12} sm={6}>
+              <Typography variant="h5" sx={{ fontWeight: 'bold', textTransform: 'capitalize' }}>
+                {event.eventName}
+              </Typography>
             </Col>
-
-             { (summary.totalDebt!=0) &&
-            <Col xs={6} md={3} className="d-flex align-items-center">
-              <Row className="align-items-center">
-                { (summary.totalDebt!=0) &&( <div> You have unsetlled dues...
-                  <button className="w-100" onClick={handleSettleUp}>
-                      {!isMobile && (<span>Settle Up!</span>)}
-                    </button> </div>)}
-              </Row>
-            </Col>}
+            <Col xs={12} sm={6} className="text-sm-end">
+              <Typography variant="h5" sx={{ fontWeight: 'bold', textTransform: 'capitalize' }}>
+                Total Expense: Rs. {event.expenses.reduce((a, v) => a + v.amount, 0)}
+              </Typography>
+            </Col>
           </Row>
-            {summary.isOwed.map(item => (
-              <>
-                <FiCornerDownRight style={{ fontSize: 'x-large' }}></FiCornerDownRight> <span>{item.name} owes you Rs.{item.amount}</span>
-              </>
-            ))}
-            {summary.inDebtTo.map(item => (
-              <>
-                <FiCornerDownRight style={{ fontSize: 'x-large' }}></FiCornerDownRight> <span>You owe {item.name} Rs.{item.amount}</span>
-              </>
-            ))}
-          </Col>
-        </Row>
-        <br />
-        <List>
-          {event.expenses.map((expense) =>
-            <div key={expense.id} onClick={() => { }}>
-              <ExpenseCardNew expense={expense}></ExpenseCardNew>
-            </div>
-          )}
-          {event.expenses.length == 0 && (
-            <NoExpensesWrapper>
-              <TbFaceIdError style={{ fontSize: 'xx-large' }}></TbFaceIdError>
-              <h6>No expenses yet!</h6>
-            </NoExpensesWrapper>)}
-        </List>
-      </div>
+          <br />
+          <Row>
+            <Col>
+              <Row className="align-items-center"> {/* This ensures that all items in the row align vertically in the center */}
+                <Col xs={6} md={9} className="d-flex align-items-center"> {/* This makes sure the column itself is a flex container, aligning items vertically */}
+                  {(summary.totalDebt > summary.totalOwed) &&
+                    <h5>Overall, you owe Rs.{summary.totalDebt - summary.totalOwed}</h5>}
+                  {(summary.totalDebt < summary.totalOwed) &&
+                    <h5>Overall, you are owed Rs.{summary.totalOwed - summary.totalDebt}</h5>}
+
+                </Col>
+
+                {(summary.totalDebt != 0) &&
+                  <Col xs={6} md={3} className="d-flex align-items-center">
+                    <Row className="align-items-center">
+                      {(summary.totalDebt != 0) && (<div> You have unsetlled dues...
+                        <button className="w-100" onClick={handleSettleUp}>
+                          {!isMobile && (<span>Settle Up!</span>)}
+                        </button> </div>)}
+                    </Row>
+                  </Col>}
+              </Row>
+              {summary.isOwed.map(item => (
+                <>
+                  <FiCornerDownRight style={{ fontSize: 'x-large' }}></FiCornerDownRight> <span>{item.name} owes you Rs.{item.amount}</span>
+                </>
+              ))}
+              {summary.inDebtTo.map(item => (
+                <>
+                  <FiCornerDownRight style={{ fontSize: 'x-large' }}></FiCornerDownRight> <span>You owe {item.name} Rs.{item.amount}</span>
+                </>
+              ))}
+            </Col>
+          </Row>
+          <br />
+          <List>
+            {currentExpenses.map((expense) =>
+              <div key={expense.id}>
+                <ExpenseCardNew expense={expense}></ExpenseCardNew>
+              </div>
+            )}
+            {event.expenses.length == 0 && (
+              <NoExpensesWrapper>
+                <TbFaceIdError style={{ fontSize: 'xx-large' }}></TbFaceIdError>
+                <h6>No expenses yet!</h6>
+              </NoExpensesWrapper>)}
+          </List>
+          <Pagination count={Math.ceil(event.expenses.length / itemsPerPage)} page={currentPage} onChange={handleChangePage} />
+        </div>
+      )}
     </DashboardContainer >
   );
 }

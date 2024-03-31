@@ -11,7 +11,6 @@ import FriendCard from "./FriendCard/FriendCard";
 import { DashboardContainer, Flex, NoItemsWrapper } from "../../App.styled";
 
 const FriendsPage = () => {
-    const [loadHeader, setLoadHeader] = useState(false);
     const [friends, setFriends] = useState({
         "uuid": "",
         "overallYouOwe": "",
@@ -39,7 +38,6 @@ const FriendsPage = () => {
         try {
             const data = await dataService.getFriendsList();
             setFriends(data);
-            setLoadHeader(true);
             setShowLoader(false);
         } catch (error) {
             console.log("Error occurred");
@@ -71,7 +69,7 @@ const FriendsPage = () => {
             </Flex>
             <br />
             {showLoader && (<div className="d-flex justify-content-center align-items-center"><CircularProgress color="secondary" variant="indeterminate" /></div>)}
-            {!showLoader && loadHeader && (
+            {!showLoader && (
                 <>
                     <Row>
                         {alertInfo.open && (
