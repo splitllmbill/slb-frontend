@@ -54,7 +54,7 @@ const Dashboard: FC<DashboardProps> = () => {
           {location.pathname.startsWith('/create-event') && <CreateEventDrawer eventID='' />}
           {location.pathname.startsWith('/event/') && !location.pathname.endsWith('edit') && <EventDetail />}
           {location.pathname.startsWith('/event/') && location.pathname.endsWith('edit') && <CreateEventDrawer eventID={eventId || ""} />}
-          {location.pathname.startsWith('/events') && <Events currentEventID='' />}
+          {location.pathname.startsWith('/events') && <Events/>}
           {location.pathname.startsWith('/create-expense') && <CreateExpenseDrawer />}
           {location.pathname.startsWith('/expense/') && <ExpenseDetail />}
           {location.pathname.startsWith('/share-bill') && <ShareBill />}
