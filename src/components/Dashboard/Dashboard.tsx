@@ -55,7 +55,8 @@ const Dashboard: FC<DashboardProps> = () => {
   const { eventId } = useParams<{ eventId: string }>();
 
   const { expenseId } = useParams<{ expenseId: string }>();
-
+  // const queryParams = new URLSearchParams(window.location.search);
+  // queryParams.set('friendId', friendId!);
   return (
     <>
       <HeaderWrapper>
@@ -68,21 +69,14 @@ const Dashboard: FC<DashboardProps> = () => {
           {(selectedContent === 'Friends' && location.pathname.startsWith('/friend')) && <FriendDetail />}
           {(selectedContent === 'Friends' && location.pathname.startsWith('/home')) && <FriendsPage />}
           {(selectedContent === 'Events' && location.pathname.startsWith('/createEvent')) && <CreateEventDrawer eventID='' />}
-<<<<<<< Updated upstream
-          {(selectedContent === 'Events' && location.pathname.startsWith('/event') && location.pathname.endsWith('edit')) && <CreateEventDrawer eventID={eventId || ""} />}
-          {(selectedContent === 'Events' && location.pathname.startsWith('/event')) && !location.pathname.endsWith('edit') && <EventDetail />}
-          {(selectedContent === 'Events' && location.pathname.startsWith('/home')) && <Events currentEventID='' />}
-          {(selectedContent === 'Events' || selectedContent === 'Friends') && location.pathname.startsWith('/createExpense') && <CreateExpenseDrawer />}
-          {(location.pathname.startsWith('/expense/')) && <ExpenseDetail />}
-          {(selectedContent === 'Events' || selectedContent === 'Friends') && location.pathname.startsWith('/shareBill') && <ShareBill />}
-=======
+
           {(selectedContent === 'Events' && location.pathname.startsWith('/event') && location.pathname.endsWith('edit')) && !location.pathname.includes('expense') && <CreateEventDrawer eventID={eventId == undefined ? "" : eventId} />}
           {(selectedContent === 'Events' && location.pathname.startsWith('/event')) && !location.pathname.endsWith('edit') && <EventDetail />}
           {(selectedContent === 'Events' && location.pathname.startsWith('/home')) && <Events currentEventID='' />}
-          {(location.pathname.startsWith('/createExpense')) && <CreateExpenseDrawer expenseId='' />}
-          {(location.pathname.startsWith('/event/'))  && location.pathname.includes('/expense/')  &&  location.pathname.endsWith('edit')  && <CreateExpenseDrawer expenseId={expenseId == undefined ? "" : expenseId} />}
+          {(selectedContent === 'Events' || selectedContent === 'Friends') && (location.pathname.startsWith('/createExpense')) && <CreateExpenseDrawer expenseId='' />}
+          {location.pathname.startsWith('/expense/')  &&  location.pathname.endsWith('edit')  && <CreateExpenseDrawer expenseId={expenseId == undefined ? "" : expenseId} />}
           {(location.pathname.startsWith('/expense/')) && !location.pathname.endsWith('edit') && <ExpenseDetail />}
->>>>>>> Stashed changes
+          {(selectedContent === 'Events' || selectedContent === 'Friends') && location.pathname.startsWith('/shareBill') && <ShareBill />}
           {selectedContent === 'Personal Expenses' && <PersonalExpense />}
           {selectedContent === 'Account' && <AccountPage />}
         </ContentArea>

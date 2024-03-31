@@ -611,8 +611,7 @@ const dataService = {
             throw error;
         }
     },
-<<<<<<< Updated upstream
-=======
+
 
     editExpense: async (expenseData: Expense) => {
         console.log(expenseData)
@@ -638,7 +637,6 @@ const dataService = {
     },
 
 
->>>>>>> Stashed changes
 };
 
 export default dataService;

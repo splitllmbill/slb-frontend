@@ -10,12 +10,8 @@ import "react-datepicker/dist/react-datepicker.css";
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import './CreateExpense.styles.css';
-<<<<<<< Updated upstream
 import { MdOutlineReceiptLong } from "react-icons/md";
 import { DashboardContainer, Flex } from "../../../App.styled";
-
-const CreateExpenseDrawer = () => {
-=======
 import { share } from "rxjs";
 import { ElevatorSharp } from "@mui/icons-material";
 
@@ -23,7 +19,6 @@ interface CreateExpenseDrawerProps {
     expenseId: string;
  }
 const CreateExpenseDrawer: FC<CreateExpenseDrawerProps>= ({expenseId}) => {
->>>>>>> Stashed changes
     const [event, setEvent] = useState<Partial<EventObject>>({});
     const [users, setUsers] = useState<User[]>([]);
     const [expenseName, setExpenseName] = useState('');
@@ -38,6 +33,10 @@ const CreateExpenseDrawer: FC<CreateExpenseDrawerProps>= ({expenseId}) => {
     const { id } = useParams<{ id: string }>();
     const { type } = useParams<{ type: string }>();
     const [mapUserIdToShareDetails, setMapUserIdToShareDetails] = useState<Map<string, { userId: string; amount: number }>>(new Map());
+    const [eventId, setEventId] = useState<string>("");
+    const [eventType, setEventType] = useState<string>("");
+    const queryParams = new URLSearchParams(location.search);
+    const friendId = queryParams.get('friendId');
 
     const fetchData = () => {
         if (type) {
@@ -56,21 +55,16 @@ const CreateExpenseDrawer: FC<CreateExpenseDrawerProps>= ({expenseId}) => {
                     setEvent(data);
                 });
             }
-<<<<<<< Updated upstream
             apiService.getPossibleUsersForExpense(id, type).then(data => {
                 setUsers(data);
                 setShowShareDetails(true);
             });
-=======
+
         }
     };
 
     const fetchData2 = () => {
         if (expenseId) {
-            apiService.getEventUsers(id, "event").then(data => {
-                setUsers(data);
-                setShowShareDetails(true);
-            });
             apiService.getExpenseById(expenseId).then(data => {
                 setExpenseName(data.expenseName);
                 setAmount(data.amount);
@@ -104,23 +98,42 @@ const CreateExpenseDrawer: FC<CreateExpenseDrawerProps>= ({expenseId}) => {
                         }
                     }
                 }
+                setEventId(data.eventId)
+                console.log("setting event id", eventId, data.eventId)
+                setEventType(data.type)
+                console.log("setting event type", eventType, data.type)
                 setSplitType(splitTypeString);
                 setSelectedUsers(users);
                 setShareDetails(shareDetailsData);
                 setMapUserIdToShareDetails(mapUserIdToShareDetails)
+                console.log("printing event type", eventType)
+                
             });
->>>>>>> Stashed changes
         }
     };
 
     useEffect(() => {
         fetchData();
-<<<<<<< Updated upstream
-    }, []);
-=======
         fetchData2();
-    }, []); // Fetch data when eventId changes
->>>>>>> Stashed changes
+    }, []);
+
+    useEffect(() => {
+        if (expenseId) {
+        if (eventType == "friend"){
+            console.log("inside friend", friendId, eventType)
+            apiService.getPossibleUsersForExpense(friendId!, eventType!).then(data => {
+                setUsers(data);
+                setShowShareDetails(true);
+            });
+        }else{
+            console.log("inside non friend", eventId, eventType)
+            apiService.getPossibleUsersForExpense(eventId!, "event").then(data => {
+                setUsers(data);
+                setShowShareDetails(true);
+            });
+        }}
+    }, [eventType]);
+
 
     useEffect(() => {
         if (splitType == "unequally" && users.length > 0 && expenseId == "") {
@@ -207,7 +220,12 @@ const CreateExpenseDrawer: FC<CreateExpenseDrawerProps>= ({expenseId}) => {
         try {
             const result = await apiService.editExpense(updateExpenseObject as unknown as Expense);
             if (result) {
-                navigate(`/expense/${result.id}`)
+                if(friendId){
+                    navigate(`/expense/${expenseId}?friendId=${friendId}`)
+                }else{
+                    navigate(`/expense/${expenseId}`)
+                }   
+               
             }
         } catch (error) {
             console.error('Unexpected error event creation:', error);
@@ -233,8 +251,11 @@ const CreateExpenseDrawer: FC<CreateExpenseDrawerProps>= ({expenseId}) => {
 
         // Create a copy of the shareDetails array
         const updatedShareDetails = shareDetails.map(share => {
-            mapUserIdToShareDetails.set(share.userId!, share);
             if (share.userId === userId) {
+                mapUserIdToShareDetails.set(share.userId!, {
+                    ...share,
+                    amount: parseFloat(value)
+                });
                 return {
                     ...share,
                     amount: parseFloat(value)
@@ -264,7 +285,7 @@ const CreateExpenseDrawer: FC<CreateExpenseDrawerProps>= ({expenseId}) => {
                 </button>
             </Flex>
             <Stack spacing={2} useFlexGap direction="column">
-                <h3>Add a New Expense</h3>
+                <h3>{expenseId ==""? "Add a New Expense":"Edit Expense"}</h3>
                 <span><strong>Expense Name</strong></span>
                 <TextField type="name" onChange={(event) => setExpenseName(event.target.value)} value={expenseName} name="name" required />
                 <span><strong>Date </strong></span>
@@ -352,14 +373,8 @@ const CreateExpenseDrawer: FC<CreateExpenseDrawerProps>= ({expenseId}) => {
                 )}
             </Stack>
             <br />
-<<<<<<< Updated upstream
-            <Button variant="contained" onClick={handleCreateExpense}>Add</Button>
-        </DashboardContainer>
-=======
-
             <Button variant="contained" onClick={expenseId == ""? handleCreateExpense:handleEditExpense}>{expenseId ==""? "Add":"Edit"}</Button>
-        </CreateExpenseWrapper>
->>>>>>> Stashed changes
+        </DashboardContainer>
     );
 }
 
