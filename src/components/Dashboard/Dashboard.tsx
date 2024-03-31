@@ -39,6 +39,9 @@ const Dashboard: FC<DashboardProps> = () => {
 
   const { eventId } = useParams<{ eventId: string }>();
 
+  const { expenseId } = useParams<{ expenseId: string }>();
+  // const queryParams = new URLSearchParams(window.location.search);
+  // queryParams.set('friendId', friendId!);
   return (
     <>
       <HeaderWrapper>
@@ -56,10 +59,12 @@ const Dashboard: FC<DashboardProps> = () => {
           {location.pathname.startsWith('/event/') && location.pathname.endsWith('edit') && <CreateEventDrawer eventID={eventId || ""} />}
           {location.pathname.startsWith('/events') && <Events/>}
           {location.pathname.startsWith('/createExpense') && <CreateExpenseDrawer />}
-          {location.pathname.startsWith('/expense/') && <ExpenseDetail />}
+          {location.pathname.startsWith('/expense/')  &&  location.pathname.endsWith('edit')  && <CreateExpenseDrawer expenseId={expenseId == undefined ? "" : expenseId} />}
+          {(location.pathname.startsWith('/expense/')) && !location.pathname.endsWith('edit') && <ExpenseDetail />}
           {location.pathname.startsWith('/shareBill') && <ShareBill />}
           {location.pathname === '/personal-expenses' && <PersonalExpense />}
           {location.pathname === '/user-account' && <AccountPage />}
+         
         </ContentArea>
       </DashboardWrapper>
 

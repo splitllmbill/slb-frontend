@@ -53,7 +53,6 @@ function App() {
             <Route path="shareBill/:expenseType" element={<Dashboard />} />
           </>
         ) : null}
-
       </Routes>
     </BrowserRouter>
   );

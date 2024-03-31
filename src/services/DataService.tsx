@@ -447,6 +447,28 @@ const dataService = {
             throw error;
         }
     },
+    editExpense: async (expenseData: Expense) => {
+        console.log(expenseData)
+        try {
+            const response = await fetch(`${BASE_URL}/db/expense/${expenseData.id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem('authToken')
+                },
+                body: JSON.stringify(expenseData),
+            });
+
+            if (!response.ok) {
+                console.log(response.json())
+                throw new Error(`Error: ${response.status}`);
+            }
+            return response.json();
+        } catch (error) {
+            console.error('Error updating user event expenses:', error);
+            throw error;
+        }
+    },
 };
 
 export default dataService;
