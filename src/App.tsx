@@ -51,6 +51,7 @@ function App() {
             <Route path="createExpense/:type/:id" element={<Dashboard />} />
             <Route path="expense/:expenseId" element={<Dashboard />} />
             <Route path="shareBill/:expenseType" element={<Dashboard />} />
+            <Route path="expense/:expenseId/edit"  element={<Dashboard/>} />
           </>
         ) : null}
       </Routes>
