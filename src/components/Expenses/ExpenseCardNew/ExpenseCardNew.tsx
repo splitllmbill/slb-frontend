@@ -20,9 +20,11 @@ const ExpenseCardNew: FC<ExpenseCardNewProps> = ({ expense }) => {
     
     const isMobile = window.innerWidth <= 500;
 
+    //exiting path name
     const navigate = useNavigate();
     const handleClick = () => {
-       navigate(`/expense/${expense.expenseId}`);
+        const queryParams = new URLSearchParams(location.search);
+       navigate(`/expense/${expense.expenseId}?${queryParams.toString()}`);
     };
 
     return (
