@@ -21,7 +21,7 @@ const Homepage: React.FC = () => {
         <Container>
           <Row>
             <Col xs={12}>
-              <h3>Welcome, Saroja! {isMobile}</h3>
+              <h3>Welcome, Saroja!{isMobile}</h3>
             </Col>
           </Row>
           <br />
