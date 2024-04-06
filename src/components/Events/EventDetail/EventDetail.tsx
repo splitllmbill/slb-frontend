@@ -11,6 +11,7 @@ import ExpenseCardNew from "../../Expenses/ExpenseCardNew/ExpenseCardNew";
 import { TbFaceIdError } from "react-icons/tb";
 import { DashboardContainer } from "../../../App.styled";
 import Pagination from '@mui/material/Pagination';
+import SettleExpenseModal from "../../Expenses/SettleExpenseModal/SettleExpenseModal";
 
 interface Expense {
   amount: number;
@@ -30,9 +31,11 @@ const EventDetail: FC = () => {
   }>({ userName: "", inDebtTo: [], isOwed: [], totalDebt: 0, totalOwed: 0 });
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5; // Change this according to your preference
+  const [isModalOpen, setisModalOpen] = useState(false);
 
   const { eventId } = useParams<{ eventId: string }>();
 
+  const [modalInput,setModalInput] = useState<{id:string; name: string; due: number }[]>([]);
   const fetchData = () => {
     if (eventId) {
       dataService.getUserSummaryForEvent(eventId).then(summary => setSummary(summary))
@@ -48,6 +51,10 @@ const EventDetail: FC = () => {
     }
   }
 
+  useEffect(()=>{
+    const input = summary.inDebtTo.map((data)=>{return {id:data.id,name:data.name,due:data.amount}})
+    setModalInput(input);
+  },[summary]);
   useEffect(() => {
     fetchData();
   }, [eventId]); // Fetch data when eventId changes
@@ -74,15 +81,11 @@ const EventDetail: FC = () => {
     }
   }
 
-  const handleSettleUp = async () => {
-
-    const shares = summary.inDebtTo.map(creditorDetail => ({
-      userId: creditorDetail.id,
-      amount: creditorDetail.amount,
-    }));
+  const handleSettleUp = async (shares:{userId:string,amount:number}[]) => {
+    setisModalOpen(false);
     const createExpenseObject = {
       expenseName: summary.userName + " Settled Up!",
-      amount: summary.totalDebt,
+      amount: shares[0].amount,
       type: "settle",
       paidBy: localStorage.getItem("userId"),
       eventId: eventId,
@@ -113,6 +116,9 @@ const EventDetail: FC = () => {
 
   return (
     <DashboardContainer>
+       {isModalOpen && <SettleExpenseModal onClose={ () => setisModalOpen(false)} eventSettleUp={handleSettleUp} friendData={modalInput}
+            settleType='event'
+            />}
       <Row>
         <Col xs={3} md={3}>
           <button onClick={handleGoBack} className="w-100">
@@ -167,15 +173,16 @@ const EventDetail: FC = () => {
 
                 </Col>
 
-                {(summary.totalDebt != 0) &&
-                  <Col xs={6} md={3} className="d-flex align-items-center">
-                    <Row className="align-items-center">
-                      {(summary.totalDebt != 0) && (<div> You have unsetlled dues...
-                        <button className="w-100" onClick={handleSettleUp}>
+                { (summary.totalDebt!=0) &&
+                <Col xs={6} md={3} className="d-flex align-items-center">
+                  <Row className="align-items-center">
+                    { (summary.totalDebt!=0) &&( <div> You have dues...
+                      <button className="w-100" onClick={()=> setisModalOpen(true)}>
                           {!isMobile && (<span>Settle Up!</span>)}
                         </button> </div>)}
-                    </Row>
-                  </Col>}
+                  </Row>
+                </Col>}
+             
               </Row>
               {summary.isOwed.map(item => (
                 <>
