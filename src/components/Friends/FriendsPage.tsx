@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { Alert, Col, Row } from "react-bootstrap";
+import { useParams, useNavigate } from 'react-router-dom';
+import { Col, Row } from "react-bootstrap";
 import { CircularProgress, List } from "@mui/material";
 import { AiOutlineUsergroupAdd } from "react-icons/ai";
 import { IoMdSearch } from "react-icons/io";
@@ -8,9 +9,12 @@ import { TbFaceIdError, TbUserCode } from "react-icons/tb";
 import dataService from "../../services/DataService";
 import AddFriend from "./AddFriend/AddFriend";
 import FriendCard from "./FriendCard/FriendCard";
+import FriendLink from "../Common/FriendLink";
 import { DashboardContainer, Flex, NoItemsWrapper } from "../../App.styled";
 
 const FriendsPage = () => {
+    const { friendId } = useParams();
+    const navigate = useNavigate();
     const [friends, setFriends] = useState({
         "uuid": "",
         "overallYouOwe": "",
@@ -21,7 +25,6 @@ const FriendsPage = () => {
         open: true,
         severity: 'light'
     });
-    const [variant] = useState('light')
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [showLoader, setShowLoader] = useState(true);
 
@@ -31,7 +34,7 @@ const FriendsPage = () => {
 
     const handleCloseAddFriend = () => {
         setIsModalOpen(false);
-        fetchData();
+        navigate('/friends')
     };
 
     const fetchData = async () => {
@@ -47,15 +50,12 @@ const FriendsPage = () => {
 
     useEffect(() => {
         fetchData();
+        if(friendId)
+            setIsModalOpen(true);
     }, []);
 
     const handleAlertToggle = () => {
         setAlertInfo({ ...alertInfo, open: !alertInfo.open });
-    };
-
-    const handleCopyToClipboard = (text: string) => {
-        navigator.clipboard.writeText(text);
-        alert('Copied to clipboard!');
     };
 
     return (
@@ -73,12 +73,10 @@ const FriendsPage = () => {
                 <>
                     <Row>
                         {alertInfo.open && (
-                            <Alert key={variant} variant={variant} style={{ width: '100%' }} dismissible>
-                                Share this unique friend code <a href="#" onClick={() => handleCopyToClipboard(friends.uuid)}>{friends.uuid}</a> with friends who want to add you on SplitLLM!
-                            </Alert>
+                            <FriendLink friendCode={friends.uuid} dismissable={true} />
                         )}
                     </Row>
-                    {isModalOpen && <AddFriend onClose={handleCloseAddFriend} />}
+                    {isModalOpen && <AddFriend friendId={ friendId || '' } onClose={handleCloseAddFriend} />}
                     <div>
                         {parseFloat(friends.overallYouOwe) !== 0.0 && (
                             <h4>Overall, you owe Rs.{friends.overallYouOwe}</h4>

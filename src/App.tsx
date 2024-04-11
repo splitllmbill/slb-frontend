@@ -45,6 +45,7 @@ function App() {
             <Route path="personal-expenses" element={<Dashboard />} />
             <Route path="user-account" element={<Dashboard />} />
             <Route path="friend/:friendId" element={<Dashboard />} />
+            <Route path="add-friend/:friendId" element={<Dashboard />} />
             <Route path="create-event" element={<Dashboard />} />
             <Route path="event/:eventId" element={<Dashboard />} />
             <Route path="event/:eventId/edit" element={<Dashboard />} />

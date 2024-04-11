@@ -40,8 +40,6 @@ const Dashboard: FC<DashboardProps> = () => {
   const { eventId } = useParams<{ eventId: string }>();
 
   const { expenseId } = useParams<{ expenseId: string }>();
-  // const queryParams = new URLSearchParams(window.location.search);
-  // queryParams.set('friendId', friendId!);
   return (
     <>
       <HeaderWrapper>
@@ -51,6 +49,7 @@ const Dashboard: FC<DashboardProps> = () => {
       <DashboardWrapper>
         {!isSmallScreen && <SideNavBar />}
         <ContentArea>
+          {location.pathname.startsWith('/add-friend') && <FriendsPage />}
           {location.pathname.startsWith('/friends') && <FriendsPage />}
           {location.pathname.startsWith('/friend/') && <FriendDetail />}
           {location.pathname.startsWith('/home') && <Homepage />}

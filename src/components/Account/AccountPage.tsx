@@ -17,6 +17,7 @@ import { Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import ChangePasswordModal from './ChangePasswordModal/ChangePasswordModal';
 import VerificationModal from './VerificationModal/VerificationModal';
+import FriendLink from '../Common/FriendLink';
 import { Flex, Button } from '../../App.styled';
 import QRModal from './QRModal/QRModal';
 
@@ -69,31 +70,41 @@ const UserPage = () => {
         fetchData();
     }, [apiData.refresh]);
 
+    const validateUPI = (upiId: string): boolean => {
+        const upiRegex = /[a-zA-Z0-9.\-_]{2,256}@[a-zA-Z]{2,64}/;
+        const valid = upiRegex.test(upiId)
+        return valid;
+    };
+
     const handleSubmit = async (event: any) => {
         event.preventDefault();
-        try {
-            const result = await dataService.updateUserAccount({
-                upiId: userData.upiId,
-                name: userData.name
-            });
-            if (result) {
-                alert('Updated successfully!')
-                setApiData({
-                    ...apiData,
-                    refresh: !apiData.refresh
-                })
-            }
-
-        } catch (error) {
-            console.error("Error occurred while updating user account", error);
+        if(validateUPI(userData.upiId)){
+            try {
+                const result = await dataService.updateUserAccount({
+                    upiId: userData.upiId,
+                    name: userData.name
+                });
+                if (result) {
+                    alert('Updated successfully!')
+                    setApiData({
+                        ...apiData,
+                        refresh: !apiData.refresh
+                    })
+                }
+    
+            } catch (error) {
+                console.error("Error occurred while updating user account", error);
+            }    
         }
+        else
+            alert('Invalid UPI Id');
     };
 
     const handleCopyToClipboard = (text: string, type: string) => {
         if (navigator.clipboard) {
             navigator.clipboard.writeText(text)
                 .then(() => {
-                    alert('Copied ' + type + ' code to clipboard!');
+                    alert('Copied ' + type + ' to clipboard!');
                 })
                 .catch((err) => {
                     console.error('Failed to copy: ', err);
@@ -115,15 +126,12 @@ const UserPage = () => {
         textArea.select();
         try {
             document.execCommand('copy');
-            // if(type !== 'code')
-                alert('Copied ' + type + ' code to clipboard!');
+            alert('Copied ' + type + ' code to clipboard!');
         } catch (err) {
             console.error('Failed to copy ', err);
         }
         document.body.removeChild(textArea);
     }
-
-
 
     const handleLogout = async () => {
         try {
@@ -230,7 +238,6 @@ const UserPage = () => {
       };
     
     const tempDisplayCode = (code: string) => {
-        // handleCopyToClipboard(code,'code');
         alert('Verification Code: ' + code);
     }
 
@@ -242,14 +249,12 @@ const UserPage = () => {
                     <button onClick={handleLogout}>Logout <IoLogOutOutline style={{ fontSize: 'x-large' }}></IoLogOutOutline></button>
                 </Flex>
                 <h2>Edit User Information</h2>
-                <Alert key='light' variant='light' style={{ width: '100%' }} >
-                    Share this unique friend code <a style={{ color: '#007bff', cursor: 'pointer' }} onClick={() => handleCopyToClipboard(userData.uuid, 'friend')}>{userData.uuid} </a> with friends who want to add you on {appTitle} !
-                </Alert>
+                <FriendLink friendCode={userData.uuid} dismissable={false} />
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <Alert key='light' variant='light' style={{ width: '67.5%' }} >
-                        Share this unique invite code <a style={{ color: '#007bff', cursor: 'pointer' }} onClick={() => handleCopyToClipboard(userData.inviteCode, 'invite')}>{userData.inviteCode} </a> to refer your friends and family and get exciting rewards in {appTitle}.
+                    <Alert variant='primary' style={{ width: '67.5%' }} >
+                        Share this unique invite code <a style={{ color: '#007bff', cursor: 'pointer' }} onClick={() => handleCopyToClipboard(userData.inviteCode, 'invite code')}>{userData.inviteCode} </a> to refer your friends and family and get exciting rewards in {appTitle}.
                     </Alert>
-                    <Alert key='light' variant='success' style={{ width: '9.5%' , minWidth: '100px'}} >
+                    <Alert variant='success' style={{ width: '9.5%' , minWidth: '100px'}} >
                         Referrals: <b>{userData.referralCount}</b>
                     </Alert>
                 </div>
@@ -433,14 +438,17 @@ const UserPage = () => {
                             value={userData.upiId}
                             onChange={(e) => setUserData({ ...userData, upiId: e.target.value })}
                         />
-                        <Tooltip title="View QR">
-                            <IconButton
-                                size="small"
-                                style={{ width: 'auto', height: 'auto', marginBottom: '10px', marginRight: '10px' }}
-                                onClick={handleGenerateQR}
-                            >
-                                <QrCode2OutlinedIcon style={{ color: 'black' }} />
-                            </IconButton>
+                        <Tooltip title={validateUPI(userData.upiId) ? "View QR" : "Invalid UPI Id"}>
+                            <span>
+                                <IconButton
+                                    disabled={!validateUPI(userData.upiId)}
+                                    size="small"
+                                    style={{ width: 'auto', height: 'auto', marginBottom: '10px', marginRight: '10px', cursor: validateUPI(userData.upiId) ? 'auto' : 'not-allowed'  }}
+                                    onClick={handleGenerateQR}
+                                >
+                                    <QrCode2OutlinedIcon style={{ color: validateUPI(userData.upiId) ? 'black' : 'grey' }} />
+                                </IconButton>
+                            </span>
                         </Tooltip>
                     </div>
                     <br />

@@ -64,7 +64,13 @@ function FriendDetail() {
                     setFriendData(data);
                     setShowLoader(false);
                 })
-                .catch(error => console.error('Error fetching friend data:', error));
+                .catch((error: Error): void => {
+                    if (error instanceof Error && error.message.startsWith('Error: 400')) {
+                        navigate('/friends')
+                    } else {
+                        console.error('Error while getting friend details',error);
+                    }
+                });
         }
     }, [refetchData, friendId]); // useEffect dependency
 
@@ -75,8 +81,9 @@ function FriendDetail() {
     const handleRemoveFriend = async () => {
         await dataService.deleteFriend(friendData.uuid).then((data) => {
             alert(data.message);
-            if (data.success === true)
-                navigate(-1);
+            if (Boolean(data.success) == true){
+                navigate('/friends');
+            }
         });
     };
 
