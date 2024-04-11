@@ -104,7 +104,7 @@ const EventDetail: FC = () => {
     }
   }
 
-  const isMobile = window.innerWidth <= 500;
+  const isMobile = window.innerWidth <= 650;
 
   const handleChangePage = (_event: React.ChangeEvent<unknown>, page: number) => {
     setCurrentPage(page);

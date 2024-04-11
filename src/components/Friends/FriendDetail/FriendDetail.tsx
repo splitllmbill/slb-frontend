@@ -87,7 +87,7 @@ function FriendDetail() {
         });
     };
 
-    const isMobile = window.innerWidth <= 500;
+    const isMobile = window.innerWidth <= 650;
 
     // Calculate start and end indexes for the current page
     const indexOfLastExpense = currentPage * itemsPerPage;

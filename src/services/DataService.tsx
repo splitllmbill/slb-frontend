@@ -469,6 +469,20 @@ const dataService = {
             throw error;
         }
     },
+    getSummaryOfExpenses: async () => {
+        try {
+            const response = await fetchInterceptor(`${BASE_URL}/db/summary`, 'POST', false);
+
+            if (!response.ok) {
+                console.log(response.json())
+                throw new Error(`Error: ${response.status}`);
+            }
+            return response.json();
+        } catch (error) {
+            console.error('Error in getting summary', error);
+            throw error;
+        }
+    },
 };
 
 export default dataService;
