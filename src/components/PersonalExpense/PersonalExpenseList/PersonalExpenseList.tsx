@@ -44,7 +44,8 @@ const PersonalExpenseList: FC<PersonalExpenseListProps> = () => {
   return (
     <PersonalExpenseListWrapper>
       <H3>
-        Personal Expenses
+        <h4>Personal Expenses</h4>
+        <h6> Total expense: Rs.5000</h6>
       </H3>
       {expenses.slice(startIndex, endIndex).map((expense) => (
         <TableLikeRow key={expense.id}>

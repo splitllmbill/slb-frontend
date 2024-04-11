@@ -71,7 +71,7 @@ background-color:white;
 padding: 10px;
 `
 
-export const H3 = styled.h5`
+export const H3 = styled.div`
 padding: 15px;
 border-bottom: 1px solid #ccc;
 `;

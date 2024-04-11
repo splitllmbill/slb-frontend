@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
-import { HomepageContainer, Item, SmallBox, BigBox, BoxContent } from './Homepage.styled';
+import { HomepageContainer, Item, SmallBox, BoxContent } from './Homepage.styled';
 import { TbUsersGroup } from "react-icons/tb";
 import { LuWallet } from "react-icons/lu";
 import { FaChevronRight } from "react-icons/fa";
@@ -10,6 +10,8 @@ import { MdOutlineKeyboardDoubleArrowRight } from "react-icons/md";
 import { Flex } from '../../App.styled';
 import CategorywisePersonalExpenses from './CategorywisePersonalExpenses/CategorywisePersonalExpenses';
 import dataService from '../../services/DataService';
+import { useNavigate } from 'react-router-dom';
+import { selectedContent } from '../../services/State';
 
 interface SummaryState {
   group_expenses: number;
@@ -33,7 +35,7 @@ const Homepage: React.FC = () => {
       try {
         const data = await dataService.getSummaryOfExpenses();
         console.log(data);
-        
+
       } catch (error) {
         // Handle errors if needed
       }
@@ -43,6 +45,17 @@ const Homepage: React.FC = () => {
 
   }, []);
 
+  const navigate = useNavigate();
+
+  const redirectToPersonalExpense = () => {
+    navigate('/personal-expenses')
+    selectedContent.next('Personal Expenses')
+  }
+
+  const redirectToEvents = () => {
+    navigate('/events')
+    selectedContent.next('Events')
+  }
 
   return (
     <HomepageContainer>
@@ -50,12 +63,12 @@ const Homepage: React.FC = () => {
         <Container>
           <br />
           <Row>
-            <Col xs={6}>
+            <Col xs={12} sm={9}>
               <h3>Welcome, Saroja! {isMobile}</h3>
               <h6>Here's a snapshot of your expenditures.</h6>
             </Col>
-            <Col xs={3}></Col>
-            <Col xs={3} className="text-end" >
+            {isMobile && <Col xs={12}><br /></Col>}
+            <Col xs={12} sm={3} className="text-end" >
               <DateFilterDropdown></DateFilterDropdown>
             </Col>
           </Row>
@@ -63,14 +76,14 @@ const Homepage: React.FC = () => {
 
           <div>
             <Row>
-              <Col xs={12} sm={4}>
+              <Col sm={12} md={4}>
                 <SmallBox>
                   <BoxContent>
                     <Row>
                       <Col xs={6}>
                         <LuWallet style={{ fontSize: 'x-large' }} />
                       </Col>
-                      <Col xs={6} className="text-end" >
+                      <Col xs={6} className="text-end" onClick={redirectToPersonalExpense}>
                         <FaChevronRight style={{ fontSize: 'x-large' }} />
                       </Col>
                     </Row>
@@ -83,14 +96,14 @@ const Homepage: React.FC = () => {
                 </SmallBox>
               </Col>
               {isMobile && <Col xs={12}><br /></Col>}
-              <Col xs={12} sm={4}>
+              <Col sm={12} md={4}>
                 <SmallBox>
                   <BoxContent>
                     <Row>
                       <Col xs={6}>
                         <TbUsersGroup style={{ fontSize: 'x-large' }}></TbUsersGroup>
                       </Col>
-                      <Col xs={6} className="text-end" >
+                      <Col xs={6} className="text-end" onClick={redirectToEvents}>
                         <FaChevronRight style={{ fontSize: 'x-large' }} />
                       </Col>
                     </Row>
@@ -103,7 +116,7 @@ const Homepage: React.FC = () => {
                 </SmallBox>
               </Col>
               {isMobile && <Col xs={12}><br /></Col>}
-              <Col xs={12} sm={4}>
+              <Col sm={12} md={4}>
                 <SmallBox>
                   <BoxContent>
                     <Flex>
@@ -118,31 +131,32 @@ const Homepage: React.FC = () => {
             </Row>
             <br />
 
-            <BigBox>
-              <BoxContent>
-                <Row>
-                  <Col xs={12} md={7}>
-                    <Item>
-                      <BoxContent>
-                        <Row>
-                          <Col xs={12} className="d-flex align-items-center">
-                            <h5>Personal Expenses</h5>
-                          </Col>
-                        </Row>
-                        <Row className="justify-content-center">
-                          <DonutChart />
-                        </Row>
-                      </BoxContent>
-                    </Item>
-                  </Col>
-                  <Col xs={12} md={5}>
-                    <Item>
-                      <CategorywisePersonalExpenses />
-                    </Item>
-                  </Col>
-                </Row>
-              </BoxContent>
-            </BigBox>
+            {/* <BigBox> */}
+            {/* <BoxContent> */}
+            <Row>
+              <Col xs={12} md={7}>
+                <Item>
+                  <BoxContent>
+                    <Row>
+                      <Col xs={12} className="d-flex align-items-center">
+                        <h5>Personal Expenses</h5>
+                      </Col>
+                    </Row>
+                    <Row className="justify-content-center">
+                      <DonutChart />
+                    </Row>
+                  </BoxContent>
+                </Item>
+              </Col>
+              {isMobile && <Col xs={12}><br /></Col>}
+              <Col xs={12} md={5}>
+                <Item>
+                  <CategorywisePersonalExpenses />
+                </Item>
+              </Col>
+            </Row>
+            {/* </BoxContent> */}
+            {/* </BigBox> */}
           </div>
         </Container>
       </div >
