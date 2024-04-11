@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import { HomepageContainer, Item, SmallBox, BoxContent } from './Homepage.styled';
 import { TbUsersGroup } from "react-icons/tb";
@@ -13,22 +13,22 @@ import dataService from '../../services/DataService';
 import { useNavigate } from 'react-router-dom';
 import { selectedContent } from '../../services/State';
 
-interface SummaryState {
-  group_expenses: number;
-  personal_expenses: number;
-  total_you_owe: number;
-  total_owed_to_you: number;
-}
+// interface SummaryState {
+//   group_expenses: number;
+//   personal_expenses: number;
+//   total_you_owe: number;
+//   total_owed_to_you: number;
+// }
 
 const Homepage: React.FC = () => {
 
   const isMobile: boolean = window.innerWidth <= 650;
-  const [summary, setSummary] = useState<SummaryState>({
-    group_expenses: 0,
-    personal_expenses: 0,
-    total_you_owe: 0,
-    total_owed_to_you: 0,
-  });
+  // const [summary, setSummary] = useState<SummaryState>({
+  //   group_expenses: 0,
+  //   personal_expenses: 0,
+  //   total_you_owe: 0,
+  //   total_owed_to_you: 0,
+  // });
 
   useEffect(() => {
     const fetchData = async () => {

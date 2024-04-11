@@ -4,25 +4,25 @@ import { formatDate, formatDateForTransactions, personalExpenseAdded, toTitleCas
 import { AiOutlineDoubleRight } from "react-icons/ai";
 import Pagination from '@mui/material/Pagination';
 import { TableLikeRow, TableLikeRowItem, PaginationContainer, PersonalExpenseListWrapper, H3 } from '../../../App.styled';
-import { Col, Row } from 'react-bootstrap';
-import DynamicFilter from '../../Filter/Filter';
+// import { Col, Row } from 'react-bootstrap';
+// import DynamicFilter from '../../Filter/Filter';
 
 interface PersonalExpenseListProps { }
 
 const PersonalExpenseList: FC<PersonalExpenseListProps> = () => {
   const [filterOptions,setFilterOptions]= useState({})
   const [expenses, setExpenses] = useState<Expense[]>([]);
-  const [filterInput,setFilterInput] =useState<FilterInput>({filters:[]})
+  // const [filterInput,setFilterInput] =useState<FilterInput>({filters:[]})
   const [page, setPage] = useState(1);
   const itemsPerPage = 5; // Number of items per page
 
-  const handleSetFilters =(Filters:FilterCriteria[])=>{
-    const updatedFilterInput={
-      ...filterInput,
-      filters:Filters
-    }
-    setFilterInput(updatedFilterInput)
-  }
+  // const handleSetFilters =(Filters:FilterCriteria[])=>{
+  //   const updatedFilterInput={
+  //     ...filterInput,
+  //     filters:Filters
+  //   }
+  //   setFilterInput(updatedFilterInput)
+  // }
   const fetchData = async (filterInput : FilterInput) => {
     try {
       console.log("filterInput",filterInput)
