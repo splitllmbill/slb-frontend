@@ -10,7 +10,7 @@ interface PersonalExpenseListProps { }
 const PersonalExpenseList: FC<PersonalExpenseListProps> = () => {
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [page, setPage] = useState(1);
-  const itemsPerPage = 10; // Number of items per page
+  const itemsPerPage = 5; // Number of items per page
 
   useEffect(() => {
     const fetchData = async () => {
@@ -43,7 +43,9 @@ const PersonalExpenseList: FC<PersonalExpenseListProps> = () => {
 
   return (
     <PersonalExpenseListWrapper>
-      <H3>Personal Expenses</H3>
+      <H3>
+        Personal Expenses
+      </H3>
       {expenses.slice(startIndex, endIndex).map((expense) => (
         <TableLikeRow key={expense.id}>
           <TableLikeRowItem>

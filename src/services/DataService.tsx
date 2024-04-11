@@ -469,6 +469,27 @@ const dataService = {
             throw error;
         }
     },
+    getSummaryOfExpenses: async () => {
+        try {
+            const response = await fetch(`${BASE_URL}/db/summary`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem('authToken')
+                },
+                body: null
+            });
+
+            if (!response.ok) {
+                console.log(response.json())
+                throw new Error(`Error: ${response.status}`);
+            }
+            return response.json();
+        } catch (error) {
+            console.error('Error in getting summary', error);
+            throw error;
+        }
+    },
 };
 
 export default dataService;

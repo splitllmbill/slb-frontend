@@ -60,6 +60,11 @@ export const PersonalExpenseListWrapper = styled.div`
   border: 1px solid #ccc;
 `;
 
+export const PersonalExpenseListWrapper2 = styled.div`
+background-color:white;
+padding: 10px;
+`
+
 export const H3 = styled.h5`
 padding: 15px;
 border-bottom: 1px solid #ccc;
