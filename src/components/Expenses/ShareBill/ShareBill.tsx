@@ -278,7 +278,6 @@ const ShareBill = () => {
                                         defaultValue={users} // Set defaultValue to all users
                                         getOptionLabel={(option) => option.name}
                                         onChange={(_event, newValue) => handleSharedByChange(index, newValue)}
-                                        disabled // Disable the Autocomplete to prevent user interaction
                                         renderInput={(params) => (
                                             <TextField
                                                 {...params}

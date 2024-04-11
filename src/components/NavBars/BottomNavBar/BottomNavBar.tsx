@@ -7,6 +7,7 @@ import { BiMoneyWithdraw } from 'react-icons/bi';
 import { itemRoutes, routeItems } from '../routes';
 import { useNavigate } from 'react-router-dom';
 import './BottomNavBar.css';
+import { selectedContent } from '../../../services/State';
 
 interface BottomNavBarProps { }
 
@@ -21,6 +22,7 @@ const BottomNavBar: FC<BottomNavBarProps> = () => {
         localStorage.setItem('selectedContent', newValue);
         if (Object.values(itemRoutes).includes(location.pathname))
             navigate(itemRoutes[newValue])
+        selectedContent.next(newValue);
     };
 
     useEffect(() => {
@@ -29,6 +31,12 @@ const BottomNavBar: FC<BottomNavBarProps> = () => {
         if (navItem) {
             setActiveItem(navItem);
         }
+
+        selectedContent.pipe().subscribe((value: string) => {
+            setActiveItem(value);
+            localStorage.setItem('selectedContent', value);
+         });
+         
     }, [activeItem]);
 
     return (

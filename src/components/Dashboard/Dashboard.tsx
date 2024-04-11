@@ -38,7 +38,6 @@ const Dashboard: FC<DashboardProps> = () => {
   }, []);
 
   const { eventId } = useParams<{ eventId: string }>();
-
   const { expenseId } = useParams<{ expenseId: string }>();
   return (
     <>
