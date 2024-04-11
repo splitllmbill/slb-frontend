@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Box, Card, CardContent, Modal, TextField, styled } from '@mui/material';
 import { Flex, Container } from '../../../App.styled';
 import QRCode from 'react-qr-code';
@@ -23,9 +23,11 @@ interface SettleExpenseModalProps {
 
 const SettleExpenseModal: React.FC<SettleExpenseModalProps> = ({ onClose, friendSettleUp,eventSettleUp, friendData ,settleType}) => {
     const appTitle = import.meta.env.VITE_APP_TITLE;
+    const dueRef =  useRef<HTMLInputElement>(null);
     const [showQR, setshowQR] = useState(false);
     const [selectedFriendData, setSelectedFriendData] = useState<{id:string;name:string;due:number}>({id:"",name:"",due:0})
     const [amountConfirmed,setAmountConfirmed] =useState(false)
+    const [friendSelected,setFriendSelected ]= useState(false)
     const  [link,setLink]=useState("")
     const CenteredFlex = styled(Flex)({
         flexDirection: 'column',
@@ -38,7 +40,6 @@ const SettleExpenseModal: React.FC<SettleExpenseModalProps> = ({ onClose, friend
     alignItems: 'center',
     justifyContent: 'center',
     });
-      
     const StyledCurrencyRupeeIcon = styled(CurrencyRupeeIcon)({
         marginRight: '4px', // Adjust the margin as needed
       });
@@ -55,8 +56,20 @@ const SettleExpenseModal: React.FC<SettleExpenseModalProps> = ({ onClose, friend
                 
         }
     }
-    const handleConfirmAmount = async() =>{
-        setAmountConfirmed(true)
+    const handleConfirmAmount = ()=>{
+        if(dueRef.current!==null){
+            const updatedFriendData = {
+                ...selectedFriendData,
+                due: parseFloat(dueRef.current.value)
+              };
+              setSelectedFriendData(updatedFriendData);
+      
+              setAmountConfirmed(true);
+              handleConfirmAmount1();
+        }
+        
+    }
+    const handleConfirmAmount1 = async() =>{
         try{
             const result = await dataService.generateUPILink(selectedFriendData.due, 'Settle ' + appTitle + ' dues', selectedFriendData.id);
             if (result.message === "No record found for id") {
@@ -82,12 +95,14 @@ const SettleExpenseModal: React.FC<SettleExpenseModalProps> = ({ onClose, friend
 
     const handleSelectSettleUser =  (data:{id:string;name:string;due:number})=>{
         setSelectedFriendData(data);
+        setFriendSelected(true);
 
     }
 
     useEffect(()=>{
         if(friendData.length==1){
             setSelectedFriendData(friendData[0]);
+            setFriendSelected(true);
         }
     },[])
 
@@ -101,7 +116,7 @@ const SettleExpenseModal: React.FC<SettleExpenseModalProps> = ({ onClose, friend
             >
                 <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', minWidth: 350, bgcolor: 'background.paper', boxShadow: 24, p: 4, borderRadius: 1 }}>
                    
-                    {selectedFriendData.id=="" &&
+                    {!friendSelected &&
                         (<CenteredFlex> 
                         <Typography variant="h6" component="div" >
                                                 Who do you want to settle with:
@@ -140,7 +155,7 @@ const SettleExpenseModal: React.FC<SettleExpenseModalProps> = ({ onClose, friend
                         </CenteredFlex>)
                     
                     }
-                    {!amountConfirmed && selectedFriendData.id!="" && 
+                    {!amountConfirmed && friendSelected && 
                          <CenteredFlex>
                          <Typography variant="h4"><b>You </b><ArrowForwardIcon/> <b> {selectedFriendData.name}</b></Typography>
     
@@ -149,16 +164,9 @@ const SettleExpenseModal: React.FC<SettleExpenseModalProps> = ({ onClose, friend
                             <CurrencyRupeeIcon/>
                             <TextField
                            type="number"
-                           onChange={(event) => {
-                            const updatedFriendData ={
-                                ...selectedFriendData,
-                                due : parseFloat(event.target.value)
-                            }
-                            console.log("inchange",selectedFriendData)
-                            setSelectedFriendData(updatedFriendData)
-                           }}
-                           value={selectedFriendData.due}
+                            inputRef={dueRef}
                            name="amount"
+                           defaultValue={selectedFriendData.due}
                            required
                             />
                             

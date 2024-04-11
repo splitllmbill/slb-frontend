@@ -18,6 +18,8 @@ export const StyledMenu = styled(Menu)`
 & .MuiPaper-root {
   border-radius: 8px;
   margin-top: 8px;
+  min-width: 700px; // Adjust for mobile devices
+  max-width: 700px; // Adjust for mobile devices
   box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.2);
   & .MuiMenu-list {
     padding: 4px 0;
