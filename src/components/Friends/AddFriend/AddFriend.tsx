@@ -7,10 +7,11 @@ import dataService from '../../../services/DataService';
 
 interface AddFriendProps {
     onClose: () => void;
+    friendId: string;
 }
 
-const AddFriend: React.FC<AddFriendProps> = ({ onClose }) => {
-    const [friendCode, setFriendCode] = useState('');
+const AddFriend: React.FC<AddFriendProps> = ({ onClose, friendId }) => {
+    const [friendCode, setFriendCode] = useState(friendId);
     const handleAddFriend = async () => {
         await dataService.addFriend(friendCode).then((data) => {
             alert(data.message)

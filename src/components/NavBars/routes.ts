@@ -5,6 +5,7 @@ export const routeItems: { [key: string]: string } = {
   '/create-event': 'Events',
   '/friends': 'Friends',
   '/friend': 'Friends',
+  '/add-friend': 'Friends',
   '/personal-expenses': 'Personal Expenses',
   '/user-account': 'Account',
 };
