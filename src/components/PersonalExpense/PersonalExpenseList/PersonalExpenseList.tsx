@@ -3,36 +3,68 @@ import dataService from '../../../services/DataService';
 import { formatDate, formatDateForTransactions, personalExpenseAdded, toTitleCase } from '../../../services/State';
 import { AiOutlineDoubleRight } from "react-icons/ai";
 import Pagination from '@mui/material/Pagination';
-import { TableLikeRow, TableLikeRowItem, H3, PaginationContainer, PersonalExpenseListWrapper } from '../../../App.styled';
+import { TableLikeRow, TableLikeRowItem, PaginationContainer, PersonalExpenseListWrapper } from '../../../App.styled';
+import { Col, Row } from 'react-bootstrap';
+import DynamicFilter from '../../Filter/Filter';
 
 interface PersonalExpenseListProps { }
 
 const PersonalExpenseList: FC<PersonalExpenseListProps> = () => {
+  const [filterOptions,setFilterOptions]= useState({})
   const [expenses, setExpenses] = useState<Expense[]>([]);
+  const [filterInput,setFilterInput] =useState<FilterInput>({filters:[]})
   const [page, setPage] = useState(1);
   const itemsPerPage = 5; // Number of items per page
 
+  const handleSetFilters =(Filters:FilterCriteria[])=>{
+    const updatedFilterInput={
+      ...filterInput,
+      filters:Filters
+    }
+    setFilterInput(updatedFilterInput)
+  }
+  const fetchData = async (filterInput : FilterInput) => {
+    try {
+      console.log("filterInput",filterInput)
+      const data = await dataService.getExpensesForUser(filterInput);
+      setExpenses(data);
+      
+    } catch (error) {
+      // Handle errors if needed
+    }
+  };
+  const fetchFilterOptions = async () => {
+    try {
+      const filterOptions =await dataService.getFilterOptions(["category"]);
+      setFilterOptions(filterOptions);
+      
+    } catch (error) {
+      // Handle errors if needed
+    }
+  };
+
+ useEffect(()=>{
+  console.log(filterOptions);
+ },[filterOptions])
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await dataService.getExpensesForUser();
-        setExpenses(data);
-      } catch (error) {
-        // Handle errors if needed
-      }
-    };
+
+    fetchFilterOptions();
 
     const subscription = personalExpenseAdded.subscribe(() => {
       console.log('List Reloaded');
-      fetchData(); // Fetch data after a reload event
+      fetchData(filterInput); // Fetch data after a reload event
     });
 
-    fetchData(); // Initial data fetch
+    fetchData(filterInput); // Initial data fetch
 
     return () => {
       subscription.unsubscribe();
     };
   }, []);
+
+  useEffect(()=>{
+    fetchData(filterInput);
+  },[filterInput])
 
   const handleChangePage = (_event: React.ChangeEvent<unknown>, newPage: number) => {
     setPage(newPage);
@@ -43,9 +75,14 @@ const PersonalExpenseList: FC<PersonalExpenseListProps> = () => {
 
   return (
     <PersonalExpenseListWrapper>
-      <H3>
-        Personal Expenses
-      </H3>
+      <Row className="align-items-center"> {/* This ensures vertical alignment */}
+        <Col md={11} xs={10} className="text-center"> {/* Adjusted for centering text */}
+          <h3>Personal Expenses</h3> {/* Assuming H3 is not a predefined component */}
+        </Col>
+        <Col md={1} xs={2} className="text-center"> {/* Ensures the icon is in a separate column and centered */}
+        <DynamicFilter applyFilter={handleSetFilters} filterOptions={filterOptions}/>
+        </Col>
+      </Row>
       {expenses.slice(startIndex, endIndex).map((expense) => (
         <TableLikeRow key={expense.id}>
           <TableLikeRowItem>

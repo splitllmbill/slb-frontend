@@ -113,9 +113,9 @@ const dataService = {
             throw error;
         }
     },
-    getExpensesForUser: async () => {
+    getExpensesForUser: async (filterInput : FilterInput) => {
         try {
-            const response = await fetchInterceptor(`${BASE_URL}/db/expenses/personal`, 'GET', false);
+            const response = await fetchInterceptor(`${BASE_URL}/db/expenses/personal`, 'POST', true, JSON.stringify(filterInput));
             const data = await response.json();
             return data;
         } catch (error) {
@@ -480,6 +480,16 @@ const dataService = {
             return response.json();
         } catch (error) {
             console.error('Error in getting summary', error);
+            throw error;
+        }
+    },
+    getFilterOptions: async (fields: string[]) => {
+        try {
+            const response = await fetchInterceptor(`${BASE_URL}/db/filter-options`, 'POST', true,JSON.stringify({fields:fields}));
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('Error making GET request:', error);
             throw error;
         }
     },
