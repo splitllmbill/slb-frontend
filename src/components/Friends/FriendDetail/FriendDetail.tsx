@@ -11,7 +11,6 @@ import { MdOutlinePlaylistAdd } from 'react-icons/md';
 import SettleExpenseModal from '../../Expenses/SettleExpenseModal/SettleExpenseModal';
 
 function FriendDetail() {
-    const appTitle = import.meta.env.VITE_APP_TITLE;
     const [friendData, setFriendData] = useState({
         "uuid": "",
         "name": "",
@@ -21,7 +20,7 @@ function FriendDetail() {
             "expenseId":""
         }]
     });
-    const [link, setLink] = useState('');
+
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [refetchData, setRefetchData] = useState(false);
     const [showLoader, setShowLoader] = useState(true);
@@ -36,27 +35,6 @@ function FriendDetail() {
 
     const handleChangePage = (_event: React.ChangeEvent<unknown>, page: number) => {
         setCurrentPage(page);
-    };
-
-    const handleSettleUpFriend = async () => {
-        if (friendId !== undefined) {
-            try {
-                const result = await dataService.generateUPILink(friendData.overallOweAmount, 'Settle ' + appTitle + ' dues', friendId);
-                if (result.message === "No record found for id") {
-                    const response = window.confirm("Receiving has not added UPI ID to their account.\nDo you want to proceed to settle manually?");
-                    if (response) {
-                        await dataService.settleUpWithFriend(friendId).then((data) => {
-                            alert(data.message);
-                        });
-                    }
-                } else {
-                    setLink(result.upiLink);
-                    setIsModalOpen(true);
-                }
-            } catch (error) {
-                console.error("Error while generating UPI Link", error);
-            }
-        }
     };
 
     const closeModal = () => {
@@ -111,10 +89,12 @@ function FriendDetail() {
 
     return (
         <FriendDetailWrapper>
-            {isModalOpen && <SettleExpenseModal onClose={closeModal} submitSettleUp={submitSettleUp} link={link} friendData={{
+            {isModalOpen && <SettleExpenseModal onClose={closeModal} friendSettleUp={submitSettleUp}  friendData={[{
+                id:friendId!,
                 name: friendData.name,
-                due: friendData.overallOweAmount
-            }}
+                due: friendData.overallOweAmount 
+            }]}
+            settleType='friend'
             />}
             <Row>
                 <Col xs={3} md={3}>
@@ -156,8 +136,8 @@ function FriendDetail() {
                         {(friendData.overallWhoOwes === 'user' && friendData.overallOweAmount !== 0) &&
                             <Col xs={6} md={3} className="d-flex align-items-center">
                                 <Row className="align-items-center">
-                                    <div> You have unsetlled dues...
-                                        <button className="w-100" onClick={handleSettleUpFriend}>
+                                    <div> You have dues...
+                                        <button className="w-100" onClick={()=>setIsModalOpen(true)}>
                                             <span>Settle Up!</span>
                                         </button>
                                     </div>
