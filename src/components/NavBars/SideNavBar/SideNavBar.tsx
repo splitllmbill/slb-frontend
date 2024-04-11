@@ -23,7 +23,7 @@ const SideNavBar: FC<SideNavBarProps> = () => {
 
    useEffect(() => {
       const handleResize = () => {
-         setIsSmallScreen(window.innerWidth <= 500);
+         setIsSmallScreen(window.innerWidth <= 650);
       };
       handleResize();
       window.addEventListener('resize', handleResize);

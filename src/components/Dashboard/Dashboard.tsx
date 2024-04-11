@@ -25,7 +25,7 @@ const Dashboard: FC<DashboardProps> = () => {
 
   useEffect(() => {
     const handleResize = () => {
-      setIsSmallScreen(window.innerWidth <= 500);
+      setIsSmallScreen(window.innerWidth <= 650);
     };
 
     handleResize(); // Initial check

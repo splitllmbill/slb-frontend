@@ -13,14 +13,15 @@ export const SmallBox = styled(Paper)(({ }) => ({
   borderRadius: '10px',
   minWidth: '100px',
   minHeight: '150px',
-  background: 'gainsboro',
   boxShadow:'none'
 }));
 
 export const BigBox = styled(Paper)(({ }) => ({
   borderRadius: '10px',
   width: '100%',
-  background: 'gainsboro',
+  '&.MuiPaper-root': {
+    background: '#dcdcdc',
+  },
   boxShadow:'none'
 }));
 

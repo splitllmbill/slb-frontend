@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { H3, PaginationContainer, PersonalExpenseListWrapper, TableLikeRow, TableLikeRowItem } from '../../../App.styled';
+import { H3, PaginationContainer, PersonalExpenseListWrapper2, TableLikeRow, TableLikeRowItem } from '../../../App.styled';
 import Pagination from '@mui/material/Pagination';
 import { toTitleCase } from '../../../services/State';
 import { Avatar } from '@mui/material';
@@ -23,7 +23,7 @@ const CategorywisePersonalExpenses: React.FC = () => {
       };
 
     return (
-        <PersonalExpenseListWrapper style={{borderRadius:'10px'}}>
+        <PersonalExpenseListWrapper2 style={{borderRadius:'10px'}}>
             <H3>Personal Expenses Summary </H3>
             {expenses.slice(startIndex, endIndex).map((expense) => (
                 <TableLikeRow style={{padding:'10px'}}>
@@ -46,7 +46,7 @@ const CategorywisePersonalExpenses: React.FC = () => {
                     size="large"
                 />
             </PaginationContainer>
-        </PersonalExpenseListWrapper>
+        </PersonalExpenseListWrapper2>
     );
 }
 
