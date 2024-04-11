@@ -20,6 +20,12 @@ export const Input = styled.input`
     margin-bottom: 10px;
     border-radius: 5px;
     border: 1px solid #ccc;
+
+    &:disabled {
+        background-color: #cccccc;
+        cursor: not-allowed;
+    }
+
 `;
 
 export const Button = styled.button`
@@ -31,11 +37,11 @@ export const Button = styled.button`
     cursor: pointer;
 
     &:hover {
-        background-color: #0056b3;
+        background-color: #black;
     }
 
     &:disabled {
-        background-color: #ced4da;
+        background-color: grey;
         color: #6c757d;
         cursor: not-allowed;
     }
