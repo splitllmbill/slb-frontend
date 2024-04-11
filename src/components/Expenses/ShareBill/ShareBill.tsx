@@ -187,7 +187,7 @@ const ShareBill = () => {
                         onChange={handleFileChange}
                     />
                 </Col>
-                {window.innerWidth <= 600 && (<><br /><br /></>)}
+                {window.innerWidth <= 650 && (<><br /><br /></>)}
                 <Col xs={12} md={6}>
                     <Button variant="secondary" onClick={handleUpload}>Upload</Button>
                 </Col>
@@ -230,7 +230,7 @@ const ShareBill = () => {
                         {ocrOutput.items.map((item, index) => (
                             <TableLikeRow key={index}>
                                 <TableLikeRowItem>
-                                    <AiOutlineDoubleRight style={{ fontSize: window.innerWidth <= 500 ? 'large' : 'x-large' }} />
+                                    <AiOutlineDoubleRight style={{ fontSize: window.innerWidth <= 650 ? 'large' : 'x-large' }} />
                                 </TableLikeRowItem>
                                 <div style={{ flex: '2' }}>
                                     <TableLikeRowItem>
@@ -261,7 +261,7 @@ const ShareBill = () => {
                         {ocrOutput.tax.map((item, index) => (
                             <TableLikeRow key={index}>
                                 <TableLikeRowItem>
-                                    <AiOutlineDoubleRight style={{ fontSize: window.innerWidth <= 500 ? 'large' : 'x-large' }} />
+                                    <AiOutlineDoubleRight style={{ fontSize: window.innerWidth <= 650 ? 'large' : 'x-large' }} />
                                 </TableLikeRowItem>
                                 <div style={{ flex: '2' }}>
                                     <TableLikeRowItem>
@@ -300,7 +300,7 @@ const ShareBill = () => {
                                         <h4>Expense Details</h4>
                                         <br />
                                         <TableLikeRow style={{ background: 'beige' }}>
-                                            {window.innerWidth > 500 && (
+                                            {window.innerWidth > 650 && (
                                                 <TableLikeRowItem>
                                                     <AiOutlineDoubleRight style={{ fontSize: 'x-large' }} />
                                                 </TableLikeRowItem>

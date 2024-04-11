@@ -18,7 +18,7 @@ const ExpenseCardNew: FC<ExpenseCardNewProps> = ({ expense }) => {
         return date.toLocaleDateString('en-GB', options).replace(/(\d+)(th|st|nd|rd)/, '$1');
     }
     
-    const isMobile = window.innerWidth <= 500;
+    const isMobile = window.innerWidth <= 650;
 
     //exiting path name
     const navigate = useNavigate();

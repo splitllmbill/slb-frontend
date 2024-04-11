@@ -471,14 +471,7 @@ const dataService = {
     },
     getSummaryOfExpenses: async () => {
         try {
-            const response = await fetch(`${BASE_URL}/db/summary`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + localStorage.getItem('authToken')
-                },
-                body: null
-            });
+            const response = await fetchInterceptor(`${BASE_URL}/db/summary`, 'POST', false);
 
             if (!response.ok) {
                 console.log(response.json())

@@ -20,7 +20,7 @@ interface SummaryState {
 
 const Homepage: React.FC = () => {
 
-  const isMobile: boolean = window.innerWidth <= 500;
+  const isMobile: boolean = window.innerWidth <= 650;
   const [summary, setSummary] = useState<SummaryState>({
     group_expenses: 0,
     personal_expenses: 0,

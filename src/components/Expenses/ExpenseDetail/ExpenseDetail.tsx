@@ -70,7 +70,7 @@ const ExpenseDetail: FC = () => {
             navigate(-1);
     };
 
-    const isMobile = window.innerWidth <= 500;
+    const isMobile = window.innerWidth <= 650;
 
     return (
         <>
