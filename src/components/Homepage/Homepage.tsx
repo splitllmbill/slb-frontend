@@ -35,7 +35,6 @@ const Homepage: React.FC = () => {
       try {
         const data = await dataService.getSummaryOfExpenses();
         console.log(data);
-
       } catch (error) {
         // Handle errors if needed
       }

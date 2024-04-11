@@ -81,3 +81,12 @@ export const PaginationContainer = styled.div`
   justify-content: flex-end; /* Align pagination to the right */
   margin: 10px; /* Adjust margin as needed */
 `;
+
+export const FilterAltIcon=styled.div`
+border-bottom: 1px solid #ccc;
+`
+
+
+export const Row=styled.div`
+border-bottom: 1px solid #ccc;
+`
