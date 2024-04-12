@@ -165,8 +165,6 @@ const ShareBill = () => {
         const allTaxItemsEdited = editableTaxItems.every(item => item !== undefined);
         if (allItemsEdited && allTaxItemsEdited) {
             updateOcrOutput();
-            setEditableItems([]);
-            setEditableTaxItems([]);
         }
     }, [editableItems, editableTaxItems]);
 

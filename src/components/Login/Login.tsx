@@ -6,6 +6,7 @@ import './Login.css';
 import Header from '../Header/Header';
 import apiService from '../../services/DataService';
 import { useNavigate } from 'react-router-dom';
+import { encrypt } from '../../util/aes';
 // import ChangePasswordModal from '../Account/ChangePasswordModal/ChangePasswordModal';
 import VerificationModal from '../Account/VerificationModal/VerificationModal';
 
@@ -66,6 +67,7 @@ const Login: React.FC<LoginProps> = ({ loginRefresh }) => {
       event.preventDefault();
       const formData = new FormData(event.target);
       const formDataObject = Object.fromEntries(formData.entries());
+      formDataObject['password'] = encrypt(formDataObject.password.toString());
       try {
          const result = buttonText === 'Login' ? await apiService.login(formDataObject as unknown as User) : await apiService.signup(formDataObject as unknown as User);
          if (result) {

@@ -4,6 +4,7 @@ import { IoMdClose } from "react-icons/io";
 import { Col, Row } from 'react-bootstrap';
 import dataService from '../../../services/DataService';
 import { Button, Container, Input } from '../../../App.styled';
+import { encrypt } from '../../../util/aes';
 
 interface ChangePasswordModalProps {
     onClose: () => void; // Define onClose as a function that takes no arguments and returns void
@@ -18,7 +19,7 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ onClose, forg
         if (!forgotPassword) {
             if (newPassword === confirmPassword && newPassword != '') {
                 let requestData = {
-                    password: newPassword
+                    password: encrypt(newPassword)
                 }
                 await dataService.changePassword(requestData).then((data) => {
                     alert(data.message)
