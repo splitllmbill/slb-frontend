@@ -114,6 +114,12 @@ const CreateExpenseDrawer: FC<CreateExpenseDrawerProps>= ({expenseId}) => {
         fetchData();
         fetchData2();
     }, []);
+useEffect(()=>{
+    if (splitType == "equally" && selectedUsers.length > 0){
+        const updatedShareDetails = selectedUsers.map(user => ({ userId: user.id!, amount: amount/(selectedUsers.length) }));
+        setShareDetails(updatedShareDetails)
+    }
+},[selectedUsers])
 
     useEffect(() => {
         if (expenseId) {
@@ -323,6 +329,7 @@ const CreateExpenseDrawer: FC<CreateExpenseDrawerProps>= ({expenseId}) => {
                             id="tags-outlined"
                             options={users}
                             onChange={(_, value) => setSelectedUsers(value)}
+                            isOptionEqualToValue={(option, value) => option.id === value.id}
                             getOptionLabel={(option) => option.name}
                             defaultValue={[]}
                             disableCloseOnSelect
