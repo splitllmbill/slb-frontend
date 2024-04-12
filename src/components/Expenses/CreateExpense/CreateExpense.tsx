@@ -1,6 +1,6 @@
 import { ChangeEvent, FC, SetStateAction, useEffect, useState } from "react";
 import apiService from '../../../services/DataService';
-import { Button, FormControl, FormControlLabel, RadioGroup, Radio, Stack, TextField, Autocomplete, Checkbox } from "@mui/material";
+import { Button, FormControl, FormControlLabel, RadioGroup, Radio, Stack, TextField, Autocomplete } from "@mui/material";
 import { LabelForm } from "./CreateExpense.styled";
 import { IoMdArrowBack } from "react-icons/io";
 import { useNavigate, useParams } from "react-router-dom";
@@ -273,10 +273,6 @@ useEffect(()=>{
         // Update the shareDetails state with the modified array
         setShareDetails(updatedShareDetails);
     };
-
-    const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
-    const checkedIcon = <CheckBoxIcon fontSize="small" />;
-
 
     return (
         <DashboardContainer>
