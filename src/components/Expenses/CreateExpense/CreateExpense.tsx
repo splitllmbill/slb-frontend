@@ -12,6 +12,7 @@ import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import './CreateExpense.styles.css';
 import { MdOutlineReceiptLong } from "react-icons/md";
 import { DashboardContainer, Flex } from "../../../App.styled";
+import CustomAutocomplete from "../../Common/CustomAutoComplete/CustomAutoComplete";
 
 interface CreateExpenseDrawerProps {
     expenseId: string;
@@ -324,32 +325,12 @@ useEffect(()=>{
                 {splitType === 'equally' && (
                     <>
                         <span ><strong>Split Equally Among</strong></span>
-                        <Autocomplete
-                            multiple
-                            id="tags-outlined"
+                        <CustomAutocomplete
                             options={users}
-                            onChange={(_, value) => setSelectedUsers(value)}
+                            onChange={(value) => setSelectedUsers(value)}
                             isOptionEqualToValue={(option, value) => option.id === value.id}
-                            getOptionLabel={(option) => option.name}
-                            defaultValue={[]}
-                            disableCloseOnSelect
-                            limitTags={4}
+                            getOptionLabel={(option) => option.name}                        
                             value={selectedUsers}
-                            // isOptionEqualToValue=
-                            renderOption={(props, option, { selected }) => (
-                                <li {...props}>
-                                    <Checkbox
-                                        icon={icon}
-                                        checkedIcon={checkedIcon}
-                                        style={{ marginRight: 8 }}
-                                        checked={selected}
-                                    />
-                                    {option.name}
-                                </li>
-                            )}
-                            renderInput={(params) => (
-                                <TextField {...params} placeholder="Add Users" />
-                            )}
                         />
                     </>)
                 }
