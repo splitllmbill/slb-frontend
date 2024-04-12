@@ -11,6 +11,7 @@ import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import { MdOutlineReceiptLong } from "react-icons/md";
 import { DashboardContainer, Flex } from "../../../App.styled";
+import CustomAutocomplete from "../../Common/CustomAutoComplete/CustomAutoComplete";
 
 interface CreateExpenseDrawerProps {
     expenseId: string;
@@ -113,6 +114,12 @@ const CreateExpenseDrawer: FC<CreateExpenseDrawerProps>= ({expenseId}) => {
         fetchData();
         fetchData2();
     }, []);
+useEffect(()=>{
+    if (splitType == "equally" && selectedUsers.length > 0){
+        const updatedShareDetails = selectedUsers.map(user => ({ userId: user.id!, amount: amount/(selectedUsers.length) }));
+        setShareDetails(updatedShareDetails)
+    }
+},[selectedUsers])
 
     useEffect(() => {
         if (expenseId) {
@@ -317,31 +324,12 @@ const CreateExpenseDrawer: FC<CreateExpenseDrawerProps>= ({expenseId}) => {
                 {splitType === 'equally' && (
                     <>
                         <span ><strong>Split Equally Among</strong></span>
-                        <Autocomplete
-                            multiple
-                            id="tags-outlined"
+                        <CustomAutocomplete
                             options={users}
-                            onChange={(_, value) => setSelectedUsers(value)}
-                            getOptionLabel={(option) => option.name}
-                            defaultValue={[]}
-                            disableCloseOnSelect
-                            limitTags={4}
+                            onChange={(value) => setSelectedUsers(value)}
+                            isOptionEqualToValue={(option, value) => option.id === value.id}
+                            getOptionLabel={(option) => option.name}                        
                             value={selectedUsers}
-                            // isOptionEqualToValue=
-                            renderOption={(props, option, { selected }) => (
-                                <li {...props}>
-                                    <Checkbox
-                                        icon={icon}
-                                        checkedIcon={checkedIcon}
-                                        style={{ marginRight: 8 }}
-                                        checked={selected}
-                                    />
-                                    {option.name}
-                                </li>
-                            )}
-                            renderInput={(params) => (
-                                <TextField {...params} placeholder="Add Users" />
-                            )}
                         />
                     </>)
                 }
