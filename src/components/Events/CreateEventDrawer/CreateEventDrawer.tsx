@@ -1,12 +1,13 @@
 import { FC, useEffect, useState } from "react";
 import apiService from '../../../services/DataService';
-import { Autocomplete, Button, Checkbox, Stack, TextField } from "@mui/material";
+import { Button, Checkbox, Stack, TextField } from "@mui/material";
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import { useNavigate } from "react-router-dom";
 import { IoMdArrowBack } from "react-icons/io";
 import './CreateEventDrawer.styles.css';
 import { DashboardContainer, Flex } from "../../../App.styled";
+import CustomAutocomplete from "../../Common/CustomAutoComplete/CustomAutoComplete";
 
 interface CreateEventDrawerProps {
     eventID: string;
@@ -103,31 +104,12 @@ const CreateEventDrawer: FC<CreateEventDrawerProps> = ({ eventID }) => {
                     <h3>{eventID == "" ? "Add a New Event" : "Edit Event"}</h3>
 
                     <TextField type="name" placeholder="Event Name" onChange={(event) => setEventName(event.target.value)} value={eventName} name="name" required />
-                    <Autocomplete
-                        classes={{ endAdornment: 'MuiAutocomplete-endAdornment' }}
-                        multiple
-                        id="tags-outlined"
+                    <CustomAutocomplete
                         options={users}
-                        onChange={(_, value) => setSelectedUsers(value)}
+                        onChange={(value) => setSelectedUsers(value)}
                         getOptionLabel={(option) => option.name}
-                        disableCloseOnSelect
-                        limitTags={4}
                         value={selectedUsers}
                         isOptionEqualToValue={(option, value) => option.id === value.id}
-                        renderOption={(props, option, { selected }) => (
-                            <li {...props}>
-                                <Checkbox
-                                    icon={icon}
-                                    checkedIcon={checkedIcon}
-                                    style={{ marginRight: 8 }}
-                                    checked={selected}
-                                />
-                                {option.name}
-                            </li>
-                        )}
-                        renderInput={(params) => (
-                            <TextField {...params} placeholder="Add Users" />
-                        )}
                     />
 
 
