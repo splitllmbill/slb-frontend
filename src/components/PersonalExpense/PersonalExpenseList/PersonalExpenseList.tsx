@@ -25,7 +25,6 @@ const PersonalExpenseList: FC<PersonalExpenseListProps> = () => {
   }
   const fetchData = async (filterInput: FilterInput) => {
     try {
-      console.log("filterInput", filterInput)
       const data = await dataService.getExpensesForUser(filterInput);
       setExpenses(data);
     } catch (error) {
@@ -43,14 +42,12 @@ const PersonalExpenseList: FC<PersonalExpenseListProps> = () => {
   };
 
   useEffect(() => {
-    console.log(filterOptions);
   }, [filterOptions])
   useEffect(() => {
 
     fetchFilterOptions();
 
     const subscription = personalExpenseAdded.subscribe(() => {
-      console.log('List Reloaded');
       fetchData(filterInput); // Fetch data after a reload event
     });
 

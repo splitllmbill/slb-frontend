@@ -28,7 +28,6 @@ const CreateEventDrawer: FC<CreateEventDrawerProps> = ({ eventID }) => {
             }
             await apiService.getFriendsList()
                 .then(data => {
-                    console.log(data);
                     setUsers(data.friendsList)
                 });
         } catch (error) {
