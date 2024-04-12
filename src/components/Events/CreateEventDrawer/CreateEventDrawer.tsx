@@ -1,8 +1,6 @@
 import { FC, useEffect, useState } from "react";
 import apiService from '../../../services/DataService';
-import { Button, Checkbox, Stack, TextField } from "@mui/material";
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import { Button, Stack, TextField } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { IoMdArrowBack } from "react-icons/io";
 import './CreateEventDrawer.styles.css';
@@ -85,8 +83,6 @@ const CreateEventDrawer: FC<CreateEventDrawerProps> = ({ eventID }) => {
         navigate(-1);
     };
 
-    const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
-    const checkedIcon = <CheckBoxIcon fontSize="small" />;
     return (
 
         <DashboardContainer >

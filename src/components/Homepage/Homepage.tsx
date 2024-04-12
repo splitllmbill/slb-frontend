@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import { HomepageContainer, Item, SmallBox, BoxContent } from './Homepage.styled';
 import { TbUsersGroup } from "react-icons/tb";
@@ -9,40 +9,73 @@ import DateFilterDropdown from './DateFilterDropdown';
 import { MdOutlineKeyboardDoubleArrowRight } from "react-icons/md";
 import { Flex } from '../../App.styled';
 import CategorywisePersonalExpenses from './CategorywisePersonalExpenses/CategorywisePersonalExpenses';
-import dataService from '../../services/DataService';
 import { useNavigate } from 'react-router-dom';
-import { selectedContent } from '../../services/State';
+import { formatDate, selectedContent } from '../../services/State';
+import dataService from '../../services/DataService';
+import CircularProgress from '@mui/material/CircularProgress';
 
-// interface SummaryState {
-//   group_expenses: number;
-//   personal_expenses: number;
-//   total_you_owe: number;
-//   total_owed_to_you: number;
-// }
+interface SummaryState {
+  group_expenses: number;
+  personal_expenses: number;
+  total_you_owe: number;
+  total_owed_to_you: number;
+}
+
+interface ChartExpense {
+  "cost": number;
+  "noOfTransactions": number;
+  "category": string;
+  "percent": number;
+}
 
 const Homepage: React.FC = () => {
 
   const isMobile: boolean = window.innerWidth <= 650;
-  // const [summary, setSummary] = useState<SummaryState>({
-  //   group_expenses: 0,
-  //   personal_expenses: 0,
-  //   total_you_owe: 0,
-  //   total_owed_to_you: 0,
-  // });
+  const [summary, setSummary] = useState<SummaryState>({
+    group_expenses: 0,
+    personal_expenses: 0,
+    total_you_owe: 0,
+    total_owed_to_you: 0,
+  });
+  const [expenses, setExpenses] = useState<ChartExpense[]>([]);
+  const [dateRange, setDateRange] = useState<{ startDate: Date | null, endDate: Date | null }>({
+    startDate: null,
+    endDate: null
+  });
+  const [showSummary, setShowSummary] = useState<boolean>(false);
+  const [showChart, setShowChart] = useState<boolean>(false);
+
+  const handleDateChange = (obj: React.SetStateAction<{ startDate: Date | null; endDate: Date | null; }>) => {
+    setDateRange(obj)
+  }
+
+  const fetchData = async () => {
+    let requestData = {
+      "startDate": dateRange.startDate ? dateRange.startDate.toDateString() : null,
+      "endDate": dateRange.endDate ? dateRange.endDate.toDateString() : null
+    }
+    try {
+      await dataService.getSummaryOfExpenses(requestData).then((data) => {
+        setSummary(data);
+        setShowSummary(true);
+      });
+    } catch (error) {
+      setShowSummary(true);
+    }
+
+    try {
+      await dataService.getChartData(requestData).then((data) => {
+        setExpenses(data);
+        setShowChart(true);
+      });
+    } catch (error) {
+      setShowChart(true);
+    }
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await dataService.getSummaryOfExpenses();
-        console.log(data);
-      } catch (error) {
-        // Handle errors if needed
-      }
-    };
-
-    fetchData(); // Initial data fetch
-
-  }, []);
+    fetchData();
+  }, [dateRange]);
 
   const navigate = useNavigate();
 
@@ -68,13 +101,20 @@ const Homepage: React.FC = () => {
             </Col>
             {isMobile && <Col xs={12}><br /></Col>}
             <Col xs={12} sm={3} className="text-end" >
-              <DateFilterDropdown></DateFilterDropdown>
+              <DateFilterDropdown setDateRange={handleDateChange}></DateFilterDropdown>
             </Col>
           </Row>
           <br />
-
+          <Row>
+            <Col xs={12} className="text-end">
+              {dateRange.startDate && dateRange.endDate && <h6>From {formatDate(dateRange.startDate)} to {formatDate(dateRange.endDate)}</h6>}
+              {!dateRange.startDate && !dateRange.endDate && <h6>Date Range: All time</h6>}
+            </Col>
+          </Row>
+          <br />
           <div>
-            <Row>
+            {!showSummary && (<div className="d-flex justify-content-center align-items-center"><CircularProgress color="secondary" variant="indeterminate" /></div>)}
+            {showSummary && (<Row>
               <Col sm={12} md={4}>
                 <SmallBox>
                   <BoxContent>
@@ -89,7 +129,7 @@ const Homepage: React.FC = () => {
                     <br />
                     <Row>
                       <h5>Personal Expenses</h5>
-                      <b>Rs.5000</b>
+                      <b>Rs.{summary.personal_expenses}</b>
                     </Row>
                   </BoxContent>
                 </SmallBox>
@@ -109,7 +149,7 @@ const Homepage: React.FC = () => {
                     <br />
                     <Row>
                       <h5>Shared expenses</h5>
-                      <b>Rs.5000</b>
+                      <b>Rs.{summary.group_expenses}</b>
                     </Row>
                   </BoxContent>
                 </SmallBox>
@@ -119,43 +159,41 @@ const Homepage: React.FC = () => {
                 <SmallBox>
                   <BoxContent>
                     <Flex>
-                      <MdOutlineKeyboardDoubleArrowRight style={{ fontSize: 'x-large' }} /><h5> Totally, you owe Rs.400</h5>
+                      <MdOutlineKeyboardDoubleArrowRight style={{ fontSize: 'x-large' }} /><h5> Totally, you owe Rs.{summary.total_you_owe}</h5>
                     </Flex>
                     <Flex>
-                      <MdOutlineKeyboardDoubleArrowRight style={{ fontSize: 'x-large' }} /><h5> Totally, you are owed Rs.4560</h5>
+                      <MdOutlineKeyboardDoubleArrowRight style={{ fontSize: 'x-large' }} /><h5> Totally, you are owed Rs.{summary.total_owed_to_you}</h5>
                     </Flex>
                   </BoxContent>
                 </SmallBox>
               </Col>
             </Row>
+            )}
             <br />
-
-            {/* <BigBox> */}
-            {/* <BoxContent> */}
-            <Row>
-              <Col xs={12} md={7}>
-                <Item>
-                  <BoxContent>
-                    <Row>
-                      <Col xs={12} className="d-flex align-items-center">
-                        <h5>Personal Expenses</h5>
-                      </Col>
-                    </Row>
-                    <Row className="justify-content-center">
-                      <DonutChart />
-                    </Row>
-                  </BoxContent>
-                </Item>
-              </Col>
-              {isMobile && <Col xs={12}><br /></Col>}
-              <Col xs={12} md={5}>
-                <Item>
-                  <CategorywisePersonalExpenses />
-                </Item>
-              </Col>
-            </Row>
-            {/* </BoxContent> */}
-            {/* </BigBox> */}
+            {showChart && (
+              <Row>
+                <Col xs={12} lg={7}>
+                  <Item>
+                    <BoxContent>
+                      <Row>
+                        <Col xs={12} className="d-flex align-items-center">
+                          <h5>Personal Expenses</h5>
+                        </Col>
+                      </Row>
+                      <Row className="justify-content-center">
+                        <DonutChart expenses={expenses} />
+                      </Row>
+                    </BoxContent>
+                  </Item>
+                </Col>
+                <Col xs={12} className="d-lg-none"><br /></Col>
+                <Col xs={12} lg={5}>
+                  <Item>
+                    <CategorywisePersonalExpenses expenses={expenses} />
+                  </Item>
+                </Col>
+              </Row>
+            )}
           </div>
         </Container>
       </div >

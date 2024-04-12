@@ -1,18 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import { H3, PaginationContainer, PersonalExpenseListWrapper2, TableLikeRow, TableLikeRowItem } from '../../../App.styled';
 import Pagination from '@mui/material/Pagination';
-import { palette, toTitleCase } from '../../../services/State';
+import { toTitleCase } from '../../../services/State';
 import { Avatar } from '@mui/material';
+import { shades } from '../colors';
+import { TbFaceIdError } from 'react-icons/tb';
+import { NoExpensesWrapper } from '../../Expenses/ExpenseDetail/ExpenseDetails.styled';
 
-const CategorywisePersonalExpenses: React.FC = () => {
+interface Expense {
+    cost: number;
+    noOfTransactions: number;
+    category: string;
+    percent: number;
+}
+
+interface Props {
+    expenses: Expense[];
+}
+
+const CategorywisePersonalExpenses: React.FC<Props> = ({ expenses }) => {
 
     const [page, setPage] = useState(1);
-    const expenses = [
-        { category: 'Food', cost: 100, percent: 30, noOfTransactions: 5 },
-        { category: 'Transportation', cost: 50, percent: 15, noOfTransactions: 3 },
-        { category: 'Entertainment', cost: 80, percent: 20, noOfTransactions: 4 },
-    ];
-    const [colors, setColors] = useState<string[]>([]);
     const itemsPerPage = 4;
     const startIndex = (page - 1) * itemsPerPage;
     const endIndex = page * itemsPerPage;
@@ -21,9 +29,7 @@ const CategorywisePersonalExpenses: React.FC = () => {
     };
 
     useEffect(() => {
-        palette.pipe().subscribe((colors: string[]) => {
-            setColors(colors);
-        })
+
     }, []);
 
 
@@ -32,18 +38,28 @@ const CategorywisePersonalExpenses: React.FC = () => {
     return (
         <PersonalExpenseListWrapper2 style={{ borderRadius: '10px' }}>
             <H3><h5>Personal Expenses Summary </h5></H3><br></br>
-            {expenses.slice(startIndex, endIndex).map((expense, index) => (
-                <TableLikeRow style={{ padding: '10px' }}>
-                    <TableLikeRowItem>
-                        <Avatar sx={{ bgcolor: colors[index] }}><p></p></Avatar>
-                    </TableLikeRowItem>
-                    <div style={{ flex: '2' }}>
-                        <div><b>{toTitleCase(expense.category)}</b></div>
-                        <div>{expense.noOfTransactions} transactions</div>
-                    </div>
-                    <div style={{ flex: '1' }} className='text-end'><b>Rs. {expense.cost}</b></div>
-                </TableLikeRow>
-            ))}
+            {expenses && expenses.length == 0 && (
+                <NoExpensesWrapper>
+                    <TbFaceIdError style={{ fontSize: 'xx-large' }}></TbFaceIdError>
+                    <h6>No records yet!</h6>
+                </NoExpensesWrapper>
+            )}
+            {expenses && expenses.length > 0 && (
+                <>
+                    {expenses.slice(startIndex, endIndex).map((expense, index) => (
+                        <TableLikeRow style={{ padding: '10px' }}>
+                            <TableLikeRowItem>
+                                <Avatar sx={{ bgcolor: shades[startIndex + index] }}><p></p></Avatar>
+                            </TableLikeRowItem>
+                            <div style={{ flex: '2' }}>
+                                <div><b>{toTitleCase(expense.category)}</b></div>
+                                <div>{expense.noOfTransactions} transactions</div>
+                            </div>
+                            <div style={{ flex: '1' }}><b>{expense.percent.toFixed(2)}%</b></div>
+                            <div style={{ flex: '1' }} className='text-end'><b>Rs. {expense.cost}</b></div>
+                        </TableLikeRow>
+                    ))}
+                </>)}
             <PaginationContainer>
                 <Pagination
                     count={Math.ceil(expenses.length / itemsPerPage)}

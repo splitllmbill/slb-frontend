@@ -2,13 +2,12 @@ import { BehaviorSubject, Subject } from 'rxjs';
 
 export const personalExpenseAdded = new Subject<void>();
 export const selectedContent = new BehaviorSubject<string>(localStorage.getItem('selectedContent') || 'Home');
-export const palette = new BehaviorSubject<string[]>([]);
 
 
 export const generatePalette = (numColors: number) => {
     const palette = [];
     const colorSet = new Set(); // To avoid duplicates
-    
+
     function generateRandomColor() {
         // Generate random RGB values
         const r = Math.floor(Math.random() * 256);

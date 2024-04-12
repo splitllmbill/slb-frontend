@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Autocomplete from '@mui/material/Autocomplete';
 import Checkbox from '@mui/material/Checkbox';
 import TextField from '@mui/material/TextField';
@@ -49,7 +49,7 @@ const CustomAutocomplete = <T extends unknown>({
       options={[selectAllOption, ...options]}
       getOptionLabel={getOptionLabel}
       value={value}
-      onChange={(event, newValue: T[], reason) => {
+      onChange={(_event, newValue: T[], reason) => {
         if (reason === 'clear') {
           handleSelectAll(false); // Deselect all if clear button is clicked
         } else {
