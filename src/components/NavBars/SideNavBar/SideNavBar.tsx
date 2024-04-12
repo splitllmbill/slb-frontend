@@ -7,6 +7,7 @@ import { RiAccountBoxFill } from "react-icons/ri";
 import { useNavigate } from 'react-router-dom';
 import { BiMoneyWithdraw } from 'react-icons/bi';
 import { itemRoutes, routeItems } from '../routes';
+import { selectedContent } from '../../../services/State';
 
 
 interface SideNavBarProps { }
@@ -19,6 +20,7 @@ const SideNavBar: FC<SideNavBarProps> = () => {
    const handleItemClick = (itemName: string) => {
       navigate(itemRoutes[itemName]);
       setActiveItem(itemName);
+      selectedContent.next(itemName);
    };
 
    useEffect(() => {
@@ -32,6 +34,12 @@ const SideNavBar: FC<SideNavBarProps> = () => {
       if(navItem){
          setActiveItem(navItem);
       }
+
+      selectedContent.pipe().subscribe((value: string) => {
+         setActiveItem(value);
+         localStorage.setItem('selectedContent', value);
+      });
+
       return () => {
          window.removeEventListener('resize', handleResize);
       };

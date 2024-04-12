@@ -1,5 +1,5 @@
 import { PieChart } from '@mui/x-charts';
-import { generatePalette } from '../../../services/State';
+import { generatePalette, palette } from '../../../services/State';
 
 const DonutChart = () => {
 
@@ -8,13 +8,14 @@ const DonutChart = () => {
         { name: 'B', value: 20, label: 'Petrol' },
         { name: 'C', value: 50, label: 'Entertjklasjksjaksjaksjkajskasjkajskasjakjainment' }
     ];
-    const palette = generatePalette(data.length);
+    const generatedpalette = generatePalette(data.length);
+    palette.next(generatedpalette);
 
     return (
 
-        <div style={{ height: '300px', width: '300px' }}>
+        <div style={{ height: '20rem', width: '20rem' }}>
             <PieChart
-                colors={palette}
+                colors={generatedpalette}
                 series={[
                     {
                         data: data,

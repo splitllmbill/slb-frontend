@@ -71,7 +71,7 @@ background-color:white;
 padding: 10px;
 `
 
-export const H3 = styled.h5`
+export const H3 = styled.div`
 padding: 15px;
 border-bottom: 1px solid #ccc;
 `;
@@ -81,3 +81,12 @@ export const PaginationContainer = styled.div`
   justify-content: flex-end; /* Align pagination to the right */
   margin: 10px; /* Adjust margin as needed */
 `;
+
+export const FilterAltIcon=styled.div`
+border-bottom: 1px solid #ccc;
+`
+
+
+export const Row=styled.div`
+border-bottom: 1px solid #ccc;
+`
