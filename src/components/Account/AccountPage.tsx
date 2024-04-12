@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Container, Label, Input } from './AccountPage.styled'; // Import styled components
+import { Container, Label, Input, Button } from './AccountPage.styled'; // Import styled components
 import dataService from '../../services/DataService';
 import { IoLogOutOutline } from "react-icons/io5";
 import { MdLockReset } from "react-icons/md";
@@ -18,7 +18,7 @@ import { useNavigate } from 'react-router-dom';
 import ChangePasswordModal from './ChangePasswordModal/ChangePasswordModal';
 import VerificationModal from './VerificationModal/VerificationModal';
 import FriendLink from '../Common/FriendLink';
-import { Flex, Button } from '../../App.styled';
+import { Flex } from '../../App.styled';
 import QRModal from './QRModal/QRModal';
 
 const UserPage = () => {

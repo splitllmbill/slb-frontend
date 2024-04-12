@@ -1,15 +1,12 @@
 import { ChangeEvent, FC, SetStateAction, useEffect, useState } from "react";
 import apiService from '../../../services/DataService';
-import { Button, FormControl, FormControlLabel, RadioGroup, Radio, Stack, TextField, Autocomplete, Checkbox } from "@mui/material";
+import { Button, FormControl, FormControlLabel, RadioGroup, Radio, Stack, TextField, Autocomplete } from "@mui/material";
 import { LabelForm } from "./CreateExpense.styled";
 import { IoMdArrowBack } from "react-icons/io";
 import { useNavigate, useParams } from "react-router-dom";
 import { Col, Row } from "react-bootstrap";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import './CreateExpense.styles.css';
 import { MdOutlineReceiptLong } from "react-icons/md";
 import { DashboardContainer, Flex } from "../../../App.styled";
 import CustomAutocomplete from "../../Common/CustomAutoComplete/CustomAutoComplete";
@@ -274,10 +271,6 @@ useEffect(()=>{
         // Update the shareDetails state with the modified array
         setShareDetails(updatedShareDetails);
     };
-
-    const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
-    const checkedIcon = <CheckBoxIcon fontSize="small" />;
-
 
     return (
         <DashboardContainer>
