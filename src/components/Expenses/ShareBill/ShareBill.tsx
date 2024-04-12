@@ -1,4 +1,4 @@
-import { ChangeEvent, SetStateAction, useRef, useState } from 'react';
+import { ChangeEvent, SetStateAction, useEffect, useRef, useState } from 'react';
 import { DashboardContainer, Flex, TableLikeRow, TableLikeRowItem } from '../../../App.styled';
 import { Row, Col, Button } from 'react-bootstrap';
 import dataService from '../../../services/DataService';
@@ -8,10 +8,15 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { BsDot } from "react-icons/bs";
 import { IoMdArrowBack } from 'react-icons/io';
 import { formatDate, formatDateForTransactions, toTitleCase } from '../../../services/State';
+import { MdOutlineEdit } from "react-icons/md";
+import { FaCheck } from 'react-icons/fa';
+
 
 const ShareBill = () => {
     const [selectedFile, setSelectedFile] = useState<File>();
     const [showTable, setShowTable] = useState<boolean>(false);
+    const [isEditOnList, setIsEditOnList] = useState<boolean[]>([]);
+    const [isEditOnTaxList, setIsEditOnTaxList] = useState<boolean[]>([]);
     const [showLoader, setShowLoader] = useState<boolean>(false);
     const [ocrOutput, setOcrOutput] = useState({
         items: [{ amount: 0, item_name: "", quantity: 1, slno: 1, total_amount: 0 }],
@@ -39,6 +44,8 @@ const ShareBill = () => {
     const id: string = location.state?.id;
     const [expenseName, setExpenseName] = useState('');
     const userSharesMap = useRef<{ [key: string]: Share }>({});
+    const [editableItems, setEditableItems] = useState<any[]>([]);
+    const [editableTaxItems, setEditableTaxItems] = useState<any[]>([]);
 
     const handleExpenseNameChange = (event: { target: { value: SetStateAction<string>; }; }) => {
         setExpenseName(event.target.value);
@@ -153,6 +160,18 @@ const ShareBill = () => {
         }
     };
 
+    useEffect(() => {
+        const allItemsEdited = editableItems.every(item => item !== undefined);
+        const allTaxItemsEdited = editableTaxItems.every(item => item !== undefined);
+        if (allItemsEdited && allTaxItemsEdited) {
+            updateOcrOutput();
+            setEditableItems([]);
+            setEditableTaxItems([]);
+        }
+    }, [editableItems, editableTaxItems]);
+
+
+
     const navigate = useNavigate();
     const handleGoBack = () => {
         navigate(-1);
@@ -168,6 +187,110 @@ const ShareBill = () => {
             console.error('Unexpected error event creation:', error);
         }
     }
+
+    const handleItemFieldChange = (index: number, field: string, value: string | number) => {
+        setEditableItems(prevItems => {
+            const updatedItems = [...prevItems];
+            updatedItems[index] = {
+                ...updatedItems[index],
+                [field]: value
+            };
+            return updatedItems;
+        });
+    };
+
+    const handleTaxItemFieldChange = (index: number, field: string, value: string | number) => {
+        setEditableTaxItems(prevItems => {
+            const updatedItems = [...prevItems];
+            updatedItems[index] = {
+                ...updatedItems[index],
+                [field]: value
+            };
+            return updatedItems;
+        });
+    };
+
+    const handleTickClick = (index: number) => {
+        const editedItem = editableItems[index];
+        if (editedItem) {
+            setEditableItems(prevEditableItems => {
+                const updatedItems = [...prevEditableItems];
+                updatedItems[index] = {
+                    ...updatedItems[index],
+                    ...editedItem
+                };
+                return updatedItems;
+            });
+        }
+
+        setIsEditOnList(prev => {
+            const newList = [...prev];
+            newList[index] = false; // Turn off edit mode for the current entry
+            return newList;
+        });
+    };
+
+    const handleTaxTickClick = (index: number) => {
+        const editedTaxItem = editableTaxItems[index];
+        if (editedTaxItem) {
+            setEditableTaxItems(prevEditableItems => {
+                const updatedTaxItems = [...prevEditableItems];
+                updatedTaxItems[index] = {
+                    ...updatedTaxItems[index],
+                    ...editedTaxItem
+                };
+                return updatedTaxItems;
+            });
+        }
+
+        setIsEditOnTaxList(prev => {
+            const newList = [...prev];
+            newList[index] = false; // Turn off edit mode for the current tax item
+            return newList;
+        });
+    };
+
+    const updateOcrOutput = () => {
+        setOcrOutput(prevOcrOutput => {
+            const updatedItems = prevOcrOutput.items.map((item, idx) => {
+                return {
+                    ...item,
+                    ...editableItems[idx]
+                };
+            });
+
+            const updatedTaxItems = prevOcrOutput.tax.map((item, idx) => {
+                return {
+                    ...item,
+                    ...editableTaxItems[idx]
+                };
+            });
+
+            return {
+                ...prevOcrOutput,
+                items: updatedItems,
+                tax: updatedTaxItems
+            };
+        });
+    };
+
+
+    const toggleTaxEdit = (index: number) => {
+        setIsEditOnTaxList(prev => {
+            const newList = [...prev];
+            newList[index] = !newList[index];
+            return newList;
+        });
+    };
+
+
+    const toggleEdit = (index: number) => {
+        setIsEditOnList(prev => {
+            const newList = [...prev];
+            newList[index] = !newList[index];
+            return newList;
+        });
+    };
 
     return (
         <DashboardContainer>
@@ -234,9 +357,49 @@ const ShareBill = () => {
                                 </TableLikeRowItem>
                                 <div style={{ flex: '2' }}>
                                     <TableLikeRowItem>
-                                        <div><b>Item Name:</b> {item.item_name}</div>
-                                        <div><b>Quantity:</b> {item.quantity}</div>
-                                        <div><Typography variant="body1" style={{ color: 'green' }}><b> Rs. {item.total_amount}</b></Typography></div>
+                                        <Row>
+                                            {!isEditOnList[index] && (
+                                                <Col xs={6}>
+                                                    <div><b>Item Name:</b> {item.item_name}</div>
+                                                    <div><b>Quantity:</b> {item.quantity}</div>
+                                                    <div><Typography variant="body1" style={{ color: 'green' }}><b> Rs. {item.total_amount}</b></Typography></div>
+                                                </Col>
+                                            )}
+                                            {isEditOnList[index] && (
+                                                <Col xs={6}>
+                                                    <TextField
+                                                        label="Item Name"
+                                                        value={editableItems[index]?.item_name || item.item_name}
+                                                        onChange={(e) => handleItemFieldChange(index, 'item_name', e.target.value)}
+                                                    />
+                                                    <TextField
+                                                        label="Quantity"
+                                                        type="number"
+                                                        value={editableItems[index]?.quantity || item.quantity}
+                                                        onChange={(e) => handleItemFieldChange(index, 'quantity', parseInt(e.target.value))}
+                                                    />
+                                                    <TextField
+                                                        label="Total Amount"
+                                                        type="number"
+                                                        value={editableItems[index]?.total_amount || item.total_amount}
+                                                        onChange={(e) => handleItemFieldChange(index, 'total_amount', parseFloat(e.target.value))}
+                                                    />
+                                                </Col>
+                                            )}
+                                            <Col xs={2}>
+                                                {isEditOnList[index] ? (
+                                                    <FaCheck
+                                                        style={{ fontSize: 'x-large', cursor: 'pointer' }}
+                                                        onClick={() => handleTickClick(index)} // Pass the index to handleTickClick
+                                                    />
+                                                ) : (
+                                                    <MdOutlineEdit
+                                                        style={{ fontSize: 'x-large', cursor: 'pointer' }}
+                                                        onClick={() => toggleEdit(index)}
+                                                    />
+                                                )}
+                                            </Col>
+                                        </Row>
                                     </TableLikeRowItem>
                                 </div>
                                 <div style={{ flex: '2' }}>
@@ -265,9 +428,45 @@ const ShareBill = () => {
                                 </TableLikeRowItem>
                                 <div style={{ flex: '2' }}>
                                     <TableLikeRowItem>
-                                        <div><b>Tax Type:</b> {item.type}</div>
-                                        <div><b>Percentage:</b> {item.percent}</div>
-                                        <div><Typography variant="body1" style={{ color: 'green' }}><b> Rs. {item.amount}</b></Typography></div>
+                                        <Row>
+                                            {!isEditOnTaxList[index] && (
+                                                <Col xs={6}>
+                                                    <div><b>Tax Type:</b> {item.type}</div>
+                                                    <div><b>Percentage:</b> {item.percent}</div>
+                                                    <div><Typography variant="body1" style={{ color: 'green' }}><b> Rs. {item.amount}</b></Typography></div>
+                                                </Col>)}
+                                            {isEditOnTaxList[index] && (
+                                                <Col xs={6}>
+                                                    <TextField
+                                                        label="Tax Type"
+                                                        value={editableTaxItems[index]?.type || item.type}
+                                                        onChange={(e) => handleTaxItemFieldChange(index, 'type', e.target.value)}
+                                                    />
+                                                    <TextField
+                                                        label="Percentage"
+                                                        value={editableTaxItems[index]?.percent || item.percent}
+                                                        onChange={(e) => handleTaxItemFieldChange(index, 'percent', parseFloat(e.target.value))}
+                                                    />
+                                                    <TextField
+                                                        label="Amount"
+                                                        value={editableTaxItems[index]?.amount || item.amount}
+                                                        onChange={(e) => handleTaxItemFieldChange(index, 'amount', parseFloat(e.target.value))}
+                                                    />
+                                                </Col>)}
+                                            <Col xs={2}>
+                                                {isEditOnTaxList[index] ? (
+                                                    <FaCheck
+                                                        style={{ fontSize: 'x-large', cursor: 'pointer' }}
+                                                        onClick={() => handleTaxTickClick(index)} // Pass the index to handleTickClick
+                                                    />
+                                                ) : (
+                                                    <MdOutlineEdit
+                                                        style={{ fontSize: 'x-large', cursor: 'pointer' }}
+                                                        onClick={() => toggleTaxEdit(index)}
+                                                    />
+                                                )}
+                                            </Col>
+                                        </Row>
                                     </TableLikeRowItem>
                                 </div>
                                 <div style={{ flex: '2' }}>
