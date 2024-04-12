@@ -22,7 +22,7 @@ const dataService = {
         }
     },
     login: async (loginData: User) => {
-                try {
+        try {
             const response = await fetch(`${BASE_URL}/db/login`, {
                 method: 'POST',
                 headers: {
@@ -113,7 +113,7 @@ const dataService = {
             throw error;
         }
     },
-    getExpensesForUser: async (filterInput : FilterInput) => {
+    getExpensesForUser: async (filterInput: FilterInput) => {
         try {
             const response = await fetchInterceptor(`${BASE_URL}/db/expenses/personal`, 'POST', true, JSON.stringify(filterInput));
             const data = await response.json();
@@ -469,10 +469,23 @@ const dataService = {
             throw error;
         }
     },
-    getSummaryOfExpenses: async () => {
+    getSummaryOfExpenses: async (requestData: any) => {
         try {
-            const response = await fetchInterceptor(`${BASE_URL}/db/summary`, 'POST', false);
+            const response = await fetchInterceptor(`${BASE_URL}/db/dashboard/summary`, 'POST', true, JSON.stringify(requestData));
 
+            if (!response.ok) {
+                console.log(response.json())
+                throw new Error(`Error: ${response.status}`);
+            }
+            return response.json();
+        } catch (error) {
+            console.error('Error in getting summary', error);
+            throw error;
+        }
+    },
+    getChartData: async (requestData: any) => {
+        try {
+            const response = await fetchInterceptor(`${BASE_URL}/db/dashboard/chart`, 'POST', true, JSON.stringify(requestData));
             if (!response.ok) {
                 console.log(response.json())
                 throw new Error(`Error: ${response.status}`);
@@ -485,7 +498,7 @@ const dataService = {
     },
     getFilterOptions: async (fields: string[]) => {
         try {
-            const response = await fetchInterceptor(`${BASE_URL}/db/filter-options`, 'POST', true,JSON.stringify({fields:fields}));
+            const response = await fetchInterceptor(`${BASE_URL}/db/filter-options`, 'POST', true, JSON.stringify({ fields: fields }));
             const data = await response.json();
             return data;
         } catch (error) {

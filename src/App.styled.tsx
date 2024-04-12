@@ -13,7 +13,7 @@ export const Input = styled.input`
 
 export const Button = styled.button`
     padding: 10px 20px;
-    background-color: #007bff;
+    background-color: #d8d3db;
     color: #fff;
     border: none;
     border-radius: 5px;
