@@ -28,7 +28,6 @@ const PersonalExpenseList: FC<PersonalExpenseListProps> = () => {
       console.log("filterInput", filterInput)
       const data = await dataService.getExpensesForUser(filterInput);
       setExpenses(data);
-
     } catch (error) {
       // Handle errors if needed
     }
@@ -79,7 +78,7 @@ const PersonalExpenseList: FC<PersonalExpenseListProps> = () => {
         <Col xs={10}> {/* Adjusted for centering text */}
           <H3>
             <h4>Personal Expenses</h4>
-            <h6> Total expense: Rs.5000</h6>
+            <h6> Total expense: Rs.{expenses.reduce((acc, expense) => acc + expense.amount, 0)}</h6>
           </H3>
         </Col>
         <Col xs={2} className="text-end"> {/* Ensures the icon is in a separate column and centered */}
