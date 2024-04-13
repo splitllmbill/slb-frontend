@@ -17,7 +17,7 @@ function FriendDetail() {
         "overallOweAmount": 0,
         "overallWhoOwes": "",
         "expenses": [{
-            "expenseId":""
+            "expenseId": ""
         }]
     });
 
@@ -25,6 +25,7 @@ function FriendDetail() {
     const [refetchData, setRefetchData] = useState(false);
     const [showLoader, setShowLoader] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
+    const [loading, setLoading] = useState(false);
     const itemsPerPage = 5;
     const navigate = useNavigate();
     const { friendId } = useParams<{ friendId: string }>();
@@ -68,7 +69,7 @@ function FriendDetail() {
                     if (error instanceof Error && error.message.startsWith('Error: 400')) {
                         navigate('/friends')
                     } else {
-                        console.error('Error while getting friend details',error);
+                        console.error('Error while getting friend details', error);
                     }
                 });
         }
@@ -79,12 +80,19 @@ function FriendDetail() {
     };
 
     const handleRemoveFriend = async () => {
-        await dataService.deleteFriend(friendData.uuid).then((data) => {
-            alert(data.message);
-            if (Boolean(data.success) == true){
-                navigate('/friends');
-            }
-        });
+        setLoading(true);
+        try {
+            await dataService.deleteFriend(friendData.uuid).then((data) => {
+                alert(data.message);
+                if (Boolean(data.success) == true) {
+                    navigate('/friends');
+                }
+            });
+        } catch (error) {
+            console.log("Error occured", error);
+        } finally {
+            setLoading(false);
+        }
     };
 
     const isMobile = window.innerWidth <= 650;
@@ -96,12 +104,12 @@ function FriendDetail() {
 
     return (
         <FriendDetailWrapper>
-            {isModalOpen && <SettleExpenseModal onClose={closeModal} friendSettleUp={submitSettleUp}  friendData={[{
-                id:friendId!,
+            {isModalOpen && <SettleExpenseModal onClose={closeModal} friendSettleUp={submitSettleUp} friendData={[{
+                id: friendId!,
                 name: friendData.name,
-                due: friendData.overallOweAmount 
+                due: friendData.overallOweAmount
             }]}
-            settleType='friend'
+                settleType='friend'
             />}
             <Row>
                 <Col xs={3} md={3}>
@@ -118,7 +126,7 @@ function FriendDetail() {
                     </button>
                 </Col>
                 <Col xs={3} md={3}>
-                    <button onClick={handleRemoveFriend} className="w-100">
+                    <button onClick={handleRemoveFriend} disabled={loading} className="w-100">
                         <IoPersonRemoveOutline style={{ fontSize: 'x-large' }} />
                         {!isMobile && (<span> Unfriend</span>)}
                     </button>
@@ -144,7 +152,7 @@ function FriendDetail() {
                             <Col xs={6} md={3} className="d-flex align-items-center">
                                 <Row className="align-items-center">
                                     <div> You have dues...
-                                        <button className="w-100" onClick={()=>setIsModalOpen(true)}>
+                                        <button className="w-100" onClick={() => setIsModalOpen(true)}>
                                             <span>Settle Up!</span>
                                         </button>
                                     </div>
