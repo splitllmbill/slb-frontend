@@ -13,6 +13,7 @@ const Chatbot = () => {
    ]);
    const [input, setInput] = useState('');
    const [showTable, setShowTable] = useState(false);
+   const [loading, setLoading] = useState(false);
    const [expenses, setExpenses] = useState<any[]>([]);
    const today = new Date();
 
@@ -51,6 +52,7 @@ const Chatbot = () => {
       console.log(expenses);
 
       try {
+         setLoading(true);
          for (const exp of expenses) {
             let expenseData = {
                expenseName: exp.name,
@@ -76,6 +78,8 @@ const Chatbot = () => {
          console.error('Error creating expense:', error);
          setShowTable(false);
          setMessages([...messages, { text: 'An error occured ', sender: 'bot' }]);
+      } finally {
+         setLoading(false);
       }
    };
 
@@ -157,7 +161,7 @@ const Chatbot = () => {
                )}
                {showTable && (
                   <Message>
-                     <Button onClick={handleAddExpense}>Okay (Add Expense)</Button>
+                     <Button onClick={handleAddExpense} disabled={loading}>Okay (Add Expense)</Button>
                      <Button onClick={handleTryAgain}>Try Again</Button>
                   </Message>
                )}

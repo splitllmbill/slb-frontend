@@ -13,8 +13,8 @@ import CustomAutocomplete from "../../Common/CustomAutoComplete/CustomAutoComple
 
 interface CreateExpenseDrawerProps {
     expenseId: string;
- }
-const CreateExpenseDrawer: FC<CreateExpenseDrawerProps>= ({expenseId}) => {
+}
+const CreateExpenseDrawer: FC<CreateExpenseDrawerProps> = ({ expenseId }) => {
     const [event, setEvent] = useState<Partial<EventObject>>({});
     const [users, setUsers] = useState<User[]>([]);
     const [expenseName, setExpenseName] = useState('');
@@ -33,6 +33,7 @@ const CreateExpenseDrawer: FC<CreateExpenseDrawerProps>= ({expenseId}) => {
     const [eventType, setEventType] = useState<string>("");
     const queryParams = new URLSearchParams(location.search);
     const friendId = queryParams.get('friendId');
+    const [loading, setLoading] = useState(false);
 
     const fetchData = () => {
         if (type) {
@@ -65,7 +66,7 @@ const CreateExpenseDrawer: FC<CreateExpenseDrawerProps>= ({expenseId}) => {
                 setExpenseName(data.expenseName);
                 setAmount(data.amount);
                 setSelectedDate(new Date(data.date));
-                const paidByDetail: { name: string; email: string; id: string } = { name: data.paidBy,  email: "", id: data.paidById}
+                const paidByDetail: { name: string; email: string; id: string } = { name: data.paidBy, email: "", id: data.paidById }
                 setPaidBy(paidByDetail);
                 console.log("paid by value", data.paidById);
                 let splitTypeString: string = 'equally';
@@ -75,7 +76,7 @@ const CreateExpenseDrawer: FC<CreateExpenseDrawerProps>= ({expenseId}) => {
                 for (const share of data.shares) {
                     const user: User = {
                         id: share.userId,
-                        email: " ", 
+                        email: " ",
                         name: share.name
                     };
                     const shareDetail = {
@@ -86,10 +87,10 @@ const CreateExpenseDrawer: FC<CreateExpenseDrawerProps>= ({expenseId}) => {
                     mapUserIdToShareDetails.set(share.userId, shareDetail);
                     console.log("printing mappppp 1: ", mapUserIdToShareDetails.get(share.userId)?.amount)
                     shareDetailsData.push(shareDetail);
-                    if(t == -1){
+                    if (t == -1) {
                         t = share.amount;
-                    }else{
-                        if(t != share.amount){
+                    } else {
+                        if (t != share.amount) {
                             splitTypeString = 'unequally';
                         }
                     }
@@ -103,7 +104,7 @@ const CreateExpenseDrawer: FC<CreateExpenseDrawerProps>= ({expenseId}) => {
                 setShareDetails(shareDetailsData);
                 setMapUserIdToShareDetails(mapUserIdToShareDetails)
                 console.log("printing event type", eventType)
-                
+
             });
         }
     };
@@ -112,28 +113,29 @@ const CreateExpenseDrawer: FC<CreateExpenseDrawerProps>= ({expenseId}) => {
         fetchData();
         fetchData2();
     }, []);
-useEffect(()=>{
-    if (splitType == "equally" && selectedUsers.length > 0){
-        const updatedShareDetails = selectedUsers.map(user => ({ userId: user.id!, amount: amount/(selectedUsers.length) }));
-        setShareDetails(updatedShareDetails)
-    }
-},[selectedUsers])
+    useEffect(() => {
+        if (splitType == "equally" && selectedUsers.length > 0) {
+            const updatedShareDetails = selectedUsers.map(user => ({ userId: user.id!, amount: amount / (selectedUsers.length) }));
+            setShareDetails(updatedShareDetails)
+        }
+    }, [selectedUsers])
 
     useEffect(() => {
         if (expenseId) {
-        if (eventType == "friend"){
-            console.log("inside friend", friendId, eventType)
-            apiService.getPossibleUsersForExpense(friendId!, eventType!).then(data => {
-                setUsers(data);
-                setShowShareDetails(true);
-            });
-        }else{
-            console.log("inside non friend", eventId, eventType)
-            apiService.getPossibleUsersForExpense(eventId!, "event").then(data => {
-                setUsers(data);
-                setShowShareDetails(true);
-            });
-        }}
+            if (eventType == "friend") {
+                console.log("inside friend", friendId, eventType)
+                apiService.getPossibleUsersForExpense(friendId!, eventType!).then(data => {
+                    setUsers(data);
+                    setShowShareDetails(true);
+                });
+            } else {
+                console.log("inside non friend", eventId, eventType)
+                apiService.getPossibleUsersForExpense(eventId!, "event").then(data => {
+                    setUsers(data);
+                    setShowShareDetails(true);
+                });
+            }
+        }
     }, [eventType]);
 
 
@@ -154,6 +156,7 @@ useEffect(()=>{
     }, [selectedUsers, users, splitType]);
 
     const handleCreateExpense = async () => {
+        setLoading(true);
         if (splitType == 'unequally') {
             const totalShareAmount = shareDetails.reduce((total, share) => total + share.amount, 0);
             if (totalShareAmount !== amount) {
@@ -183,11 +186,14 @@ useEffect(()=>{
             }
         } catch (error) {
             console.error('Unexpected error event creation:', error);
+        } finally {
+            setLoading(false);
         }
     };
 
 
     const handleEditExpense = async () => {
+        setLoading(true);
         if (splitType == 'unequally') {
             const totalShareAmount = shareDetails.reduce((total, share) => total + share.amount, 0);
             if (totalShareAmount !== amount) {
@@ -222,15 +228,17 @@ useEffect(()=>{
         try {
             const result = await apiService.editExpense(updateExpenseObject as unknown as Expense);
             if (result) {
-                if(friendId){
+                if (friendId) {
                     navigate(`/expense/${expenseId}?friendId=${friendId}`)
-                }else{
+                } else {
                     navigate(`/expense/${expenseId}`)
-                }   
-               
+                }
+
             }
         } catch (error) {
             console.error('Unexpected error event creation:', error);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -283,7 +291,7 @@ useEffect(()=>{
                 </button>
             </Flex>
             <Stack spacing={2} useFlexGap direction="column">
-                <h3>{expenseId ==""? "Add a New Expense":"Edit Expense"}</h3>
+                <h3>{expenseId == "" ? "Add a New Expense" : "Edit Expense"}</h3>
                 <span><strong>Expense Name</strong></span>
                 <TextField type="name" onChange={(event) => setExpenseName(event.target.value)} value={expenseName} name="name" required />
                 <span><strong>Date </strong></span>
@@ -322,7 +330,7 @@ useEffect(()=>{
                             options={users}
                             onChange={(value) => setSelectedUsers(value)}
                             isOptionEqualToValue={(option, value) => option.id === value.id}
-                            getOptionLabel={(option) => option.name}                        
+                            getOptionLabel={(option) => option.name}
                             value={selectedUsers}
                         />
                     </>)
@@ -333,26 +341,27 @@ useEffect(()=>{
                         {users.map((user) => {
                             console.log("printing mapp ahain", mapUserIdToShareDetails.get(user.id!))
                             return (
-                            <div key={user.id}>
-                                <Row>
-                                    <Col>
-                                        <span>{user.name}</span>
-                                    </Col>
-                                    <Col>
-                                        <input
-                                            type="number"
-                                            value={mapUserIdToShareDetails.has(user.id!) ? mapUserIdToShareDetails.get(user.id!)?.amount : 0}
-                                            onChange={(e) => handleAmountChange(e, user.id)}
-                                        />
-                                    </Col>
-                                </Row>
-                            </div>
-                        )})}
+                                <div key={user.id}>
+                                    <Row>
+                                        <Col>
+                                            <span>{user.name}</span>
+                                        </Col>
+                                        <Col>
+                                            <input
+                                                type="number"
+                                                value={mapUserIdToShareDetails.has(user.id!) ? mapUserIdToShareDetails.get(user.id!)?.amount : 0}
+                                                onChange={(e) => handleAmountChange(e, user.id)}
+                                            />
+                                        </Col>
+                                    </Row>
+                                </div>
+                            )
+                        })}
                     </>
                 )}
             </Stack>
             <br />
-            <Button variant="contained" onClick={expenseId == ""? handleCreateExpense:handleEditExpense}>{expenseId ==""? "Add":"Edit"}</Button>
+            <Button variant="contained" disabled={loading} onClick={expenseId == "" ? handleCreateExpense : handleEditExpense}>{expenseId == "" ? "Add" : "Edit"}</Button>
         </DashboardContainer>
     );
 }

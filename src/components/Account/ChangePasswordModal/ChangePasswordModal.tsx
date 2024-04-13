@@ -14,17 +14,25 @@ interface ChangePasswordModalProps {
 const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ onClose, forgotPassword }) => {
     const [email, setEmail] = useState('');
     const [newPassword, setNewPassword] = useState('');
+    const [loading, setLoading] = useState(false);
     const [confirmPassword, setConfirmPassword] = useState('');
     const handleChangePassword = async () => {
         if (!forgotPassword) {
+            setLoading(true);
             if (newPassword === confirmPassword && newPassword != '') {
                 let requestData = {
                     password: encrypt(newPassword)
                 }
-                await dataService.changePassword(requestData).then((data) => {
-                    alert(data.message)
-                    onClose();
-                })
+                try {
+                    await dataService.changePassword(requestData).then((data) => {
+                        alert(data.message)
+                        onClose();
+                    })
+                } catch (error) {
+                    console.log("Error occured", error);
+                } finally {
+                    setLoading(false);
+                }
             } else {
                 if (newPassword != confirmPassword)
                     alert("New password and confirm new password don't match!")
@@ -92,8 +100,8 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ onClose, forg
                             </>
                         )}
                         <Row>
-                            {!forgotPassword && (<Button onClick={handleChangePassword}>Change Password</Button>)}
-                            {forgotPassword && (<Button onClick={handleChangePassword}>Reset Password</Button>)}
+                            {!forgotPassword && (<Button onClick={handleChangePassword} disabled={loading}>Change Password</Button>)}
+                            {forgotPassword && (<Button onClick={handleChangePassword} disabled={loading}>Reset Password</Button>)}
                         </Row>
                     </div>
                 </Box>

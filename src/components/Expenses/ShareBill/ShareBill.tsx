@@ -46,6 +46,7 @@ const ShareBill = () => {
     const userSharesMap = useRef<{ [key: string]: Share }>({});
     const [editableItems, setEditableItems] = useState<any[]>([]);
     const [editableTaxItems, setEditableTaxItems] = useState<any[]>([]);
+    const [loading, setLoading] = useState(false);
 
     const handleExpenseNameChange = (event: { target: { value: SetStateAction<string>; }; }) => {
         setExpenseName(event.target.value);
@@ -60,6 +61,7 @@ const ShareBill = () => {
     const handleUpload = async () => {
         if (selectedFile) {
             setShowLoader(true);
+            setLoading(true);
             setShowTable(false);
             try {
                 const data = await dataService.fileUpload(selectedFile);
@@ -76,6 +78,8 @@ const ShareBill = () => {
             } catch (error) {
                 console.error('Error uploading file:', error);
                 setShowLoader(false);
+            } finally {
+                setLoading(false);
             }
         } else {
             alert("Invalid file!");
@@ -192,6 +196,7 @@ const ShareBill = () => {
     };
 
     const handleAddExpense = async () => {
+        setLoading(true);
         try {
             const result = await dataService.createExpense(expenseToCreate as unknown as Expense);
             if (result) {
@@ -199,6 +204,8 @@ const ShareBill = () => {
             }
         } catch (error) {
             console.error('Unexpected error event creation:', error);
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -326,7 +333,7 @@ const ShareBill = () => {
                 </Col>
                 {window.innerWidth <= 650 && (<><br /><br /></>)}
                 <Col xs={6} md={6}>
-                    <Button variant="secondary" onClick={handleUpload}>Upload</Button>
+                    <Button variant="secondary" disabled={loading} onClick={handleUpload}>Upload</Button>
                     {/* <FaFileUpload style={{ fontSize: 'xx-large' }} onClick={handleUpload} /> */}
                 </Col>
             </Row>
@@ -541,7 +548,7 @@ const ShareBill = () => {
                                                 <br />
                                             </div>
                                         ))}
-                                        <Button variant="secondary" onClick={handleAddExpense}>Add Expense</Button>
+                                        <Button variant="secondary" disabled={loading} onClick={handleAddExpense}>Add Expense</Button>
                                     </CardContent>
                                 </Card>
                             </>

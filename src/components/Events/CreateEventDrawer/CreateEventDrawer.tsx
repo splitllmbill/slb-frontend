@@ -16,6 +16,7 @@ const CreateEventDrawer: FC<CreateEventDrawerProps> = ({ eventID }) => {
     const [selectedUsers, setSelectedUsers] = useState<User[]>([])
     const [users, setUsers] = useState<User[]>([])
     const [eventData, setEventData] = useState<Partial<EventObject>>({});
+    const [loading, setLoading] = useState(false); // Add loading state
 
     const fetchData = async () => {
         try {
@@ -40,6 +41,7 @@ const CreateEventDrawer: FC<CreateEventDrawerProps> = ({ eventID }) => {
     }, []);// Initial data fetch
 
     const handleCreateEvent = async () => {
+        setLoading(true);
         const createEventObject = {
             eventName: eventName,
             users: [`${localStorage.getItem('userId')}`, ...(selectedUsers.map(selectedUser => selectedUser.id!))],
@@ -54,10 +56,13 @@ const CreateEventDrawer: FC<CreateEventDrawerProps> = ({ eventID }) => {
             // setAlertInfo({ open: true, severity: 'error', message: 'Unexpected error occured! Please try again.' });
             console.error('Unexpected error event creation:', error);
 
+        } finally {
+            setLoading(false); // Reset loading state regardless of success or failure
         }
     };
 
     const handleEditEvent = async () => {
+        setLoading(true);
         const ediEventObject = {
             id: eventID,
             expenses: eventData.expenses,
@@ -74,6 +79,8 @@ const CreateEventDrawer: FC<CreateEventDrawerProps> = ({ eventID }) => {
             // setAlertInfo({ open: true, severity: 'error', message: 'Unexpected error occured! Please try again.' });
             console.error('Unexpected error event creation:', error);
 
+        } finally {
+            setLoading(false); // Reset loading state regardless of success or failure
         }
     };
 
@@ -110,7 +117,7 @@ const CreateEventDrawer: FC<CreateEventDrawerProps> = ({ eventID }) => {
 
                 </Stack>
                 <br />
-                <Button variant="contained" onClick={eventID == "" ? handleCreateEvent : handleEditEvent}>{eventID == "" ? "Add" : "Edit"}</Button>
+                <Button variant="contained" disabled={loading} onClick={eventID == "" ? handleCreateEvent : handleEditEvent}>{eventID == "" ? "Add" : "Edit"}</Button>
             </div>
         </DashboardContainer>
 
