@@ -11,7 +11,6 @@ import { formatDate, formatDateForTransactions, toTitleCase } from '../../../ser
 import { MdOutlineEdit } from "react-icons/md";
 import { FaCheck } from 'react-icons/fa';
 
-
 const ShareBill = () => {
     const [selectedFile, setSelectedFile] = useState<File>();
     const [showTable, setShowTable] = useState<boolean>(false);
@@ -24,6 +23,7 @@ const ShareBill = () => {
     });
     const [payer, setPayer] = useState<any>(null);
     const [sharedByUsers, setSharedByUsers] = useState<any[]>([]);
+    const [sharedByUsersTax, setSharedByUsersTax] = useState<any[]>([]);
     const [showShares, setShowShares] = useState<boolean>(false);
     const [expenseToCreate, setExpenseToCreate] = useState<Expense>({
         expenseName: "", // Provide a name for the expense if necessary
@@ -65,6 +65,13 @@ const ShareBill = () => {
                 const data = await dataService.fileUpload(selectedFile);
                 setShowLoader(false);
                 setOcrOutput(data.ocroutput);
+                if (data.ocroutput.tax.length > 0) {
+                    const initialSharedByUsersTax: any[] = [];
+                    for (let i = 0; i < data.ocroutput.tax.length; i++) {
+                        initialSharedByUsersTax.push(users);
+                    }
+                    setSharedByUsersTax(initialSharedByUsersTax);
+                }
                 setShowTable(true);
             } catch (error) {
                 console.error('Error uploading file:', error);
@@ -83,13 +90,21 @@ const ShareBill = () => {
         });
     };
 
+    const handleTaxSharedByChange = (index: number, newValue: any[]) => {
+        setSharedByUsersTax(prevSharedByUsersTax => {
+            const updatedSharedByUsersTax = [...prevSharedByUsersTax];
+            updatedSharedByUsersTax[index] = newValue;
+            return updatedSharedByUsersTax;
+        });
+    };
+
     const calculateShares = () => {
         userSharesMap.current = {};
         if (type && id && payer) {
             let totalAmount = ocrOutput.items.reduce((total, item) => total + item.total_amount, 0);
             totalAmount += ocrOutput.tax.reduce((total, item) => total + item.amount, 0);
 
-            if (sharedByUsers.length !== ocrOutput.items.length || !type || !payer) {
+            if (sharedByUsers.length !== ocrOutput.items.length || sharedByUsersTax.length != ocrOutput.tax.length || !type || !payer) {
                 alert("Please fill all required fields!");
             } else {
                 ocrOutput.items.forEach((item, index) => {
@@ -111,20 +126,23 @@ const ShareBill = () => {
                     }
                 });
 
-                ocrOutput.tax.forEach((item) => {
-                    const itemShareAmount = item.amount / users.length;
-                    users.forEach((user: any) => {
-                        const { id: userId } = user;
-                        if (!userSharesMap.current[userId]) {
-                            userSharesMap.current[userId] = {
-                                amount: itemShareAmount,
-                                name: user.name,
-                                userId
-                            };
-                        } else {
-                            userSharesMap.current[userId].amount += itemShareAmount;
-                        }
-                    });
+                ocrOutput.tax.forEach((item, index) => {
+                    if (sharedByUsersTax[index] && sharedByUsersTax[index].length > 0) {
+                        const itemShareAmount = item.amount / sharedByUsersTax[index].length;
+
+                        sharedByUsersTax[index].forEach((user: { id: any, name: string }) => {
+                            const { id: userId } = user;
+                            if (!userSharesMap.current[userId]) {
+                                userSharesMap.current[userId] = {
+                                    amount: itemShareAmount,
+                                    name: user.name,
+                                    userId
+                                };
+                            } else {
+                                userSharesMap.current[userId].amount += itemShareAmount;
+                            }
+                        });
+                    }
                 });
 
                 const expense: Expense = {
@@ -167,8 +185,6 @@ const ShareBill = () => {
             updateOcrOutput();
         }
     }, [editableItems, editableTaxItems]);
-
-
 
     const navigate = useNavigate();
     const handleGoBack = () => {
@@ -301,7 +317,7 @@ const ShareBill = () => {
             <p>Upload receipts, split expenses, and track shared costs effortlessly!</p>
             <br />
             <Row className="align-items-center">
-                <Col xs={12} md={6}>
+                <Col xs={6} md={6}>
                     <input
                         type="file"
                         accept="image/*"
@@ -309,8 +325,9 @@ const ShareBill = () => {
                     />
                 </Col>
                 {window.innerWidth <= 650 && (<><br /><br /></>)}
-                <Col xs={12} md={6}>
+                <Col xs={6} md={6}>
                     <Button variant="secondary" onClick={handleUpload}>Upload</Button>
+                    {/* <FaFileUpload style={{ fontSize: 'xx-large' }} onClick={handleUpload} /> */}
                 </Col>
             </Row>
             <br />
@@ -474,7 +491,7 @@ const ShareBill = () => {
                                         options={users}
                                         defaultValue={users} // Set defaultValue to all users
                                         getOptionLabel={(option) => option.name}
-                                        onChange={(_event, newValue) => handleSharedByChange(index, newValue)}
+                                        onChange={(_event, newValue) => handleTaxSharedByChange(index, newValue)}
                                         renderInput={(params) => (
                                             <TextField
                                                 {...params}
