@@ -249,7 +249,7 @@ const UserPage = () => {
                     <button onClick={handleLogout}>Logout <IoLogOutOutline style={{ fontSize: 'x-large' }}></IoLogOutOutline></button>
                 </Flex>
                 <h2>Edit User Information</h2>
-                <FriendLink friendCode={userData.uuid} dismissable={false} />
+                <FriendLink friendCode={userData.uuid}/>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <Alert variant='primary' style={{ width: '67.5%' }} >
                         Share this unique invite code <a style={{ color: '#007bff', cursor: 'pointer' }} onClick={() => handleCopyToClipboard(userData.inviteCode, 'invite code')}>{userData.inviteCode} </a> to refer your friends and family and get exciting rewards in {appTitle}.

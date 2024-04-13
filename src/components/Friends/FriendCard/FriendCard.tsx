@@ -18,6 +18,8 @@ const FriendCard: FC<FriendCardProps> = ({ friend }) => {
         navigate(`/friend/${friend.id}?friendId=${friend.id}`);
     };
 
+    const oweAmount = friend.oweAmount as number;
+
     return (
         <FriendCardWrapper onClick={handleClick}>
             <Card>
@@ -35,19 +37,19 @@ const FriendCard: FC<FriendCardProps> = ({ friend }) => {
                         </Col>
                         <Col className="d-flex justify-content-end">
                             <Typography variant="body1" color="#785A53" sx={{ fontWeight: 'bold', textTransform: 'capitalize', textAlign: 'right' }}>
-                                {(friend.whoOwes === 'user' && friend.oweAmount > 0) && (
+                                {(oweAmount < 0) && (
                                     <>
                                         <div>You owe</div>
-                                        <div>Rs.{friend.oweAmount}</div>
+                                        <div>Rs. {(-oweAmount).toFixed(2)}</div>
                                     </>
                                 )}
-                                {(friend.whoOwes === 'friend' && friend.oweAmount > 0) && (
+                                {(oweAmount > 0) && (
                                     <>
                                         <div>{friend.name} owes </div>
-                                        <div>Rs.{friend.oweAmount}</div>
+                                        <div>Rs. {oweAmount.toFixed(2)}</div>
                                     </>
                                 )}
-                                {friend.oweAmount == 0.0 && (
+                                {oweAmount == 0.0 && (
                                     <>
                                         <div>No expenses</div>
                                     </>
