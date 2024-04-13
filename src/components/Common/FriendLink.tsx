@@ -5,10 +5,9 @@ import InsertLinkOutlinedIcon from '@mui/icons-material/InsertLinkOutlined';
 
 interface FriendLinkProps {
     friendCode: string;
-    dismissable: boolean;
 }
 
-const FriendLink: React.FC<FriendLinkProps> = ({ friendCode, dismissable }) => {
+const FriendLink: React.FC<FriendLinkProps> = ({ friendCode }) => {
 
     const appTitle = import.meta.env.VITE_APP_TITLE;
 
@@ -50,7 +49,7 @@ const FriendLink: React.FC<FriendLinkProps> = ({ friendCode, dismissable }) => {
     }
 
     return (
-        <Alert variant='primary' style={{ width: '100%' }} dismissible={dismissable}>
+        <Alert variant='primary' style={{ width: '100%' }} >
             Share this unique friend code <a style={{ color: '#007bff', cursor: 'pointer' }} onClick={() => handleCopyToClipboard(friendCode, 'friend code')}>{friendCode} </a> or this friend link 
             <Tooltip title="Share Friend Link">
                 <IconButton
