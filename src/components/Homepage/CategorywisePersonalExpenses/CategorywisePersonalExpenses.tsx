@@ -47,7 +47,7 @@ const CategorywisePersonalExpenses: React.FC<Props> = ({ expenses }) => {
             {expenses && expenses.length > 0 && (
                 <>
                     {expenses.slice(startIndex, endIndex).map((expense, index) => (
-                        <TableLikeRow style={{ padding: '10px' }}>
+                        <TableLikeRow style={{ padding: '10px' }} key={index}>
                             <TableLikeRowItem>
                                 <Avatar sx={{ bgcolor: shades[startIndex + index] }}><p></p></Avatar>
                             </TableLikeRowItem>

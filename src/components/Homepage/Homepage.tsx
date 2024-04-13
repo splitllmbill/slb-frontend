@@ -10,7 +10,7 @@ import { MdOutlineKeyboardDoubleArrowRight } from "react-icons/md";
 import { Flex } from '../../App.styled';
 import CategorywisePersonalExpenses from './CategorywisePersonalExpenses/CategorywisePersonalExpenses';
 import { useNavigate } from 'react-router-dom';
-import { formatDate, selectedContent } from '../../services/State';
+import { formatDate } from '../../services/State';
 import dataService from '../../services/DataService';
 import CircularProgress from '@mui/material/CircularProgress';
 
@@ -81,12 +81,10 @@ const Homepage: React.FC = () => {
 
   const redirectToPersonalExpense = () => {
     navigate('/personal-expenses')
-    selectedContent.next('Personal Expenses')
   }
 
   const redirectToEvents = () => {
     navigate('/events')
-    selectedContent.next('Events')
   }
 
   return (
