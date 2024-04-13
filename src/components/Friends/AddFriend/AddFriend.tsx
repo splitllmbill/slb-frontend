@@ -12,11 +12,19 @@ interface AddFriendProps {
 
 const AddFriend: React.FC<AddFriendProps> = ({ onClose, friendId }) => {
     const [friendCode, setFriendCode] = useState(friendId);
+    const [loading, setLoading] = useState(false);
     const handleAddFriend = async () => {
-        await dataService.addFriend(friendCode).then((data) => {
-            alert(data.message)
-            onClose();
-        })
+        setLoading(true);
+        try {
+            await dataService.addFriend(friendCode).then((data) => {
+                alert(data.message)
+                onClose();
+            })
+        } catch (error) {
+            console.log("Error in adding friend!");
+        } finally {
+            setLoading(false);
+        }
     }
 
     return (
@@ -47,7 +55,7 @@ const AddFriend: React.FC<AddFriendProps> = ({ onClose, friendId }) => {
                             />
                         </Row>
                         <Row>
-                            <Button onClick={handleAddFriend}>Add Friend</Button>
+                            <Button onClick={handleAddFriend} disabled={loading}>Add Friend</Button>
                         </Row>
                     </div>
                 </Box>

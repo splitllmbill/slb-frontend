@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Form, Button, FormGroup } from 'react-bootstrap';
 import { Row, Col } from 'react-bootstrap';
 import { Alert, AlertColor } from '@mui/material';
@@ -7,12 +7,12 @@ import Header from '../Header/Header';
 import apiService from '../../services/DataService';
 import { useNavigate } from 'react-router-dom';
 import { encrypt } from '../../util/aes';
-// import ChangePasswordModal from '../Account/ChangePasswordModal/ChangePasswordModal';
 import VerificationModal from '../Account/VerificationModal/VerificationModal';
 
 interface LoginProps {
    loginRefresh: () => void;
 }
+
 const Login: React.FC<LoginProps> = ({ loginRefresh }) => {
    const appTitle = import.meta.env.VITE_APP_TITLE;
    let navigate = useNavigate();
@@ -23,26 +23,17 @@ const Login: React.FC<LoginProps> = ({ loginRefresh }) => {
    const [inviteCode, setInviteCode] = useState('');
    const [buttonText, setButtonText] = useState('Login');
    const [alertInfo, setAlertInfo] = useState({ open: false, severity: 'success', message: '' });
-   // const [isModalOpen, setIsModalOpen] = useState(false);
+   const [loading, setLoading] = useState(false); // Add loading state
    const [isVerificationModalOpen, setisVerificationModalOpen] = useState(false);
-
-
-   // const openModal = () => {
-   //    setIsModalOpen(true);
-   // }
-
-   // const closeModal = () => {
-   //    setIsModalOpen(false);
-   // }
 
    const handleCloseAlert = () => {
       setAlertInfo({ ...alertInfo, open: false });
    };
 
+   
    const tempDisplayCode = (code: string) => {
       alert(code);
    }
-   
 
    const handleVerificationModal = async() => {
       alert('Email is not yet verified. Please verify to access all functionality.')
@@ -65,6 +56,8 @@ const Login: React.FC<LoginProps> = ({ loginRefresh }) => {
 
    const handleSignUpOrLogin = async (event: any) => {
       event.preventDefault();
+      setLoading(true); // Set loading state to true
+
       const formData = new FormData(event.target);
       const formDataObject = Object.fromEntries(formData.entries());
       formDataObject['password'] = encrypt(formDataObject.password.toString());
@@ -93,6 +86,8 @@ const Login: React.FC<LoginProps> = ({ loginRefresh }) => {
       } catch (error : any) {
          setAlertInfo({ open: true, severity: 'error', message: error.message });
          console.error('Unexpected error during signup:', error);
+      } finally {
+         setLoading(false); // Reset loading state regardless of success or failure
       }
    };
 
@@ -103,7 +98,6 @@ const Login: React.FC<LoginProps> = ({ loginRefresh }) => {
          <div className="login-container">
             <Header></Header>
             <br></br>
-            {/* {isModalOpen && <ChangePasswordModal onClose={closeModal} forgotPassword={true} />} */}
             {isVerificationModalOpen && <VerificationModal handleClose={handleCloseVerification} type={'Email'} userData={{email: email}}/>}
             {alertInfo.open && (
                <Alert onClose={handleCloseAlert} severity={alertInfo.severity as AlertColor} sx={{ width: '100%' }}>
@@ -115,8 +109,8 @@ const Login: React.FC<LoginProps> = ({ loginRefresh }) => {
                <Col sm={5}>
                   <Row>
                      <Row>
-                        <Col sm={6}><Button className={buttonText === 'Login' ? 'button primary active' : 'button primary'} onClick={() => setButtonText('Login')}>Login</Button></Col>
-                        <Col sm={6}><Button className={buttonText === 'Signup' ? 'button primary active' : 'button primary'} onClick={() => setButtonText('Signup')}>Signup</Button></Col>
+                        <Col sm={6}><Button disabled={loading} className={buttonText === 'Login' ? 'button primary active' : 'button primary'} onClick={() => setButtonText('Login')}>Login</Button></Col>
+                        <Col sm={6}><Button disabled={loading} className={buttonText === 'Signup' ? 'button primary active' : 'button primary'} onClick={() => setButtonText('Signup')}>Signup</Button></Col>
                      </Row>
                      <Row>
                         <Col>
@@ -147,14 +141,9 @@ const Login: React.FC<LoginProps> = ({ loginRefresh }) => {
                                     <br></br>
                                  </>
                               }
-                              <Button variant="primary" type="submit">
+                              <Button disabled={loading} variant="primary" type="submit">
                                  {buttonText}
                               </Button>
-                              {/* <p>Or sign up with</p>
-                              <Button variant="outline-primary" type="submit">
-                                 <i className="fab fa-google" /> Google
-                              </Button>
-                              <a href="#" onClick={openModal}>Forgot password?</a> */}
                            </Form>
                         </Col>
                      </Row>
