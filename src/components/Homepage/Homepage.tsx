@@ -19,6 +19,7 @@ interface SummaryState {
   personal_expenses: number;
   total_you_owe: number;
   total_owed_to_you: number;
+  username: string;
 }
 
 interface ChartExpense {
@@ -36,6 +37,7 @@ const Homepage: React.FC = () => {
     personal_expenses: 0,
     total_you_owe: 0,
     total_owed_to_you: 0,
+    username: ''
   });
   const [expenses, setExpenses] = useState<ChartExpense[]>([]);
   const [dateRange, setDateRange] = useState<{ startDate: Date | null, endDate: Date | null }>({
@@ -92,16 +94,20 @@ const Homepage: React.FC = () => {
       <div className='app'>
         <Container>
           <br />
-          <Row>
-            <Col xs={12} sm={9}>
-              <h3>Welcome, Saroja! {isMobile}</h3>
-              <h6>Here's a snapshot of your expenditures.</h6>
-            </Col>
-            {isMobile && <Col xs={12}><br /></Col>}
-            <Col xs={12} sm={3} className="text-end" >
-              <DateFilterDropdown setDateRange={handleDateChange}></DateFilterDropdown>
-            </Col>
-          </Row>
+          {
+            summary.username !== '' ? (
+              <Row>
+                <Col xs={12} sm={9}>
+                  <h3>Welcome, {summary.username} ! {isMobile}</h3>
+                  <h6>Here's a snapshot of your expenditures.</h6>
+                </Col>
+                {isMobile && <Col xs={12}><br /></Col>}
+                <Col xs={12} sm={3} className="text-end" >
+                  <DateFilterDropdown setDateRange={handleDateChange}></DateFilterDropdown>
+                </Col>
+              </Row>
+            ) : <></>
+          }
           <br />
           <Row>
             <Col xs={12} className="text-end">
