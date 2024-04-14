@@ -1,16 +1,17 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from 'react-router-dom';
-import { Col, Row } from "react-bootstrap";
+import { Row , Col } from "react-bootstrap";
 import { CircularProgress, List } from "@mui/material";
 import { AiOutlineUsergroupAdd } from "react-icons/ai";
 import { IoMdSearch } from "react-icons/io";
-import { FriendList } from "./FriendsPage.styled";
-import { TbFaceIdError, TbUserCode } from "react-icons/tb";
+import { Flex, FriendList } from "./FriendsPage.styled";
+import { TbFaceIdError } from "react-icons/tb";
+import TextField from '@mui/material/TextField';
 import dataService from "../../services/DataService";
 import AddFriend from "./AddFriend/AddFriend";
 import FriendCard from "./FriendCard/FriendCard";
 import FriendLink from "../Common/FriendLink";
-import { DashboardContainer, Flex, NoItemsWrapper } from "../../App.styled";
+import { DashboardContainer, NoItemsWrapper } from "../../App.styled";
 
 const FriendsPage = () => {
     const { friendId } = useParams();
@@ -21,12 +22,11 @@ const FriendsPage = () => {
         "overallYouAreOwed": "",
         "friendsList": []
     });
-    const [alertInfo, setAlertInfo] = useState({
-        open: true,
-        severity: 'light'
-    });
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [showLoader, setShowLoader] = useState(true);
+    const [enableSearch, setEnableSearch] = useState(false);
+    const [searchInput, setSearchInput] = useState('');
+    const [friendsList, setFriendsList] = useState([]);
 
     const handleAddFriend = () => {
         setIsModalOpen(true);
@@ -37,10 +37,32 @@ const FriendsPage = () => {
         navigate('/friends')
     };
 
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const inputValue = event.target.value as string;
+        setSearchInput(inputValue);
+        const filteredArray = friends.friendsList.filter(item => {
+            const name = item['name'] as string;
+            const email = item['email'] as string;
+            return name.toLowerCase().includes(inputValue.toLowerCase()) || email.toLowerCase().includes(inputValue.toLowerCase());
+        });
+        setFriendsList(filteredArray);
+    };
+
+    const handleSearch = () => {
+        if(!enableSearch)
+            setEnableSearch(true);
+        else {
+            setSearchInput('');
+            setFriendsList(friends.friendsList);
+            setEnableSearch(false);
+        }
+    }
+
     const fetchData = async () => {
         try {
             const data = await dataService.getFriendsList();
             setFriends(data);
+            setFriendsList(data.friendsList)
             setShowLoader(false);
         } catch (error) {
             console.log("Error occurred");
@@ -53,48 +75,58 @@ const FriendsPage = () => {
         if(friendId)
             setIsModalOpen(true);
     }, []);
-
-    const handleAlertToggle = () => {
-        setAlertInfo({ ...alertInfo, open: !alertInfo.open });
-    };
-
+    
     return (
         <DashboardContainer>
-            <Flex>
-                <button onClick={handleAddFriend}>Add Friend <AiOutlineUsergroupAdd style={{ fontSize: 'x-large' }} /></button>
-                <button>Search <IoMdSearch style={{ fontSize: 'x-large' }} /></button>
-                <Col sm={1}>
-                    <TbUserCode onClick={handleAlertToggle} style={{ fontSize: 'x-large', marginTop: '15px' }} />
+            <Row>
+                <Col xs={12} md={6}>
+                    <button onClick={handleAddFriend}>Add Friend <AiOutlineUsergroupAdd style={{ fontSize: 'x-large' }} /></button>
                 </Col>
-            </Flex>
+                { !showLoader && 
+                    <Col xs={12} md={6}>
+                        <Flex style={{ justifyContent: 'flex-end' }}>
+                            {
+                                enableSearch && 
+                                <TextField 
+                                    id="standard-basic" 
+                                    label="Search" 
+                                    placeholder="Name or Email"
+                                    variant="standard" 
+                                    value={searchInput} 
+                                    onChange={handleInputChange} 
+                                />
+                            }
+                            <IoMdSearch onClick={handleSearch} style={{ fontSize: 'xx-large', marginTop: '15px' }} />
+                        </Flex>
+                    </Col> 
+                }
+            </Row>
             <br />
             {showLoader && (<div className="d-flex justify-content-center align-items-center"><CircularProgress color="secondary" variant="indeterminate" /></div>)}
             {!showLoader && (
                 <>
                     <Row>
-                        {alertInfo.open && (
-                            <FriendLink friendCode={friends.uuid} dismissable={true} />
-                        )}
+                        <FriendLink friendCode={friends.uuid}/>
                     </Row>
                     {isModalOpen && <AddFriend friendId={ friendId || '' } onClose={handleCloseAddFriend} />}
                     <div>
                         {parseFloat(friends.overallYouOwe) !== 0.0 && (
-                            <h4>Overall, you owe Rs.{friends.overallYouOwe}</h4>
+                            <h4>Overall, you owe Rs. {parseFloat(friends.overallYouOwe).toFixed(2)}</h4>
                         )}
 
                         {parseFloat(friends.overallYouAreOwed) !== 0.0 && (
-                            <h4>Overall, you are owed Rs.{friends.overallYouAreOwed}</h4>
+                            <h4>Overall, you are owed Rs. {parseFloat(friends.overallYouAreOwed).toFixed(2)}</h4>
                         )}
                     </div>
                     <FriendList>
-                        {friends && friends?.friendsList.length == 0 && (
+                        {friendsList && friendsList.length == 0 && (
                             <NoItemsWrapper>
                                 <TbFaceIdError style={{ fontSize: 'xx-large' }}></TbFaceIdError>
                                 <h6>No friends yet!</h6>
                             </NoItemsWrapper>
                         )}
                         <List>
-                            {friends.friendsList.map((friend, index) => (
+                            {friendsList.map((friend, index) => (
                                 <FriendCard key={index} friend={friend} />
                             ))}
                         </List>

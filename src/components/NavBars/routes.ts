@@ -3,11 +3,15 @@ export const routeItems: { [key: string]: string } = {
   '/events': 'Events',
   '/event': 'Events',
   '/create-event': 'Events',
+  '/shareBill/group': 'Events',
+  '/createExpense/event': 'Events',
   '/friends': 'Friends',
   '/friend': 'Friends',
   '/add-friend': 'Friends',
+  '/shareBill/friend': 'Friends',
+  '/createExpense/friend': 'Friends',
   '/personal-expenses': 'Personal Expenses',
-  '/user-account': 'Account',
+  '/user-account': 'Account'
 };
 
 export const itemRoutes: { [key: string]: string } = {
