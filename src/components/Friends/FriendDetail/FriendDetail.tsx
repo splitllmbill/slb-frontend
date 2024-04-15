@@ -56,6 +56,8 @@ function FriendDetail() {
         if (friendId !== undefined) {
             try {
                 await dataService.settleUpWithFriend(friendId).then((data) => {
+                    console.log("data",data);
+                    
                     setSnackBarState({ message: data.message, open: true });
                     setRefetchData(!refetchData);
                 });

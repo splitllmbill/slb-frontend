@@ -188,7 +188,7 @@ const SettleExpenseModal: React.FC<SettleExpenseModalProps> = ({ onClose, friend
                             </button>
                         </CenteredFlex>
                     }{
-                        amountConfirmed && link == "" && <Typography variant="h4">Awaiting confirmation...</Typography>
+                        amountConfirmed && link == "" && <Typography variant="h5">Awaiting confirmation...</Typography>
                     }{amountConfirmed && link != "" && <div>
                         <Flex style={{ marginBottom: '-5px' }}>
                             <Typography variant="h4">UPI Payment Helper</Typography>
