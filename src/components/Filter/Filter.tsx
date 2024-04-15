@@ -1,19 +1,18 @@
-import React, { Fragment, useEffect, useState } from 'react';
-import { Col, Row } from 'react-bootstrap';
+import React, {useEffect, useState } from 'react';
+import { Row } from 'react-bootstrap';
 import Box from '@mui/material/Box';
-import InputLabel from '@mui/material/InputLabel';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
-import {Autocomplete,TextField,Checkbox} from '@mui/material';
+import {Autocomplete,TextField,Checkbox,Typography} from '@mui/material';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import DeleteIcon from '@mui/icons-material/Delete';
+import { toTitleCase } from '../../services/State';
+
 import {
   StyledButton,
   StyledMenu,
-  StyledMenuItem,
   StyledFormControl,
-  StyledSelect,
+  StyledFragment
 } from './FilterMenuStyles';
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
@@ -57,39 +56,45 @@ const DynamicFilter: React.FC<DynamicFilterProps> = ({applyFilter,filterOptions}
     setAnchorEl(null);
   };
 
-  const handleAddFilter = () => {
-    // Add a new filter criteria with default values
-    setFilters([...filters, { field: '', operator: '', values: [] }]);
-  };
+
+
+  const handleApplyFilters=()=>{
+    
+    const validFilters=filters.filter((filter)=>{
+      if (filter.operator=="BTW" && (filter.values[0]==''||filter.values[1]=='') )
+        return false
+      return true
+    })
+    if(validFilters && validFilters.length!=0){
+      applyFilter(validFilters);
+    }
+    setAnchorEl(null);
+   
+  }
 
   useEffect(()=>{
-   let valid=true
-    filters.map((filter)=>{
-      if(filter.operator=="IN" && filter.values.length==0)
-        valid=false
-      else if (filter.operator=="BTW" && (filter.values[0]==''||filter.values[1]=='') )
-        valid=false
-    })
-    if(valid){
-      applyFilter(filters);
-    }
-   
-  },[filters])
+    const initialFilters =filterFields.map((filter)=>({
+      field:filter.name,
+      operator: filter.type == "dropdown"? "IN":"BTW",
+      values: filter.type == "dropdown"?[]:['','']
+    }))
+    setFilters(initialFilters)
+  },[])
 
-  const handleFieldChange = (index: number, fieldName: string) => {
-    // Update the selected field for a specific filter criteria
-    const updatedFilters = [...filters];
-    const field = filterFields.find((field) => field.name === fieldName);
-    if (field) {
-      updatedFilters[index] = {
-        ...updatedFilters[index],
-        field: fieldName,
-        operator: field.type=="dropdown"?"IN":"BTW",
-        values: field.type === 'range' ? ['','']: [],
-      };
-      setFilters(updatedFilters);
-    }
-  };
+  // const handleFieldChange = (index: number, fieldName: string) => {
+  //   // Update the selected field for a specific filter criteria
+  //   const updatedFilters = [...filters];
+  //   const field = filterFields.find((field) => field.name === fieldName);
+  //   if (field) {
+  //     updatedFilters[index] = {
+  //       ...updatedFilters[index],
+  //       field: fieldName,
+  //       operator: field.type=="dropdown"?"IN":"BTW",
+  //       values: field.type === 'range' ? ['','']: [],
+  //     };
+  //     setFilters(updatedFilters);
+  //   }
+  // };
   const convertToArray = (value: string | string[]): string[] => Array.isArray(value) ? value : [value];
 
 
@@ -111,13 +116,13 @@ const DynamicFilter: React.FC<DynamicFilterProps> = ({applyFilter,filterOptions}
    
   };
 
-  const handleRemoveFilter = (index: number) => {
-    const updatedFilters = filters.filter((_, i) => i !== index);
-    setFilters(updatedFilters);
-  };
+  // const handleRemoveFilter = (index: number) => {
+  //   const updatedFilters = filters.filter((_, i) => i !== index);
+  //   setFilters(updatedFilters);
+  // };
 
   return (
-    <Fragment>
+    <StyledFragment >
       <StyledButton
         aria-controls="filter-menu"
         aria-haspopup="true"
@@ -137,34 +142,21 @@ const DynamicFilter: React.FC<DynamicFilterProps> = ({applyFilter,filterOptions}
       >
       {filters.map((filter, index) => (
         <Box key={index} sx={{ mb: 2 }}>
-          <Row>
-            <Col md={4}>
-          <StyledFormControl fullWidth>
-            <InputLabel id={`select-label-${index}`}>Select a field</InputLabel>
-            <StyledSelect
-              labelId={`select-label-${index}`}
-              id={`select-${index}`}
-              value={filter.field}
-              label="Select a field"
-              onChange={(e) => handleFieldChange(index, e.target.value as string)}
-            >
-              {filterFields.map((field) => (
-                <StyledMenuItem key={field.name} value={field.name}>
-                  {field.name}
-                </StyledMenuItem>
-              ))}
-            </StyledSelect>
-          </StyledFormControl>
-          </Col>
-          <Col md={7}>
+          <Row  sx={{width:'250px'}}>
+          <Typography variant="body1" component="div" sx={{ fontWeight: 'bold', textTransform: 'capitalize' }}>
+            {toTitleCase(filter.field)}
+          </Typography>
           {filter.operator === 'IN' && (
             
-            <StyledFormControl fullWidth>
+            <StyledFormControl>
 
               <Autocomplete
-                        classes={{ endAdornment: 'MuiAutocomplete-endAdornment' }}
+              sx={{
+                marginRight:'20px',
+                marginTop:'5px',
+                marginLeft:'8px'
+              }}
                         multiple
-                        id="tags-outlined"
                         options={filterOptions[filter.field]}
                         onChange={(_,option) => handleDropdownChange(index,convertToArray(option))}
                         getOptionLabel={(option) => option}
@@ -193,17 +185,18 @@ const DynamicFilter: React.FC<DynamicFilterProps> = ({applyFilter,filterOptions}
           )}
           
           {filter.operator === 'BTW' && (
-               <Box sx={{ display: 'flex' }}>
-               <StyledFormControl fullWidth>
+               <Box sx={{ display: 'flex',marginRight:'20px'}}>
+               <StyledFormControl>
                  <OutlinedInput
+                 sx={{width:'100%'}}
                    type="number"
                    value={filter.values[0]}
                    onChange={(e) => handleRangeChange(index, 'min', e.target.value)}
                    placeholder="Min"
                  />
                </StyledFormControl>
-               <StyledFormControl fullWidth>
-                 <OutlinedInput
+               <StyledFormControl >
+                 <OutlinedInput sx={{width:'100%',marginRight:'20px'}}
                    type="number"
                    value={filter.values[1]}
                    onChange={(e) => handleRangeChange(index, 'max', e.target.value)}
@@ -212,20 +205,17 @@ const DynamicFilter: React.FC<DynamicFilterProps> = ({applyFilter,filterOptions}
                </StyledFormControl>
              </Box>
              )}
-          
-          </Col>
-          <Col md={1}>
-          <DeleteIcon onClick={() => handleRemoveFilter(index)} sx={{ mt: 2 }}/>
-          </Col>
           </Row>
         </Box>
         
       ))}
-      <StyledButton variant="contained" onClick={handleAddFilter} sx={{ mt: 2 }}>
-        Add Filter
-      </StyledButton>
+        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <StyledButton variant="contained" onClick={handleApplyFilters} sx={{marginRight:'5px' ,width:'20px'}}>
+          Apply
+        </StyledButton>
+      </div>
       </StyledMenu>
-    </Fragment>
+    </StyledFragment>
   );
 };
 

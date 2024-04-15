@@ -71,17 +71,17 @@ const PersonalExpenseList: FC<PersonalExpenseListProps> = () => {
 
   return (
     <PersonalExpenseListWrapper>
-      <Row className="align-items-center"> {/* This ensures vertical alignment */}
-        <Col xs={10}> {/* Adjusted for centering text */}
-          <H3>
-            <h4>Personal Expenses</h4>
-            <h6> Total expense: Rs.{expenses.reduce((acc, expense) => acc + expense.amount, 0)}</h6>
-          </H3>
-        </Col>
-        <Col xs={2} className="text-end"> {/* Ensures the icon is in a separate column and centered */}
-          <DynamicFilter applyFilter={handleSetFilters} filterOptions={filterOptions} />
-        </Col>
-      </Row>
+      <H3>
+        <Row className="align-items-center"> {/* This ensures vertical alignment */}
+          <Col md={11} xs={8}> {/* Adjusted for centering text */} 
+              <h4>Personal Expenses</h4>
+              <h6> Total expense: Rs.{expenses.reduce((acc, expense) => acc + expense.amount, 0)}</h6>
+          </Col>
+          <Col md={1} xs={4} > {/* Ensures the icon is in a separate column and centered */}
+            <DynamicFilter applyFilter={handleSetFilters} filterOptions={filterOptions} />
+          </Col>
+        </Row>
+      </H3>
       {expenses.slice(startIndex, endIndex).map((expense) => (
         <TableLikeRow key={expense.id}>
           <TableLikeRowItem>

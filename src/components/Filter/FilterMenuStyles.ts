@@ -1,4 +1,5 @@
 // FilterMenuStyles.ts
+import {Fragment} from 'react';
 import { styled } from '@mui/system';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
@@ -8,31 +9,32 @@ import Select from '@mui/material/Select';
 
 export const StyledButton = styled(Button)({
   color: '#fff', // Adjust the color to fit your theme
-  backgroundColor: '#007bff', // Example color
+  backgroundColor: 'black', // Example color
   '&:hover': {
-    backgroundColor: '#115293',
+    backgroundColor: 'grey',
   },
+
 });
 
 export const StyledMenu = styled(Menu)`
 & .MuiPaper-root {
+  overflow: hidden;
+  transform: translateX(10px);
   border-radius: 8px;
   margin-top: 8px;
-  min-width: 700px; // Adjust for mobile devices
-  max-width: 700px; // Adjust for mobile devices
+  margin-right :20px;
+  min-width: 300px; // Adjust for mobile devices
+  max-width: 300px; // Adjust for mobile devices
+  height:275px;
   box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.2);
-  & .MuiMenu-list {
-    padding: 4px 0;
+    padding: 20px 20px 20px 20px;
   }
   & .MuiMenuItem-root {
     &:hover {
       background-color: #f4f4f4;
     }
   }
-}
-
-@media (max-width: 768px) {
-  & .MuiPaper-root {
+}r-root {
     min-width: 300px; // Adjust for mobile devices
     max-width: 300px; // Adjust for mobile devices
   }
@@ -44,8 +46,7 @@ export const StyledMenuItem = styled(MenuItem)({
 });
 
 export const StyledFormControl = styled(FormControl)({
-  margin: '8px', // Spacing around the form control
-  minWidth: '180px', // Minimum width of the form controls
+  marginRight: '8px', // Spacing around the form control // Minimum width of the form controls
   '& .MuiInputLabel-root': {
     fontSize: '0.875rem', // Label font size
   },
@@ -56,4 +57,9 @@ export const StyledFormControl = styled(FormControl)({
 
 export const StyledSelect = styled(Select)({
   // Additional styling for selects if needed
+});
+
+export const StyledFragment = styled(Fragment)({
+  // Additional styling for selects if needed
+  marginRight:'20px',
 });
