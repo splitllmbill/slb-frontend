@@ -34,7 +34,13 @@ const FriendsPage = () => {
 
     const handleCloseAddFriend = () => {
         setIsModalOpen(false);
-        navigate('/friends')
+        if(location.pathname.startsWith('/add-friend')){
+            navigate('/friends');
+        }
+        else {
+            setShowLoader(true);
+            fetchData();
+        }
     };
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {

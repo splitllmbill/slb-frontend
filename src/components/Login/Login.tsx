@@ -31,16 +31,12 @@ const Login: React.FC<LoginProps> = ({ loginRefresh }) => {
    };
 
    
-   const tempDisplayCode = (code: string) => {
-      alert(code);
-   }
 
    const handleVerificationModal = async() => {
       alert('Email is not yet verified. Please verify to access all functionality.')
       try {
          const result = await apiService.generateVerificationCode('email');
          if (result) {
-            tempDisplayCode(result.emailCode);
             setisVerificationModalOpen(true);
          }
       } catch (error) {
