@@ -120,13 +120,13 @@ const Homepage: React.FC = () => {
             {!showSummary && (<div className="d-flex justify-content-center align-items-center"><CircularProgress color="secondary" variant="indeterminate" /></div>)}
             {showSummary && (<Row>
               <Col sm={12} md={4}>
-                <SmallBox>
+                <SmallBox onClick={redirectToPersonalExpense}>
                   <BoxContent>
                     <Row>
                       <Col xs={6}>
                         <LuWallet style={{ fontSize: 'x-large' }} />
                       </Col>
-                      <Col xs={6} className="text-end" onClick={redirectToPersonalExpense}>
+                      <Col xs={6} className="text-end">
                         <FaChevronRight style={{ fontSize: 'x-large' }} />
                       </Col>
                     </Row>
@@ -140,13 +140,13 @@ const Homepage: React.FC = () => {
               </Col>
               {isMobile && <Col xs={12}><br /></Col>}
               <Col sm={12} md={4}>
-                <SmallBox>
+                <SmallBox onClick={redirectToEvents}>
                   <BoxContent>
                     <Row>
                       <Col xs={6}>
                         <TbUsersGroup style={{ fontSize: 'x-large' }}></TbUsersGroup>
                       </Col>
-                      <Col xs={6} className="text-end" onClick={redirectToEvents}>
+                      <Col xs={6} className="text-end">
                         <FaChevronRight style={{ fontSize: 'x-large' }} />
                       </Col>
                     </Row>

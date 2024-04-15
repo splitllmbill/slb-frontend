@@ -7,7 +7,8 @@ import './VerificationModal.css';
 interface VerificationModalProps {
     handleClose: (check: boolean) => void;
     type: string;
-    userData: any
+    userData: any;
+    handleMessage: (message: string) => void;
 }
 
 const typeMap: Record<string, string> = {
@@ -16,7 +17,7 @@ const typeMap: Record<string, string> = {
   'Email': 'email'
 };
 
-const VerificationModal: React.FC<VerificationModalProps> = ({ handleClose, type, userData}) => {
+const VerificationModal: React.FC<VerificationModalProps> = ({ handleClose, type, userData, handleMessage}) => {
     const [codes, setCodes] = useState(['', '', '', '']);
     const [verificationStatus, setVerificationStatus] = useState(true); 
 
@@ -40,7 +41,7 @@ const VerificationModal: React.FC<VerificationModalProps> = ({ handleClose, type
             setVerificationStatus(false);
           }
           else {
-            alert('Verified '+ type);
+            handleMessage('Verified '+ type)
             handleClose(true);
           }
         } catch (error) {

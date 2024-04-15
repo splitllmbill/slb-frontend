@@ -11,6 +11,7 @@ import { Card, CardContent } from "@mui/material";
 import { formatDate, toTitleCase } from "../../../services/State";
 import { MdOutlineArrowForwardIos } from "react-icons/md";
 import { DashboardContainer } from "../../../App.styled";
+import CustomSnackbar from "../../Common/SnackBar/SnackBar";
 
 const ExpenseDetail: FC = () => {
     const [expense, setExpense] = useState<Expense>({
@@ -29,6 +30,11 @@ const ExpenseDetail: FC = () => {
     const [showDetails, setShowDetails] = useState<boolean>(false);
     const queryParams = new URLSearchParams(location.search);
     const { expenseId } = useParams<{ expenseId: string }>();
+    const [snackBarState, setSnackBarState] = useState<{ open: boolean, message: string }>({ open: false, message: "" });
+
+    const handleClose = () => {
+        setSnackBarState({ ...snackBarState, open: false });
+    };
 
     const fetchData = () => {
         if (expenseId) {
@@ -46,18 +52,18 @@ const ExpenseDetail: FC = () => {
     const handleDeleteExpense = async () => {
         if (expenseId) {
             await dataService.deleteExpense(expenseId).then((data) => {
-                alert(data.message)
+                setSnackBarState({ message: data.message, open: true });
                 if (data.success == 'true') {
                     navigate(-2);
                 }
             });
         } else {
-            alert("Invalid expense ID!")
+            setSnackBarState({ message: "Invalid expense ID!", open: true });
         }
     }
 
     const handleEditExpense = async () => {
-      
+
         navigate(`/expense/${expense.id}/edit?${queryParams.toString()}`);
     }
 
@@ -66,8 +72,8 @@ const ExpenseDetail: FC = () => {
     }, [expenseId]); // Fetch data when eventId changes
 
     const navigate = useNavigate();
-    const handleGoBack = () => { 
-            navigate(-1);
+    const handleGoBack = () => {
+        navigate(-1);
     };
 
     const isMobile = window.innerWidth <= 650;
@@ -76,6 +82,7 @@ const ExpenseDetail: FC = () => {
         <>
             {showDetails && (
                 <DashboardContainer>
+                    <CustomSnackbar message={snackBarState.message} handleClose={handleClose} open={snackBarState.open} />
                     <Row>
                         <Col xs={3} md={3}>
                             <button onClick={handleGoBack} className="w-100">

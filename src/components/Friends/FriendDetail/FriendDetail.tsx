@@ -9,6 +9,8 @@ import ExpenseCardNew from '../../Expenses/ExpenseCardNew/ExpenseCardNew';
 import { Row, Col } from 'react-bootstrap';
 import { MdOutlinePlaylistAdd } from 'react-icons/md';
 import SettleExpenseModal from '../../Expenses/SettleExpenseModal/SettleExpenseModal';
+import CustomSnackbar from '../../Common/SnackBar/SnackBar';
+import ConfirmSnackbar from '../../Common/SnackBar/ConfirmSnackBar';
 
 function FriendDetail() {
     const [friendData, setFriendData] = useState({
@@ -29,6 +31,13 @@ function FriendDetail() {
     const itemsPerPage = 5;
     const navigate = useNavigate();
     const { friendId } = useParams<{ friendId: string }>();
+    const [snackBarState, setSnackBarState] = useState<{ open: boolean, message: string }>({ open: false, message: "" });
+    const [confirmSnackBarState, setConfirmSnackBarState] = useState<{ open: boolean, message: string }>({ open: false, message: "" });
+    const [confirmation, setConfirmation] = useState<boolean>(false);
+
+    const handleClose = () => {
+        setSnackBarState({ ...snackBarState, open: false });
+    };
 
     const handleGoBack = () => {
         navigate(-1);
@@ -47,13 +56,13 @@ function FriendDetail() {
         if (friendId !== undefined) {
             try {
                 await dataService.settleUpWithFriend(friendId).then((data) => {
-                    alert(data.message);
+                    setSnackBarState({ message: data.message, open: true });
                     setRefetchData(!refetchData);
                 });
             } catch (error) {
                 const errMsg = "Error while settling dues. Please try again later";
                 console.error(errMsg, error);
-                alert(errMsg);
+                setSnackBarState({ message: errMsg, open: true });
             }
         }
     };
@@ -83,7 +92,7 @@ function FriendDetail() {
         setLoading(true);
         try {
             await dataService.deleteFriend(friendData.uuid).then((data) => {
-                alert(data.message);
+                setSnackBarState({ message: data.message, open: true });
                 if (Boolean(data.success) == true) {
                     navigate('/friends');
                 }
@@ -95,6 +104,19 @@ function FriendDetail() {
         }
     };
 
+    const handleConfirmClose = () => {
+        setConfirmSnackBarState({ ...snackBarState, open: false });
+    };
+
+    const handleSnackBar = () => {
+        setConfirmSnackBarState({ message: "Please confirm that you have paid Rs " + friendData.overallOweAmount + " to " + friendData.name, open: true });
+    };
+
+    const handleSetConfirmation = () => {
+        setConfirmation(true);
+        handleConfirmClose();
+    }
+
     const isMobile = window.innerWidth <= 650;
 
     // Calculate start and end indexes for the current page
@@ -104,13 +126,18 @@ function FriendDetail() {
 
     return (
         <FriendDetailWrapper>
+            <CustomSnackbar message={snackBarState.message} handleClose={handleClose} open={snackBarState.open} />
+            <ConfirmSnackbar open={confirmSnackBarState.open} message={confirmSnackBarState.message} handleSetConfirmation={handleSetConfirmation} handleClose={handleConfirmClose} />
             {isModalOpen && <SettleExpenseModal onClose={closeModal} friendSettleUp={submitSettleUp} friendData={[{
                 id: friendId!,
                 name: friendData.name,
                 due: friendData.overallOweAmount
             }]}
                 settleType='friend'
+                confirmation={confirmation}
+                handleSnackBar={handleSnackBar}
             />}
+
             <Row>
                 <Col xs={3} md={3}>
                     <button onClick={handleGoBack} className="w-100">

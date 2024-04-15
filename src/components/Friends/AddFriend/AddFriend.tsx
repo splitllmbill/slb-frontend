@@ -8,16 +8,17 @@ import dataService from '../../../services/DataService';
 interface AddFriendProps {
     onClose: () => void;
     friendId: string;
+    handleMessage: (message: string) => void;
 }
 
-const AddFriend: React.FC<AddFriendProps> = ({ onClose, friendId }) => {
+const AddFriend: React.FC<AddFriendProps> = ({ onClose, friendId, handleMessage }) => {
     const [friendCode, setFriendCode] = useState(friendId);
     const [loading, setLoading] = useState(false);
     const handleAddFriend = async () => {
         setLoading(true);
         try {
             await dataService.addFriend(friendCode).then((data) => {
-                alert(data.message)
+                handleMessage(data.message);
                 onClose();
             })
         } catch (error) {

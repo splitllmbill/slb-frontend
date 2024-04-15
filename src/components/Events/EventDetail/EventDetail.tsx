@@ -12,6 +12,8 @@ import { TbFaceIdError } from "react-icons/tb";
 import { DashboardContainer } from "../../../App.styled";
 import Pagination from '@mui/material/Pagination';
 import SettleExpenseModal from "../../Expenses/SettleExpenseModal/SettleExpenseModal";
+import CustomSnackbar from '../../Common/SnackBar/SnackBar';
+import ConfirmSnackbar from "../../Common/SnackBar/ConfirmSnackBar";
 
 interface Expense {
   amount: number;
@@ -32,10 +34,13 @@ const EventDetail: FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5; // Change this according to your preference
   const [isModalOpen, setisModalOpen] = useState(false);
-
+  const [snackBarState, setSnackBarState] = useState<{ open: boolean, message: string }>({ open: false, message: "" });
   const { eventId } = useParams<{ eventId: string }>();
+  const [modalInput, setModalInput] = useState<{ id: string; name: string; due: number }[]>([]);
+  const [confirmSnackBarState, setConfirmSnackBarState] = useState<{ open: boolean, message: string }>({ open: false, message: "" });
+  const [confirmation, setConfirmation] = useState<boolean>(false);
 
-  const [modalInput,setModalInput] = useState<{id:string; name: string; due: number }[]>([]);
+
   const fetchData = () => {
     if (eventId) {
       dataService.getUserSummaryForEvent(eventId).then(summary => setSummary(summary))
@@ -45,16 +50,21 @@ const EventDetail: FC = () => {
       })
         .catch(error => {
           console.error("Error fetching event expenses:", error);
+          setShowLoader(false);
         });
     } else {
-      alert("Invalid event ID!")
+      setSnackBarState({ message: "Invalid event ID!", open: true });
     }
   }
 
-  useEffect(()=>{
-    const input = summary.inDebtTo.map((data)=>{return {id:data.id,name:data.name,due:data.amount}})
+  const handleClose = () => {
+    setSnackBarState({ ...snackBarState, open: false });
+  };
+
+  useEffect(() => {
+    const input = summary.inDebtTo.map((data) => { return { id: data.id, name: data.name, due: data.amount } })
     setModalInput(input);
-  },[summary]);
+  }, [summary]);
   useEffect(() => {
     fetchData();
   }, [eventId]); // Fetch data when eventId changes
@@ -73,15 +83,15 @@ const EventDetail: FC = () => {
   const handleDeleteEvent = async () => {
     if (eventId) {
       await dataService.deleteEvent(eventId).then((data) => {
-        alert(data.message)
+        setSnackBarState({ message: data.message, open: true });
         if (data.success == 'true') navigate(-2);
       });
     } else {
-      alert("Invalid event ID!")
+      setSnackBarState({ message: "Invalid event ID!", open: true });
     }
   }
 
-  const handleSettleUp = async (shares:{userId:string,amount:number}[]) => {
+  const handleSettleUp = async (shares: { userId: string, amount: number }[]) => {
     setisModalOpen(false);
     const createExpenseObject = {
       expenseName: summary.userName + " Settled Up!",
@@ -110,15 +120,35 @@ const EventDetail: FC = () => {
     setCurrentPage(page);
   };
 
+  const handleConfirmClose = () => {
+    setConfirmSnackBarState({ ...snackBarState, open: false });
+  };
+  
+  const handleSnackBar = () => {
+    setConfirmSnackBarState({ message: "Please confirm that you have paid Rs " + modalInput[0].due + " to " + modalInput[0].name, open: true });
+  };
+
+  const handleSetConfirmation = () => {
+    setConfirmation(true);
+    handleConfirmClose();
+  }
+
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentExpenses = event.expenses.slice(indexOfFirstItem, indexOfLastItem);
 
   return (
     <DashboardContainer>
-       {isModalOpen && <SettleExpenseModal onClose={ () => setisModalOpen(false)} eventSettleUp={handleSettleUp} friendData={modalInput}
-            settleType='event'
-            />}
+      <CustomSnackbar message={snackBarState.message} handleClose={handleClose} open={snackBarState.open} />
+      <ConfirmSnackbar open={confirmSnackBarState.open} message={confirmSnackBarState.message} handleSetConfirmation={handleSetConfirmation} handleClose={handleConfirmClose} />
+      {isModalOpen && <SettleExpenseModal
+        onClose={() => setisModalOpen(false)}
+        eventSettleUp={handleSettleUp}
+        friendData={modalInput}
+        settleType='event'
+        confirmation={confirmation}
+        handleSnackBar={handleSnackBar}
+      />}
       <Row>
         <Col xs={3} md={3}>
           <button onClick={handleGoBack} className="w-100">
@@ -173,16 +203,16 @@ const EventDetail: FC = () => {
 
                 </Col>
 
-                { (summary.totalDebt!=0) &&
-                <Col xs={6} md={3} className="d-flex align-items-center">
-                  <Row className="align-items-center">
-                    { (summary.totalDebt!=0) &&( <div> You have dues...
-                      <button className="w-100" onClick={()=> setisModalOpen(true)}>
+                {(summary.totalDebt != 0) &&
+                  <Col xs={6} md={3} className="d-flex align-items-center">
+                    <Row className="align-items-center">
+                      {(summary.totalDebt != 0) && (<div> You have dues...
+                        <button className="w-100" onClick={() => setisModalOpen(true)}>
                           {!isMobile && (<span>Settle Up!</span>)}
                         </button> </div>)}
-                  </Row>
-                </Col>}
-             
+                    </Row>
+                  </Col>}
+
               </Row>
               {summary.isOwed.map(item => (
                 <>

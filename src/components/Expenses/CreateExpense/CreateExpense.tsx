@@ -10,6 +10,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { MdOutlineReceiptLong } from "react-icons/md";
 import { DashboardContainer, Flex } from "../../../App.styled";
 import CustomAutocomplete from "../../Common/CustomAutoComplete/CustomAutoComplete";
+import CustomSnackbar from "../../Common/SnackBar/SnackBar";
 
 interface CreateExpenseDrawerProps {
     expenseId: string;
@@ -34,6 +35,11 @@ const CreateExpenseDrawer: FC<CreateExpenseDrawerProps> = ({ expenseId }) => {
     const queryParams = new URLSearchParams(location.search);
     const friendId = queryParams.get('friendId');
     const [loading, setLoading] = useState(false);
+    const [snackBarState, setSnackBarState] = useState<{ open: boolean, message: string }>({ open: false, message: "" });
+
+    const handleClose = () => {
+        setSnackBarState({ ...snackBarState, open: false });
+    };
 
     const fetchData = () => {
         if (type) {
@@ -160,7 +166,7 @@ const CreateExpenseDrawer: FC<CreateExpenseDrawerProps> = ({ expenseId }) => {
         if (splitType == 'unequally') {
             const totalShareAmount = shareDetails.reduce((total, share) => total + share.amount, 0);
             if (totalShareAmount !== amount) {
-                alert("Sum of individual user shares must be equal to the expense amount!");
+                setSnackBarState({ message: "Sum of individual user shares must be equal to the expense amount!", open: true });
                 return;
             }
         }
@@ -197,7 +203,7 @@ const CreateExpenseDrawer: FC<CreateExpenseDrawerProps> = ({ expenseId }) => {
         if (splitType == 'unequally') {
             const totalShareAmount = shareDetails.reduce((total, share) => total + share.amount, 0);
             if (totalShareAmount !== amount) {
-                alert("Sum of individual user shares must be equal to the expense amount!");
+                setSnackBarState({ message: "Sum of individual user shares must be equal to the expense amount!", open: true });
                 return;
             }
         }
@@ -282,6 +288,7 @@ const CreateExpenseDrawer: FC<CreateExpenseDrawerProps> = ({ expenseId }) => {
 
     return (
         <DashboardContainer>
+            <CustomSnackbar message={snackBarState.message} handleClose={handleClose} open={snackBarState.open} />
             <Flex>
                 <button onClick={handleGoBack}>
                     <IoMdArrowBack style={{ fontSize: 'x-large' }}></IoMdArrowBack> Go Back

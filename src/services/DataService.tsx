@@ -237,7 +237,7 @@ const dataService = {
             if (!response.ok) {
                 throw new Error(`Error: ${response.status}`);
             }
-            return response.json();
+            return  response.json();
         } catch (error) {
             console.error('Error fetching event expenses:', error);
             throw error;
