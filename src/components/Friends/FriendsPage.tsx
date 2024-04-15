@@ -12,6 +12,7 @@ import AddFriend from "./AddFriend/AddFriend";
 import FriendCard from "./FriendCard/FriendCard";
 import FriendLink from "../Common/FriendLink";
 import { DashboardContainer, NoItemsWrapper } from "../../App.styled";
+import CustomSnackbar from "../Common/SnackBar/SnackBar";
 
 const FriendsPage = () => {
     const { friendId } = useParams();
@@ -27,6 +28,7 @@ const FriendsPage = () => {
     const [enableSearch, setEnableSearch] = useState(false);
     const [searchInput, setSearchInput] = useState('');
     const [friendsList, setFriendsList] = useState([]);
+    const [snackBarState, setSnackBarState] = useState<{ open: boolean, message: string }>({ open: false, message: "" });
 
     const handleAddFriend = () => {
         setIsModalOpen(true);
@@ -82,8 +84,17 @@ const FriendsPage = () => {
             setIsModalOpen(true);
     }, []);
     
+    const handleMessageFromModal = (message: string) => {
+        setSnackBarState({ open: true, message: message }); // Update the snackbar state with the message
+    };
+
+    const handleClose = () => {
+        setSnackBarState({ ...snackBarState, open: false });
+    };
+
     return (
         <DashboardContainer>
+            <CustomSnackbar message={snackBarState.message} handleClose={handleClose} open={snackBarState.open} />
             <Row>
                 <Col xs={12} md={6}>
                     <button onClick={handleAddFriend}>Add Friend <AiOutlineUsergroupAdd style={{ fontSize: 'x-large' }} /></button>
@@ -112,9 +123,9 @@ const FriendsPage = () => {
             {!showLoader && (
                 <>
                     <Row>
-                        <FriendLink friendCode={friends.uuid}/>
+                        <FriendLink friendCode={friends.uuid} handleMessage={handleMessageFromModal}/>
                     </Row>
-                    {isModalOpen && <AddFriend friendId={ friendId || '' } onClose={handleCloseAddFriend} />}
+                    {isModalOpen && <AddFriend friendId={ friendId || '' } handleMessage={handleMessageFromModal} onClose={handleCloseAddFriend} />}
                     <div>
                         {parseFloat(friends.overallYouOwe) !== 0.0 && (
                             <h4>Overall, you owe Rs. {parseFloat(friends.overallYouOwe).toFixed(2)}</h4>

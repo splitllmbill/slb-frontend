@@ -8,6 +8,7 @@ import apiService from '../../services/DataService';
 import { useNavigate } from 'react-router-dom';
 import { encrypt } from '../../util/aes';
 import VerificationModal from '../Account/VerificationModal/VerificationModal';
+import CustomSnackbar from '../Common/SnackBar/SnackBar';
 
 interface LoginProps {
    loginRefresh: () => void;
@@ -25,15 +26,15 @@ const Login: React.FC<LoginProps> = ({ loginRefresh }) => {
    const [alertInfo, setAlertInfo] = useState({ open: false, severity: 'success', message: '' });
    const [loading, setLoading] = useState(false); // Add loading state
    const [isVerificationModalOpen, setisVerificationModalOpen] = useState(false);
-
+   const [snackBarState, setSnackBarState] = useState<{ open: boolean, message: string }>({ open: false, message: "" });
    const handleCloseAlert = () => {
       setAlertInfo({ ...alertInfo, open: false });
    };
 
-   
 
-   const handleVerificationModal = async() => {
-      alert('Email is not yet verified. Please verify to access all functionality.')
+
+   const handleVerificationModal = async () => {
+      setSnackBarState({ message: 'Email is not yet verified. Please verify to access all functionality.', open: true });
       try {
          const result = await apiService.generateVerificationCode('email');
          if (result) {
@@ -46,7 +47,7 @@ const Login: React.FC<LoginProps> = ({ loginRefresh }) => {
 
    const handleCloseVerification = (check: boolean = false) => {
       setisVerificationModalOpen(false);
-      if(check)
+      if (check)
          navigate('/home')
    }
 
@@ -63,7 +64,7 @@ const Login: React.FC<LoginProps> = ({ loginRefresh }) => {
             if (buttonText === 'Login') {
                localStorage.setItem('authToken', result.token);
                localStorage.setItem('userId', result.id);
-               if(result.verified){
+               if (result.verified) {
                   loginRefresh();
                   navigate('/home');
                }
@@ -79,12 +80,20 @@ const Login: React.FC<LoginProps> = ({ loginRefresh }) => {
                setButtonText('Login');
             }
          }
-      } catch (error : any) {
+      } catch (error: any) {
          setAlertInfo({ open: true, severity: 'error', message: error.message });
          console.error('Unexpected error during signup:', error);
       } finally {
          setLoading(false); // Reset loading state regardless of success or failure
       }
+   };
+
+   const handleMessageFromModal = (message: string) => {
+      setSnackBarState({ open: true, message: message }); // Update the snackbar state with the message
+   };
+
+   const handleClose = () => {
+      setSnackBarState({ ...snackBarState, open: false });
    };
 
    const appDesc = `Welcome to ${appTitle}, your go-to app for seamless bill splitting. Easily manage shared expenses, split bills with friends, and keep track of your finances.`;
@@ -93,8 +102,9 @@ const Login: React.FC<LoginProps> = ({ loginRefresh }) => {
       <>
          <div className="login-container">
             <Header></Header>
+            <CustomSnackbar message={snackBarState.message} handleClose={handleClose} open={snackBarState.open} />
             <br></br>
-            {isVerificationModalOpen && <VerificationModal handleClose={handleCloseVerification} type={'Email'} userData={{email: email}}/>}
+            {isVerificationModalOpen && <VerificationModal handleClose={handleCloseVerification} handleMessage={handleMessageFromModal} type={'Email'} userData={{ email: email }} />}
             {alertInfo.open && (
                <Alert onClose={handleCloseAlert} severity={alertInfo.severity as AlertColor} sx={{ width: '100%' }}>
                   {alertInfo.message}

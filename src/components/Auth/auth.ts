@@ -8,14 +8,12 @@ export function checkTokenValidity(): boolean {
     let errMsg = 'Redirecting to login'
     if (!token) {
         errMsg += ' Token does not exist';
-        // alert(errMsg);
         console.error(errMsg);
         return false;
     }
     const decodedToken = parseJwt(token);
     if (!decodedToken || !decodedToken.exp) {
         errMsg += ' Token expired / invalid';
-        // alert(errMsg);
         console.error(errMsg);
         return false; // Token is invalid or doesn't contain expiration time
     }

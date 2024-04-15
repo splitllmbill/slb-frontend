@@ -5,9 +5,10 @@ import InsertLinkOutlinedIcon from '@mui/icons-material/InsertLinkOutlined';
 
 interface FriendLinkProps {
     friendCode: string;
+    handleMessage: (message: string) => void;
 }
 
-const FriendLink: React.FC<FriendLinkProps> = ({ friendCode }) => {
+const FriendLink: React.FC<FriendLinkProps> = ({ friendCode, handleMessage }) => {
 
     const appTitle = import.meta.env.VITE_APP_TITLE;
 
@@ -15,17 +16,17 @@ const FriendLink: React.FC<FriendLinkProps> = ({ friendCode }) => {
         if (navigator.clipboard) {
             navigator.clipboard.writeText(text)
                 .then(() => {
-                    alert('Copied ' + type + ' to clipboard!');
+                    handleMessage('Copied ' + type + ' to clipboard!');
                 })
                 .catch((err) => {
                     console.error('Failed to copy: ', err);
-                    fallbackCopyTextToClipboard(text,type);
+                    fallbackCopyTextToClipboard(text, type);
                 });
         } else {
-            fallbackCopyTextToClipboard(text,type);
+            fallbackCopyTextToClipboard(text, type);
         }
     };
-    
+
     function fallbackCopyTextToClipboard(text: string, type: string) {
         const textArea = document.createElement('textarea');
         textArea.value = text;
@@ -37,7 +38,7 @@ const FriendLink: React.FC<FriendLinkProps> = ({ friendCode }) => {
         textArea.select();
         try {
             document.execCommand('copy');
-            alert('Copied ' + type + ' code to clipboard!');
+            handleMessage('Copied ' + type + ' to clipboard!');
         } catch (err) {
             console.error('Failed to copy ', err);
         }
@@ -50,7 +51,7 @@ const FriendLink: React.FC<FriendLinkProps> = ({ friendCode }) => {
 
     return (
         <Alert variant='primary' style={{ width: '100%' }} >
-            Share this unique friend code <a style={{ color: '#007bff', cursor: 'pointer' }} onClick={() => handleCopyToClipboard(friendCode, 'friend code')}>{friendCode} </a> or this friend link 
+            Share this unique friend code <a style={{ color: '#007bff', cursor: 'pointer' }} onClick={() => handleCopyToClipboard(friendCode, 'friend code')}>{friendCode} </a> or this friend link
             <Tooltip title="Share Friend Link">
                 <IconButton
                     size="small"

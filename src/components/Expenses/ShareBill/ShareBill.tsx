@@ -10,6 +10,7 @@ import { IoMdArrowBack } from 'react-icons/io';
 import { formatDate, formatDateForTransactions, toTitleCase } from '../../../services/State';
 import { MdOutlineEdit } from "react-icons/md";
 import { FaCheck } from 'react-icons/fa';
+import CustomSnackbar from '../../Common/SnackBar/SnackBar';
 
 const ShareBill = () => {
     const [selectedFile, setSelectedFile] = useState<File>();
@@ -47,6 +48,11 @@ const ShareBill = () => {
     const [editableItems, setEditableItems] = useState<any[]>([]);
     const [editableTaxItems, setEditableTaxItems] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);
+    const [snackBarState, setSnackBarState] = useState<{ open: boolean, message: string }>({ open: false, message: "" });
+
+    const handleClose = () => {
+        setSnackBarState({ ...snackBarState, open: false });
+    };
 
     const handleExpenseNameChange = (event: { target: { value: SetStateAction<string>; }; }) => {
         setExpenseName(event.target.value);
@@ -82,7 +88,7 @@ const ShareBill = () => {
                 setLoading(false);
             }
         } else {
-            alert("Invalid file!");
+            setSnackBarState({ message: "Invalid file!", open: true });
         }
     };
 
@@ -109,7 +115,7 @@ const ShareBill = () => {
             totalAmount += ocrOutput.tax.reduce((total, item) => total + item.amount, 0);
 
             if (sharedByUsers.length !== ocrOutput.items.length || sharedByUsersTax.length != ocrOutput.tax.length || !type || !payer) {
-                alert("Please fill all required fields!");
+                setSnackBarState({ message: "Please fill all required fields!", open: true });
             } else {
                 ocrOutput.items.forEach((item, index) => {
                     if (sharedByUsers[index] && sharedByUsers[index].length > 0) {
@@ -178,7 +184,7 @@ const ShareBill = () => {
                 }
             }
         } else {
-            alert("Please fill all required fields!");
+            setSnackBarState({ message: "Please fill all required fields!", open: true });
         }
     };
 
@@ -315,6 +321,7 @@ const ShareBill = () => {
 
     return (
         <DashboardContainer>
+            <CustomSnackbar message={snackBarState.message} handleClose={handleClose} open={snackBarState.open} />
             <Flex>
                 <button onClick={handleGoBack}>
                     <IoMdArrowBack style={{ fontSize: 'x-large' }}></IoMdArrowBack> Go Back

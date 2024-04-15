@@ -26,7 +26,7 @@ const QRModal: React.FC<QRModalModalProps> = ({ onClose , upiId }) => {
                 aria-labelledby="change-pwd-modal-title"
                 aria-describedby="change-pwd-modal-description"
             >
-                <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '30%', minWidth: 350, bgcolor: 'background.paper', boxShadow: 24, p: 4, borderRadius: 1 }}>
+                <Box sx={{ position: 'absolute', bgcolor: 'background.paper', boxShadow: 24, padding: '40px', borderRadius: 1 }}>
                     <h4 >UPI QR code</h4>
                     <Flex style={{ marginTop: '20px', alignItems: 'baseline' }}>
                         <Label>Amount:</Label>
@@ -52,7 +52,7 @@ const QRModal: React.FC<QRModalModalProps> = ({ onClose , upiId }) => {
                         />
                     </Flex>
                     <Flex style={{ marginTop: '10px' }}>
-                        <QRCode value={link} size={450}/>
+                        <QRCode value={link} size={200}/>
                     </Flex>
                 </Box>
             </Modal>

@@ -19,9 +19,11 @@ interface SettleExpenseModalProps {
     eventSettleUp?: (shares: { userId: string, amount: number }[]) => void;
     friendData: { id: string; name: string; due: number }[]
     settleType: string
+    confirmation: boolean;
+    handleSnackBar: () => void;
 }
 
-const SettleExpenseModal: React.FC<SettleExpenseModalProps> = ({ onClose, friendSettleUp, eventSettleUp, friendData, settleType }) => {
+const SettleExpenseModal: React.FC<SettleExpenseModalProps> = ({ onClose, friendSettleUp, eventSettleUp, friendData, settleType, confirmation, handleSnackBar }) => {
     const appTitle = import.meta.env.VITE_APP_TITLE;
     const dueRef = useRef<HTMLInputElement>(null);
     const [showQR, setshowQR] = useState(false);
@@ -44,19 +46,23 @@ const SettleExpenseModal: React.FC<SettleExpenseModalProps> = ({ onClose, friend
     const StyledCurrencyRupeeIcon = styled(CurrencyRupeeIcon)({
         marginRight: '4px', // Adjust the margin as needed
     });
-    const verifySubmit = async () => {
-        const response = confirm("Please confirm that you have paid Rs " + selectedFriendData.due + " to " + selectedFriendData.name);
-        if (response) {
-            if (settleType == "friend") {
-                friendSettleUp!();
-            } else {
-                const shares = [{ userId: selectedFriendData.id, amount: selectedFriendData.due }]
-                console.log("shares", shares)
-                eventSettleUp!(shares);
-            }
 
+    const verifySubmit = async () => {
+        if (settleType == "friend") {
+            friendSettleUp!();
+        } else {
+            const shares = [{ userId: selectedFriendData.id, amount: selectedFriendData.due }]
+            console.log("shares", shares)
+            eventSettleUp!(shares);
         }
     }
+
+    useEffect(() => {
+        if (confirmation) {
+            verifySubmit()
+        }
+    }, [confirmation]);
+
     const handleConfirmAmount = () => {
         if (dueRef.current !== null) {
             const updatedFriendData = {
@@ -237,7 +243,7 @@ const SettleExpenseModal: React.FC<SettleExpenseModalProps> = ({ onClose, friend
                                 />
                             </Flex>
                         }
-                        <button className="w-100" style={{ marginBottom: 0 }} onClick={verifySubmit}>
+                        <button className="w-100" style={{ marginBottom: 0 }} onClick={handleSnackBar}>
                             <span>Settle Up!</span>
                         </button>
                     </div>}

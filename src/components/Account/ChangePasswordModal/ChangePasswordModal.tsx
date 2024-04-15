@@ -9,13 +9,15 @@ import { encrypt } from '../../../util/aes';
 interface ChangePasswordModalProps {
     onClose: () => void; // Define onClose as a function that takes no arguments and returns void
     forgotPassword: boolean;
+    handleMessage: (message: string) => void;
 }
 
-const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ onClose, forgotPassword }) => {
+const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ onClose, forgotPassword, handleMessage }) => {
     const [email, setEmail] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [loading, setLoading] = useState(false);
     const [confirmPassword, setConfirmPassword] = useState('');
+
     const handleChangePassword = async () => {
         if (!forgotPassword) {
             setLoading(true);
@@ -25,7 +27,7 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ onClose, forg
                 }
                 try {
                     await dataService.changePassword(requestData).then((data) => {
-                        alert(data.message)
+                        handleMessage(data.message);
                         onClose();
                     })
                 } catch (error) {
@@ -35,17 +37,24 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ onClose, forg
                 }
             } else {
                 if (newPassword != confirmPassword)
-                    alert("New password and confirm new password don't match!")
+                    handleMessage("New password and confirm new password don't match!");
                 else if (newPassword == '')
-                    alert("Password cannot be empty!")
+                    handleMessage("Password cannot be empty!");
+                setLoading(false);
             }
         }
         else {
-            await dataService.forgotPassword({ email: email }).then((data) => {
-                alert(data.message)
-                console.log("new password", data.new_password);
-                onClose();
-            })
+            try {
+                await dataService.forgotPassword({ email: email }).then((data) => {
+                    handleMessage(data.message);
+                    console.log("new password", data.new_password);
+                    onClose();
+                })
+            } catch (error) {
+                console.log(error);
+            } finally {
+                setLoading(false);
+            }
         }
     }
 
