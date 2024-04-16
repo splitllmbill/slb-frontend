@@ -20,10 +20,10 @@ interface SettleExpenseModalProps {
     friendData: { id: string; name: string; due: number }[]
     settleType: string
     confirmation: boolean;
-    handleSnackBar: () => void;
+    setConfirmSnackBarState: (snackBarState: { message: string, open: boolean }) => void;
 }
 
-const SettleExpenseModal: React.FC<SettleExpenseModalProps> = ({ onClose, friendSettleUp, eventSettleUp, friendData, settleType, confirmation, handleSnackBar }) => {
+const SettleExpenseModal: React.FC<SettleExpenseModalProps> = ({ onClose, friendSettleUp, eventSettleUp, friendData, settleType, confirmation, setConfirmSnackBarState }) => {
     const appTitle = import.meta.env.VITE_APP_TITLE;
     const dueRef = useRef<HTMLInputElement>(null);
     const [showQR, setshowQR] = useState(false);
@@ -52,7 +52,6 @@ const SettleExpenseModal: React.FC<SettleExpenseModalProps> = ({ onClose, friend
             friendSettleUp!();
         } else {
             const shares = [{ userId: selectedFriendData.id, amount: selectedFriendData.due }]
-            console.log("shares", shares)
             eventSettleUp!(shares);
         }
     }
@@ -70,28 +69,16 @@ const SettleExpenseModal: React.FC<SettleExpenseModalProps> = ({ onClose, friend
                 due: parseFloat(dueRef.current.value)
             };
             setSelectedFriendData(updatedFriendData);
-
             setAmountConfirmed(true);
             handleConfirmAmount1();
         }
-
     }
     const handleConfirmAmount1 = async () => {
         try {
             setLoading(true);
             const result = await dataService.generateUPILink(selectedFriendData.due, 'Settle ' + appTitle + ' dues', selectedFriendData.id);
             if (result.message === "No record found for id") {
-                const response = confirm("Receiving has not added UPI ID to their account.\nDo you want to proceed to settle manually ? ");
-                if (response) {
-                    if (settleType == "friend") {
-                        friendSettleUp!();
-                    } else {
-                        const shares = [{ userId: selectedFriendData.id, amount: selectedFriendData.due }]
-                        eventSettleUp!(shares);
-                    }
-                } else {
-                    onClose()
-                }
+                setConfirmSnackBarState({ message: "Receiving has not added UPI ID to their account.\nDo you want to proceed to settle manually ? ", open: true });
             } else {
                 setLink(result.upiLink);
             }
@@ -243,7 +230,7 @@ const SettleExpenseModal: React.FC<SettleExpenseModalProps> = ({ onClose, friend
                                 />
                             </Flex>
                         }
-                        <button className="w-100" style={{ marginBottom: 0 }} onClick={handleSnackBar}>
+                        <button className="w-100" style={{ marginBottom: 0 }} onClick={() => { setConfirmSnackBarState({ message: "Please confirm that you have paid Rs " + selectedFriendData.due + " to " + selectedFriendData.name, open: true }); }}>
                             <span>Settle Up!</span>
                         </button>
                     </div>}
