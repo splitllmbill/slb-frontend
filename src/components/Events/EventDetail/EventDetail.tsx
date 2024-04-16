@@ -93,6 +93,8 @@ const EventDetail: FC = () => {
 
   const handleSettleUp = async (shares: { userId: string, amount: number }[]) => {
     setisModalOpen(false);
+    setConfirmSnackBarState({ message: "", open: false });
+    setConfirmation(false);
     const createExpenseObject = {
       expenseName: summary.userName + " Settled Up!",
       amount: shares[0].amount,
@@ -121,16 +123,14 @@ const EventDetail: FC = () => {
   };
 
   const handleConfirmClose = () => {
+    setConfirmation(false);
     setConfirmSnackBarState({ ...snackBarState, open: false });
-  };
-  
-  const handleSnackBar = () => {
-    setConfirmSnackBarState({ message: "Please confirm that you have paid Rs " + modalInput[0].due + " to " + modalInput[0].name, open: true });
+    setisModalOpen(false);
   };
 
   const handleSetConfirmation = () => {
     setConfirmation(true);
-    handleConfirmClose();
+    setConfirmSnackBarState({ ...snackBarState, open: false });
   }
 
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -147,7 +147,7 @@ const EventDetail: FC = () => {
         friendData={modalInput}
         settleType='event'
         confirmation={confirmation}
-        handleSnackBar={handleSnackBar}
+        setConfirmSnackBarState={setConfirmSnackBarState}
       />}
       <Row>
         <Col xs={3} md={3}>

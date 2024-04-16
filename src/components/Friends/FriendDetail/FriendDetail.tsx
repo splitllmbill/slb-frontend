@@ -53,9 +53,11 @@ function FriendDetail() {
 
     const submitSettleUp = async () => {
         setIsModalOpen(false);
+        setConfirmSnackBarState({ message: "", open: false });
+        setConfirmation(false);
         if (friendId !== undefined) {
             try {
-                await dataService.settleUpWithFriend(friendId).then((data) => {
+                await dataService.settleUpWithFriend(friendId).then((data: { message: any; }) => {
                     setSnackBarState({ message: data.message, open: true });
                     setRefetchData(!refetchData);
                 });
@@ -105,16 +107,14 @@ function FriendDetail() {
     };
 
     const handleConfirmClose = () => {
+        setConfirmation(false);
         setConfirmSnackBarState({ ...snackBarState, open: false });
-    };
-
-    const handleSnackBar = () => {
-        setConfirmSnackBarState({ message: "Please confirm that you have paid Rs " + friendData.overallOweAmount + " to " + friendData.name, open: true });
+        setIsModalOpen(false);
     };
 
     const handleSetConfirmation = () => {
         setConfirmation(true);
-        handleConfirmClose();
+        setConfirmSnackBarState({ ...snackBarState, open: false });
     }
 
     const isMobile = window.innerWidth <= 650;
@@ -135,7 +135,7 @@ function FriendDetail() {
             }]}
                 settleType='friend'
                 confirmation={confirmation}
-                handleSnackBar={handleSnackBar}
+                setConfirmSnackBarState={setConfirmSnackBarState}
             />}
 
             <Row>
