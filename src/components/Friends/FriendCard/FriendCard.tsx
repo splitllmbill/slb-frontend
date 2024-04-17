@@ -38,20 +38,14 @@ const FriendCard: FC<FriendCardProps> = ({ friend }) => {
                         <Col className="d-flex justify-content-end">
                             <Typography variant="body1" color="#785A53" sx={{ fontWeight: 'bold', textTransform: 'capitalize', textAlign: 'right' }}>
                                 {(oweAmount < 0) && (
-                                    <>
-                                        <div>You owe</div>
-                                        <div>Rs. {(-oweAmount).toFixed(2)}</div>
-                                    </>
+                                    <>You owe<br />Rs. {(-oweAmount).toFixed(2)}</>
                                 )}
                                 {(oweAmount > 0) && (
-                                    <>
-                                        <div>{friend.name} owes </div>
-                                        <div>Rs. {oweAmount.toFixed(2)}</div>
-                                    </>
+                                    <>{friend.name} owes <br />Rs. {oweAmount.toFixed(2)}</>
                                 )}
                                 {oweAmount == 0.0 && (
                                     <>
-                                        <div>No expenses</div>
+                                        No expenses
                                     </>
                                 )}
 

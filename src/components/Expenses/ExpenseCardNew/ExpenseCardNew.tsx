@@ -67,12 +67,12 @@ const ExpenseCardNew: FC<ExpenseCardNewProps> = ({ expense }) => {
                         <Col className="d-flex justify-content-end">
                             {expense?.user_summary.oweAmount != '0.0' && <Typography variant="body1" color="#785A53" sx={{ fontWeight: 'bold', textTransform: 'capitalize', textAlign: 'right' }}>
                                 {expense.user_summary.owePerson === 'user' ? (
-                                    <div> You borrowed </div>
+                                    <> You borrowed </>
                                 ) : (
-                                    <div>You lent </div>
+                                    <>You lent </>
                                 )}
-                                <div>Rs.{expense?.user_summary?.oweAmount} <br /> <small>{expense.user_summary.owePerson === 'user' ? "from " + expense.paidBy : ""}</small></div>
-                                {expense.user_summary.owePerson === 'user' && <div></div>}
+                                <>Rs.{expense?.user_summary?.oweAmount} <br /> <small>{expense.user_summary.owePerson === 'user' ? "from " + expense.paidBy : ""}</small></>
+                                {expense.user_summary.owePerson === 'user' && <></>}
                             </Typography>}
                             {expense?.oweAmount == '0.0' && <Typography variant="body1" color="#785A53" sx={{ fontWeight: 'bold', textTransform: 'capitalize', textAlign: 'right' }}>
                                 <div> Settled </div>

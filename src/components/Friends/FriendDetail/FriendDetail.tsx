@@ -27,7 +27,7 @@ function FriendDetail() {
     const [refetchData, setRefetchData] = useState(false);
     const [showLoader, setShowLoader] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const itemsPerPage = 5;
     const navigate = useNavigate();
     const { friendId } = useParams<{ friendId: string }>();
@@ -75,6 +75,7 @@ function FriendDetail() {
                 .then((data) => {
                     setFriendData(data);
                     setShowLoader(false);
+                    setLoading(false);
                 })
                 .catch((error: Error): void => {
                     if (error instanceof Error && error.message.startsWith('Error: 400')) {
@@ -82,6 +83,7 @@ function FriendDetail() {
                     } else {
                         console.error('Error while getting friend details', error);
                     }
+                    setLoading(false);
                 });
         }
     }, [refetchData, friendId]); // useEffect dependency
@@ -95,7 +97,7 @@ function FriendDetail() {
         try {
             await dataService.deleteFriend(friendData.uuid).then((data) => {
                 setSnackBarState({ message: data.message, open: true });
-                if (Boolean(data.success) == true) {
+                if (data.success == true) {
                     navigate('/friends');
                 }
             });
