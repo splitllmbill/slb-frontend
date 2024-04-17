@@ -19,6 +19,7 @@ interface Expense {
   amount: number;
   paidBy: string;
   id: string;
+  type: string;
 }
 
 const EventDetail: FC = () => {
@@ -137,6 +138,13 @@ const EventDetail: FC = () => {
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentExpenses = event.expenses.slice(indexOfFirstItem, indexOfLastItem);
 
+  const totalExpense = event.expenses.reduce((total, expense) => {
+    if (expense.type !== "settle") {
+      return total + expense.amount;
+    }
+    return total;
+  }, 0);
+
   return (
     <DashboardContainer>
       <CustomSnackbar message={snackBarState.message} handleClose={handleClose} open={snackBarState.open} />
@@ -187,7 +195,7 @@ const EventDetail: FC = () => {
             </Col>
             <Col xs={12} sm={6} className="text-sm-end">
               <Typography variant="h5" sx={{ fontWeight: 'bold', textTransform: 'capitalize' }}>
-                Total Expense: Rs. {event.expenses.reduce((a, v) => a + v.amount, 0)}
+                Total Expense: Rs. {totalExpense}
               </Typography>
             </Col>
           </Row>
@@ -200,7 +208,6 @@ const EventDetail: FC = () => {
                     <h5>Overall, you owe Rs.{summary.totalDebt - summary.totalOwed}</h5>}
                   {(summary.totalDebt < summary.totalOwed) &&
                     <h5>Overall, you are owed Rs.{summary.totalOwed - summary.totalDebt}</h5>}
-
                 </Col>
 
                 {(summary.totalDebt != 0) &&
@@ -216,12 +223,12 @@ const EventDetail: FC = () => {
               </Row>
               {summary.isOwed.map(item => (
                 <>
-                  <FiCornerDownRight style={{ fontSize: 'x-large' }}></FiCornerDownRight> <span>{item.name} owes you Rs.{item.amount}</span>
+                  <FiCornerDownRight style={{ fontSize: 'x-large' }}></FiCornerDownRight> <span>{item.name} owes you Rs.{item.amount}</span><br/>
                 </>
               ))}
               {summary.inDebtTo.map(item => (
                 <>
-                  <FiCornerDownRight style={{ fontSize: 'x-large' }}></FiCornerDownRight> <span>You owe {item.name} Rs.{item.amount}</span>
+                  <FiCornerDownRight style={{ fontSize: 'x-large' }}></FiCornerDownRight> <span>You owe {item.name} Rs.{item.amount}</span><br/>
                 </>
               ))}
             </Col>
