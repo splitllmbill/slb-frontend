@@ -25,7 +25,9 @@ const ExpenseDetail: FC = () => {
         updatedAt: new Date(),
         createdBy: "",
         updatedBy: "",
-        category: ""
+        category: "",
+        eventId: '',
+        eventName: "None"
     });
     const [showDetails, setShowDetails] = useState<boolean>(false);
     const queryParams = new URLSearchParams(location.search);
@@ -63,8 +65,11 @@ const ExpenseDetail: FC = () => {
     }
 
     const handleEditExpense = async () => {
-
         navigate(`/expense/${expense.id}/edit?${queryParams.toString()}`);
+    }
+
+    const handleEventClick = async () => {
+        navigate(`/event/${expense.eventId}`);
     }
 
     useEffect(() => {
@@ -112,7 +117,8 @@ const ExpenseDetail: FC = () => {
                                 </Col>
                                 <Col>
                                     <h4> {expense.expenseName}</h4>
-                                    <span><strong>Category:</strong> {expense.category}</span><br />
+                                    {expense.eventName && expense.eventName != 'None' && (<><span> <a href="" onClick={handleEventClick}><strong>Event: {expense.eventName}</strong></a></span><br /></>)}
+                                    < span > <strong>Category:</strong> {expense.category}</span><br />
                                     <span><strong>Amount:</strong> Rs.{expense.amount}</span>
                                     <Small> Created by {expense.createdBy} on {formatDate(expense.createdAt)}</Small>
                                     <Small> Updated by {expense.updatedBy} on {formatDate(expense.updatedAt)}</Small>
