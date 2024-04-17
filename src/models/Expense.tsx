@@ -12,4 +12,5 @@ interface Expense {
     updatedBy: string; // Reference to a User object
     category: string;
     eventId?: string;
+    eventName?: string;
 }

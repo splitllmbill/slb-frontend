@@ -17,14 +17,18 @@ const ExpenseCardNew: FC<ExpenseCardNewProps> = ({ expense }) => {
         const date = new Date(dateString);
         return date.toLocaleDateString('en-GB', options).replace(/(\d+)(th|st|nd|rd)/, '$1');
     }
-    
+
     const isMobile = window.innerWidth <= 650;
 
-    //exiting path name
     const navigate = useNavigate();
     const handleClick = () => {
-        const queryParams = new URLSearchParams(location.search);
-       navigate(`/expense/${expense.expenseId}?${queryParams.toString()}`);
+        navigate(`/expense/${expense.expenseId}`);
+    };
+
+    const handleLinkClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+        event.stopPropagation();
+        event.preventDefault();
+        navigate(`/event/${expense.eventId}`);
     };
 
     return (
@@ -55,6 +59,9 @@ const ExpenseCardNew: FC<ExpenseCardNewProps> = ({ expense }) => {
                                 </Typography>
                                 {!isMobile && <p>Category: {toTitleCase(expense.category)}</p>}
                                 {isMobile && <p>{toTitleCase(expense.category)}</p>}
+                                {expense.eventName && expense.eventName != 'None' &&
+                                    <a href="" onClick={handleLinkClick}>From event: {expense.eventName}</a>
+                                }
                             </MarginLeft>
                         </Col>
                         <Col className="d-flex justify-content-end">
@@ -64,7 +71,7 @@ const ExpenseCardNew: FC<ExpenseCardNewProps> = ({ expense }) => {
                                 ) : (
                                     <div>You lent </div>
                                 )}
-                                <div>Rs.{expense?.user_summary?.oweAmount} <br/> <small>{expense.user_summary.owePerson === 'user'?"from "+ expense.paidBy:""}</small></div>
+                                <div>Rs.{expense?.user_summary?.oweAmount} <br /> <small>{expense.user_summary.owePerson === 'user' ? "from " + expense.paidBy : ""}</small></div>
                                 {expense.user_summary.owePerson === 'user' && <div></div>}
                             </Typography>}
                             {expense?.oweAmount == '0.0' && <Typography variant="body1" color="#785A53" sx={{ fontWeight: 'bold', textTransform: 'capitalize', textAlign: 'right' }}>
