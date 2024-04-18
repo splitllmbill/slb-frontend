@@ -9,7 +9,7 @@ import { IoMdArrowBack } from "react-icons/io";
 import { FiCornerDownRight } from "react-icons/fi";
 import ExpenseCardNew from "../../Expenses/ExpenseCardNew/ExpenseCardNew";
 import { TbFaceIdError } from "react-icons/tb";
-import { DashboardContainer } from "../../../App.styled";
+import { Button, DashboardContainer } from "../../../App.styled";
 import Pagination from '@mui/material/Pagination';
 import SettleExpenseModal from "../../Expenses/SettleExpenseModal/SettleExpenseModal";
 import CustomSnackbar from '../../Common/SnackBar/SnackBar';
@@ -159,28 +159,28 @@ const EventDetail: FC = () => {
       />}
       <Row>
         <Col xs={3} md={3}>
-          <button onClick={handleGoBack} className="w-100">
+          <Button onClick={handleGoBack} className="w-100">
             <IoMdArrowBack style={{ fontSize: 'x-large' }} />
             {!isMobile && (<span> Go Back</span>)}
-          </button>
+          </Button>
         </Col>
         <Col xs={3} md={3}>
-          <button className="w-100" onClick={handleEditEvent}>
+          <Button className="w-100" onClick={handleEditEvent}>
             < MdBorderColor style={{ fontSize: 'x-large' }} />
             {!isMobile && (<span> Edit Event</span>)}
-          </button>
+          </Button>
         </Col>
         <Col xs={3} md={3}>
-          <button className="w-100" onClick={handleCreateExpense}>
+          <Button className="w-100" onClick={handleCreateExpense}>
             <MdOutlinePlaylistAdd style={{ fontSize: 'x-large' }} />
             {!isMobile && (<span> Add Expense</span>)}
-          </button>
+          </Button>
         </Col>
         <Col xs={3} md={3}>
-          <button className="w-100" onClick={handleDeleteEvent}>
+          <Button className="w-100" onClick={handleDeleteEvent}>
             <MdOutlineDelete style={{ fontSize: 'x-large' }} />
             {!isMobile && (<span> Delete Event</span>)}
-          </button>
+          </Button>
         </Col>
       </Row>
       <br />
@@ -214,9 +214,9 @@ const EventDetail: FC = () => {
                   <Col xs={6} md={3} className="d-flex align-items-center">
                     <Row className="align-items-center">
                       {(summary.totalDebt != 0) && (<div> You have dues...
-                        <button className="w-100" onClick={() => setisModalOpen(true)}>
+                        <Button className="w-100" onClick={() => setisModalOpen(true)}>
                           {!isMobile && (<span>Settle Up!</span>)}
-                        </button> </div>)}
+                        </Button> </div>)}
                     </Row>
                   </Col>}
 

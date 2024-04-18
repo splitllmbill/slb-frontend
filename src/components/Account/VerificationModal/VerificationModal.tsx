@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Box, Modal } from '@mui/material';
-import { Container } from '../../../App.styled';
+import { Button, Container } from '../../../App.styled';
 import dataService from '../../../services/DataService';
 import './VerificationModal.css';
 
@@ -121,9 +121,9 @@ const VerificationModal: React.FC<VerificationModalProps> = ({ handleClose, type
                             ))}
                         </div>
                         <div className="action-btns">
-                            <button type="button" className="verify" onClick={handleVerify}>Verify</button>
-                            <button type="button" className="clear" onClick={handleClear}>Clear</button>
-                            <button type="button" className="cancel" onClick={() => handleClose(false)}>Cancel</button>
+                            <Button type="button" className="verify" onClick={handleVerify}>Verify</Button>
+                            <Button type="button" className="clear" onClick={handleClear}>Clear</Button>
+                            <Button type="button" className="cancel" onClick={() => handleClose(false)}>Cancel</Button>
                         </div>
                     </form>
                 </Box>

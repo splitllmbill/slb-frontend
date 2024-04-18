@@ -70,9 +70,10 @@ const ExpenseCardNew: FC<ExpenseCardNewProps> = ({ expense }) => {
                                     <> You borrowed </>
                                 ) : (
                                     <>You lent </>
-                                )}
-                                <>Rs.{expense?.user_summary?.oweAmount} <br /> <small>{expense.user_summary.owePerson === 'user' ? "from " + expense.paidBy : ""}</small></>
-                                {expense.user_summary.owePerson === 'user' && <></>}
+                                )}<br/>
+                                <>Rs.{expense?.user_summary?.oweAmount} </>
+                                {/* <small>{expense.user_summary.owePerson === 'user' ? "from " + expense.paidBy : ""}</small>
+                                {expense.user_summary.owePerson === 'user' && <></>} */}
                             </Typography>}
                             {expense?.oweAmount == '0.0' && <Typography variant="body1" color="#785A53" sx={{ fontWeight: 'bold', textTransform: 'capitalize', textAlign: 'right' }}>
                                 <div> Settled </div>

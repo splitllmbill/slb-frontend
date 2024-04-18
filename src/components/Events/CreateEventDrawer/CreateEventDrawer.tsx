@@ -1,10 +1,10 @@
 import { FC, useEffect, useState } from "react";
 import apiService from '../../../services/DataService';
-import { Button, Stack, TextField } from "@mui/material";
+import { Stack, TextField } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { IoMdArrowBack } from "react-icons/io";
 import './CreateEventDrawer.styles.css';
-import { DashboardContainer, Flex } from "../../../App.styled";
+import { Button, DashboardContainer, Flex } from "../../../App.styled";
 import CustomAutocomplete from "../../Common/CustomAutoComplete/CustomAutoComplete";
 
 interface CreateEventDrawerProps {
@@ -94,9 +94,9 @@ const CreateEventDrawer: FC<CreateEventDrawerProps> = ({ eventID }) => {
 
         <DashboardContainer >
             <Flex>
-                <button onClick={handleGoBack}>
+                <Button onClick={handleGoBack}>
                     <IoMdArrowBack style={{ fontSize: 'x-large' }}></IoMdArrowBack> Go Back
-                </button>
+                </Button>
             </Flex>
             <br />
             {/* <Row className="d-flex justify-content-end align-items-center text-end">
@@ -118,7 +118,7 @@ const CreateEventDrawer: FC<CreateEventDrawerProps> = ({ eventID }) => {
 
                 </Stack>
                 <br />
-                <Button variant="contained" disabled={loading} onClick={eventID == "" ? handleCreateEvent : handleEditEvent}>{eventID == "" ? "Add" : "Edit"}</Button>
+                <Button disabled={loading} onClick={eventID == "" ? handleCreateEvent : handleEditEvent}>{eventID == "" ? "Add" : "Edit"}</Button>
             </div>
         </DashboardContainer>
 

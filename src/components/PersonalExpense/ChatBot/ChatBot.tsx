@@ -1,11 +1,12 @@
 import { KeyboardEventHandler, SetStateAction, useState } from 'react';
-import { Button, ChatbotContainer, ChatbotWindow, Input, InputContainer, Message, ZoomOutTable } from './ChatBot.styled';
+import { ChatbotContainer, ChatbotWindow, Input, InputContainer, Message, ZoomOutTable, StyledDatePicker } from './ChatBot.styled';
 import logo from '../../../assets/logo.png';
 import { PiUserCircleThin } from 'react-icons/pi';
 import dataService from '../../../services/DataService';
 import { convertTimestampToISO, personalExpenseAdded } from '../../../services/State';
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { Button } from '../../../App.styled';
+import { IoMdArrowUp } from 'react-icons/io';
 
 const Chatbot = () => {
    const [messages, setMessages] = useState<any[]>([
@@ -122,34 +123,30 @@ const Chatbot = () => {
                            {expenses.map((row, index) => (
                               <tr key={index}>
                                  <td>
-                                    <input
+                                    <Input
                                        type="text"
-                                       className="small-input"
                                        value={row.name || row.Name}
                                        onChange={(e) => handleExpenseChange(index, 'name', e.target.value)}
                                     />
                                  </td>
                                  <td>
-                                    <input
+                                    <Input
                                        type="text"
-                                       className="small-input"
                                        value={row.amount || row.Amount}
                                        onChange={(e) => handleExpenseChange(index, 'amount', e.target.value)}
                                     />
                                  </td>
                                  <td>
-                                    <input
+                                    <Input
                                        type="text"
-                                       className="small-input"
                                        value={row.category || row.Category}
                                        onChange={(e) => handleExpenseChange(index, 'category', e.target.value)}
                                     />
                                  </td>
                                  <td>
-                                    <DatePicker
+                                    <StyledDatePicker
                                        selected={row.date ? new Date(row.date) : new Date()}
                                        onChange={(date) => handleExpenseChange(index, 'date', date)}
-                                       className="small-input"
                                     />
 
                                  </td>
@@ -176,6 +173,7 @@ const Chatbot = () => {
                onKeyDown={handleKeyDown}
                disabled={showTable} // Disable the input field when showTable is true
             />
+            <IoMdArrowUp style={{ fontSize: "xx-large", marginRight: '15px', cursor: "pointer" }} onClick={handleSendMessage}></IoMdArrowUp >
          </InputContainer>
       </ChatbotContainer >
    );

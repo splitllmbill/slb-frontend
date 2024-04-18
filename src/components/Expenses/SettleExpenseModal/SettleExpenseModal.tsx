@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Box, Card, CardContent, Modal, TextField, styled } from '@mui/material';
-import { Flex, Container } from '../../../App.styled';
+import { Flex, Container, Button } from '../../../App.styled';
 import QRCode from 'react-qr-code';
 import VerifiedUserOutlinedIcon from '@mui/icons-material/VerifiedUserOutlined';
 import Tooltip from '@mui/material/Tooltip';
@@ -170,9 +170,9 @@ const SettleExpenseModal: React.FC<SettleExpenseModalProps> = ({ onClose, friend
 
                             </HorizontalCenteredFlex>
                             <br />
-                            <button className="w-100" style={{ marginBottom: 0 }} disabled={loading} onClick={handleConfirmAmount}>
+                            <Button className="w-100" style={{ marginBottom: 0 }} disabled={loading} onClick={handleConfirmAmount}>
                                 <span>Confirm</span>
-                            </button>
+                            </Button>
                         </CenteredFlex>
                     }{
                         amountConfirmed && link == "" && <Typography variant="h5">Awaiting confirmation...</Typography>
@@ -230,9 +230,9 @@ const SettleExpenseModal: React.FC<SettleExpenseModalProps> = ({ onClose, friend
                                 />
                             </Flex>
                         }
-                        <button className="w-100" style={{ marginBottom: 0 }} onClick={() => { setConfirmSnackBarState({ message: "Please confirm that you have paid Rs " + selectedFriendData.due + " to " + selectedFriendData.name, open: true }); }}>
+                        <Button className="w-100" style={{ marginBottom: 0 }} onClick={() => { setConfirmSnackBarState({ message: "Please confirm that you have paid Rs " + selectedFriendData.due + " to " + selectedFriendData.name, open: true }); }}>
                             <span>Settle Up!</span>
-                        </button>
+                        </Button>
                     </div>}
                 </Box>
             </Modal>

@@ -1,6 +1,6 @@
 import { ChangeEvent, SetStateAction, useEffect, useRef, useState } from 'react';
-import { DashboardContainer, Flex, TableLikeRow, TableLikeRowItem } from '../../../App.styled';
-import { Row, Col, Button } from 'react-bootstrap';
+import { DashboardContainer, Flex, TableLikeRow, TableLikeRowItem, Button } from '../../../App.styled';
+import { Row, Col } from 'react-bootstrap';
 import dataService from '../../../services/DataService';
 import { AiOutlineDoubleRight } from 'react-icons/ai';
 import { Autocomplete, CardContent, Card, CircularProgress, TextField, Typography, Avatar } from '@mui/material';
@@ -323,9 +323,9 @@ const ShareBill = () => {
         <DashboardContainer>
             <CustomSnackbar message={snackBarState.message} handleClose={handleClose} open={snackBarState.open} />
             <Flex>
-                <button onClick={handleGoBack}>
+                <Button onClick={handleGoBack}>
                     <IoMdArrowBack style={{ fontSize: 'x-large' }}></IoMdArrowBack> Go Back
-                </button>
+                </Button>
             </Flex>
             <h2>Share a bill</h2>
             <p>Upload receipts, split expenses, and track shared costs effortlessly!</p>
@@ -340,7 +340,7 @@ const ShareBill = () => {
                 </Col>
                 {window.innerWidth <= 650 && (<><br /><br /></>)}
                 <Col xs={6} md={6}>
-                    <Button variant="secondary" disabled={loading} onClick={handleUpload}>Upload</Button>
+                    <Button disabled={loading} onClick={handleUpload}>Upload</Button>
                     {/* <FaFileUpload style={{ fontSize: 'xx-large' }} onClick={handleUpload} /> */}
                 </Col>
             </Row>
@@ -518,7 +518,7 @@ const ShareBill = () => {
                                 </div>
                             </TableLikeRow>
                         ))}
-                        <Button variant="primary" onClick={calculateShares}>Calculate Shares</Button>
+                        <Button onClick={calculateShares}>Calculate Shares</Button>
                         <br></br>
                         {showShares && (
                             <>
@@ -555,7 +555,7 @@ const ShareBill = () => {
                                                 <br />
                                             </div>
                                         ))}
-                                        <Button variant="secondary" disabled={loading} onClick={handleAddExpense}>Add Expense</Button>
+                                        <Button disabled={loading} onClick={handleAddExpense}>Add Expense</Button>
                                     </CardContent>
                                 </Card>
                             </>

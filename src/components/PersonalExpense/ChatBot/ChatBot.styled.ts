@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { Table } from 'react-bootstrap'
+import DatePicker from "react-datepicker";
 
 export const ChatbotContainer = styled.div`
   display: flex;
@@ -36,10 +37,18 @@ export const Input = styled.input`
   flex: 1;
   padding: 8px;
   margin: -2px 20px 10px 20px;
+  background: #fff;
+  border: 1px solid black;
+  color: black;
 `;
 
-export const Button = styled.button`
-  background-color: darkgrey;
+export const StyledDatePicker = styled(DatePicker)`
+  flex: 1;
+  padding: 8px;
+  margin: -2px 20px 10px 20px;
+  background: #fff;
+  border: 1px solid black;
+  color: black;
 `;
 
 export const TH = styled.th`

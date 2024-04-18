@@ -1,6 +1,6 @@
 import { ChangeEvent, FC, SetStateAction, useEffect, useState } from "react";
 import apiService from '../../../services/DataService';
-import { Button, FormControl, FormControlLabel, RadioGroup, Radio, Stack, TextField, Autocomplete } from "@mui/material";
+import { FormControl, FormControlLabel, RadioGroup, Radio, Stack, TextField, Autocomplete } from "@mui/material";
 import { LabelForm } from "./CreateExpense.styled";
 import { IoMdArrowBack } from "react-icons/io";
 import { useNavigate, useParams } from "react-router-dom";
@@ -8,7 +8,7 @@ import { Col, Row } from "react-bootstrap";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { MdOutlineReceiptLong } from "react-icons/md";
-import { DashboardContainer, Flex } from "../../../App.styled";
+import { DashboardContainer, Flex, Button } from "../../../App.styled";
 import CustomAutocomplete from "../../Common/CustomAutoComplete/CustomAutoComplete";
 import CustomSnackbar from "../../Common/SnackBar/SnackBar";
 
@@ -290,12 +290,12 @@ const CreateExpenseDrawer: FC<CreateExpenseDrawerProps> = ({ expenseId }) => {
         <DashboardContainer>
             <CustomSnackbar message={snackBarState.message} handleClose={handleClose} open={snackBarState.open} />
             <Flex>
-                <button onClick={handleGoBack}>
+                <Button onClick={handleGoBack}>
                     <IoMdArrowBack style={{ fontSize: 'x-large' }}></IoMdArrowBack> Go Back
-                </button>
-                <button onClick={handleShareBill} >
+                </Button>
+                <Button onClick={handleShareBill} >
                     <MdOutlineReceiptLong style={{ fontSize: 'x-large' }}></MdOutlineReceiptLong> Share a bill
-                </button>
+                </Button>
             </Flex>
             <Stack spacing={2} useFlexGap direction="column">
                 <h3>{expenseId == "" ? "Add a New Expense" : "Edit Expense"}</h3>
@@ -368,7 +368,7 @@ const CreateExpenseDrawer: FC<CreateExpenseDrawerProps> = ({ expenseId }) => {
                 )}
             </Stack>
             <br />
-            <Button variant="contained" disabled={loading} onClick={expenseId == "" ? handleCreateExpense : handleEditExpense}>{expenseId == "" ? "Add" : "Edit"}</Button>
+            <Button disabled={loading} onClick={expenseId == "" ? handleCreateExpense : handleEditExpense}>{expenseId == "" ? "Add" : "Edit"}</Button>
         </DashboardContainer>
     );
 }
