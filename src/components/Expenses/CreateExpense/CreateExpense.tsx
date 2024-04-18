@@ -19,6 +19,7 @@ const CreateExpenseDrawer: FC<CreateExpenseDrawerProps> = ({ expenseId }) => {
     const [event, setEvent] = useState<Partial<EventObject>>({});
     const [users, setUsers] = useState<User[]>([]);
     const [expenseName, setExpenseName] = useState('');
+    const [category, setCategory] = useState('');
     const [amount, setAmount] = useState(0);
     const [paidBy, setPaidBy] = useState<User>({ name: "", email: "" });
     const [showShareDetails, setShowShareDetails] = useState<boolean>(false);
@@ -70,6 +71,7 @@ const CreateExpenseDrawer: FC<CreateExpenseDrawerProps> = ({ expenseId }) => {
         if (expenseId) {
             apiService.getExpenseById(expenseId).then(data => {
                 setExpenseName(data.expenseName);
+                setCategory(data.category);
                 setAmount(data.amount);
                 setSelectedDate(new Date(data.date));
                 const paidByDetail: { name: string; email: string; id: string } = { name: data.paidBy, email: "", id: data.paidById }
@@ -180,7 +182,7 @@ const CreateExpenseDrawer: FC<CreateExpenseDrawerProps> = ({ expenseId }) => {
             type: typeToPass,
             paidBy: paidBy.id,
             eventId: event.id,
-            category: "food",
+            category: category,
             shares: shares,
             date: selectedDate.toDateString()
         };
@@ -226,7 +228,7 @@ const CreateExpenseDrawer: FC<CreateExpenseDrawerProps> = ({ expenseId }) => {
             amount: amount,
             type: typeToPass,
             paidBy: paidBy.id,
-            category: "food",
+            category: category,
             shares: shares,
             date: selectedDate.toDateString()
         };
@@ -301,6 +303,8 @@ const CreateExpenseDrawer: FC<CreateExpenseDrawerProps> = ({ expenseId }) => {
                 <h3>{expenseId == "" ? "Add a New Expense" : "Edit Expense"}</h3>
                 <span><strong>Expense Name</strong></span>
                 <TextField type="name" onChange={(event) => setExpenseName(event.target.value)} value={expenseName} name="name" required />
+                <span><strong>Category</strong></span>
+                <TextField type="name" onChange={(event) => setCategory(event.target.value)} value={category} name="category" required />
                 <span><strong>Date </strong></span>
                 <DatePicker
                     selected={selectedDate}
