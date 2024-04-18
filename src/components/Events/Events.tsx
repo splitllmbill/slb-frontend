@@ -7,7 +7,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { useNavigate } from 'react-router-dom';
 import { TbFaceIdError } from "react-icons/tb";
 import NonGroupExpenseCard from './EventCard/NonGroupExpenseCard';
-import { DashboardContainer, NoItemsWrapper } from '../../App.styled';
+import { Button, DashboardContainer, NoItemsWrapper } from '../../App.styled';
 
 
 interface EventsProps { }
@@ -61,7 +61,7 @@ const Events: FC<EventsProps> = () => {
   return (
     <DashboardContainer>
       <>
-        <button onClick={handleCreateEvent}>Create Event <MdOutlineGroupAdd style={{ fontSize: 'x-large' }}></MdOutlineGroupAdd></button>
+        <Button onClick={handleCreateEvent}>Create Event <MdOutlineGroupAdd style={{ fontSize: 'x-large' }}></MdOutlineGroupAdd></Button><br /><br />
         {!showEvents && (<div className="d-flex justify-content-center align-items-center"><CircularProgress color="secondary" variant="indeterminate" /></div>)}
         {showEvents && events && events?.events.length > 0 && (
           <>

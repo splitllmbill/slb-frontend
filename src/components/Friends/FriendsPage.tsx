@@ -11,7 +11,7 @@ import dataService from "../../services/DataService";
 import AddFriend from "./AddFriend/AddFriend";
 import FriendCard from "./FriendCard/FriendCard";
 import FriendLink from "../Common/FriendLink";
-import { DashboardContainer, NoItemsWrapper } from "../../App.styled";
+import { Button, DashboardContainer, NoItemsWrapper } from "../../App.styled";
 import CustomSnackbar from "../Common/SnackBar/SnackBar";
 
 const FriendsPage = () => {
@@ -97,7 +97,7 @@ const FriendsPage = () => {
             <CustomSnackbar message={snackBarState.message} handleClose={handleClose} open={snackBarState.open} />
             <Row>
                 <Col xs={12} md={6}>
-                    <button onClick={handleAddFriend}>Add Friend <AiOutlineUsergroupAdd style={{ fontSize: 'x-large' }} /></button>
+                    <Button onClick={handleAddFriend}>Add Friend <AiOutlineUsergroupAdd style={{ fontSize: 'x-large' }} /></Button>
                 </Col>
                 { !showLoader && 
                     <Col xs={12} md={6}>

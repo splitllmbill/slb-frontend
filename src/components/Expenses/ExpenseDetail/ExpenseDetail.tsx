@@ -10,7 +10,7 @@ import { TbListDetails } from "react-icons/tb";
 import { Card, CardContent } from "@mui/material";
 import { formatDate, toTitleCase } from "../../../services/State";
 import { MdOutlineArrowForwardIos } from "react-icons/md";
-import { DashboardContainer } from "../../../App.styled";
+import { Button, DashboardContainer } from "../../../App.styled";
 import CustomSnackbar from "../../Common/SnackBar/SnackBar";
 
 const ExpenseDetail: FC = () => {
@@ -90,23 +90,23 @@ const ExpenseDetail: FC = () => {
                     <CustomSnackbar message={snackBarState.message} handleClose={handleClose} open={snackBarState.open} />
                     <Row>
                         <Col xs={3} md={3}>
-                            <button onClick={handleGoBack} className="w-100">
+                            <Button onClick={handleGoBack} className="w-100">
                                 <IoMdArrowBack style={{ fontSize: 'x-large' }} />
                                 {!isMobile && (<span> Go Back</span>)}
-                            </button>
+                            </Button>
                         </Col>
                         <Col xs={3} md={3}></Col>
                         <Col xs={3} md={3}>
-                            <button onClick={handleEditExpense} className="w-100">
+                            <Button onClick={handleEditExpense} className="w-100">
                                 <BiEditAlt style={{ fontSize: 'x-large' }} />
                                 {!isMobile && (<span> Edit</span>)}
-                            </button>
+                            </Button>
                         </Col>
                         <Col xs={3} md={3}>
-                            <button className="w-100" onClick={handleDeleteExpense}>
+                            <Button className="w-100" onClick={handleDeleteExpense}>
                                 <MdOutlineDelete style={{ fontSize: 'x-large' }} />
                                 {!isMobile && (<span> Delete</span>)}
-                            </button>
+                            </Button>
                         </Col>
                     </Row>
                     <Card>

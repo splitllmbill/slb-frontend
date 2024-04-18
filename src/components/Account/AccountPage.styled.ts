@@ -20,29 +20,12 @@ export const Input = styled.input`
     margin-bottom: 10px;
     border-radius: 5px;
     border: 1px solid #ccc;
+    background-color: #fff;
+    color: black;
 
     &:disabled {
         background-color: #cccccc;
         cursor: not-allowed;
     }
-
 `;
 
-export const Button = styled.button`
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-
-    &:hover {
-        background-color: #0174C8;
-    }
-
-    &:disabled {
-        background-color: grey;
-        color: #6c696d;
-        cursor: not-allowed;
-    }
-`;

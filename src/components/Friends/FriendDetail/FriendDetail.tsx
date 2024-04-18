@@ -11,6 +11,7 @@ import { MdOutlinePlaylistAdd } from 'react-icons/md';
 import SettleExpenseModal from '../../Expenses/SettleExpenseModal/SettleExpenseModal';
 import CustomSnackbar from '../../Common/SnackBar/SnackBar';
 import ConfirmSnackbar from '../../Common/SnackBar/ConfirmSnackBar';
+import { Button } from '../../../App.styled';
 
 function FriendDetail() {
     const [friendData, setFriendData] = useState({
@@ -142,23 +143,23 @@ function FriendDetail() {
 
             <Row>
                 <Col xs={3} md={3}>
-                    <button onClick={handleGoBack} className="w-100">
+                    <Button onClick={handleGoBack} className="w-100">
                         <IoMdArrowBack style={{ fontSize: 'x-large' }} />
                         {!isMobile && (<span> Go Back</span>)}
-                    </button>
+                    </Button>
                 </Col>
                 <Col xs={3} md={3}></Col>
                 <Col xs={3} md={3}>
-                    <button className="w-100" onClick={handleCreateExpense}>
+                    <Button className="w-100" onClick={handleCreateExpense}>
                         <MdOutlinePlaylistAdd style={{ fontSize: 'x-large' }} />
                         {!isMobile && (<span> Add Expense</span>)}
-                    </button>
+                    </Button>
                 </Col>
                 <Col xs={3} md={3}>
-                    <button onClick={handleRemoveFriend} disabled={loading} className="w-100">
+                    <Button onClick={handleRemoveFriend} disabled={loading} className="w-100">
                         <IoPersonRemoveOutline style={{ fontSize: 'x-large' }} />
                         {!isMobile && (<span> Unfriend</span>)}
-                    </button>
+                    </Button>
                 </Col>
             </Row>
             {showLoader && (<div className="d-flex justify-content-center align-items-center"><CircularProgress color="secondary" variant="indeterminate" /></div>)}
@@ -181,9 +182,9 @@ function FriendDetail() {
                             <Col xs={6} md={3} className="d-flex align-items-center">
                                 <Row className="align-items-center">
                                     <div> You have dues...
-                                        <button className="w-100" onClick={() => setIsModalOpen(true)}>
+                                        <Button className="w-100" onClick={() => setIsModalOpen(true)}>
                                             <span>Settle Up!</span>
-                                        </button>
+                                        </Button>
                                     </div>
                                 </Row>
                             </Col>}

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Container, Label, Input, Button } from './AccountPage.styled'; // Import styled components
+import { Container, Label, Input } from './AccountPage.styled'; // Import styled components
 import dataService from '../../services/DataService';
 import { IoLogOutOutline } from "react-icons/io5";
 import { MdLockReset } from "react-icons/md";
@@ -18,7 +18,7 @@ import { useNavigate } from 'react-router-dom';
 import ChangePasswordModal from './ChangePasswordModal/ChangePasswordModal';
 import VerificationModal from './VerificationModal/VerificationModal';
 import FriendLink from '../Common/FriendLink';
-import { Flex } from '../../App.styled';
+import { Button, Flex } from '../../App.styled';
 import QRModal from './QRModal/QRModal';
 import CustomSnackbar from '../Common/SnackBar/SnackBar';
 
@@ -259,8 +259,8 @@ const UserPage = () => {
             <Container>
                 <CustomSnackbar message={snackBarState.message} handleClose={handleClose} open={snackBarState.open} />
                 <Flex>
-                    <button onClick={handleChangePassword}>Change Password <MdLockReset style={{ fontSize: 'x-large' }}></MdLockReset></button>
-                    <button onClick={handleLogout}>Logout <IoLogOutOutline style={{ fontSize: 'x-large' }}></IoLogOutOutline></button>
+                    <Button onClick={handleChangePassword}>Change Password <MdLockReset style={{ fontSize: 'x-large' }}></MdLockReset></Button>
+                    <Button onClick={handleLogout}>Logout <IoLogOutOutline style={{ fontSize: 'x-large' }}></IoLogOutOutline></Button>
                 </Flex>
                 <h2>Edit User Information</h2>
                 <FriendLink friendCode={userData.uuid} handleMessage={handleMessageFromModal}  />

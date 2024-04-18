@@ -14,13 +14,13 @@ export const Input = styled.input`
 export const Button = styled.button`
     padding: 10px 20px;
     background-color: #d8d3db;
-    color: #fff;
+    color: black;
     border: none;
     border-radius: 5px;
     cursor: pointer;
 
     &:hover {
-        background-color: #0056b3;
+        background-color: darkgray;
     }
 
     &:disabled {
@@ -82,11 +82,11 @@ export const PaginationContainer = styled.div`
   margin: 10px; /* Adjust margin as needed */
 `;
 
-export const FilterAltIcon=styled.div`
+export const FilterAltIcon = styled.div`
 border-bottom: 1px solid #ccc;
 `
 
 
-export const Row=styled.div`
+export const Row = styled.div`
 border-bottom: 1px solid #ccc;
 `
