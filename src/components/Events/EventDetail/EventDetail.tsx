@@ -85,7 +85,7 @@ const EventDetail: FC = () => {
     if (eventId) {
       await dataService.deleteEvent(eventId).then((data) => {
         setSnackBarState({ message: data.message, open: true });
-        if (data.success == 'true') navigate(-2);
+        if (data.success == 'true' || data.success == true) navigate('/events');
       });
     } else {
       setSnackBarState({ message: "Invalid event ID!", open: true });

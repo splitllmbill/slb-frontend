@@ -19,6 +19,7 @@ const Events: FC<EventsProps> = () => {
     events: []
   });
   const [showEvents, setShowEvents] = useState(false);
+  const [showNonGroup, setShowNonGroup] = useState(false);
   const [nonGroupExpenses, setNonGroupExpenses] = useState({
     "overallYouOwe": 0,
     "overallYouAreOwed": 0,
@@ -28,16 +29,25 @@ const Events: FC<EventsProps> = () => {
   const [oweAmount, setOweAmount] = useState<number>(0);
 
   const fetchData = async () => {
-    await dataService.getUserEvents().then(async (eventData) => {
-      setEvents(eventData);
-      await dataService.getNonGroupExpenses().then((nonGroupExpenseData) => {
-        setNonGroupExpenses(nonGroupExpenseData);
-        calculateAmount(eventData.overallOweAmount, eventData.owingPerson, nonGroupExpenseData.overallYouAreOwed, nonGroupExpenseData.overallYouOwe);
+    try {
+      await dataService.getUserEvents().then(eventData => {
+        setEvents(eventData);
         setShowEvents(true);
-      })
-    });
-  }
+      });
 
+      await dataService.getNonGroupExpenses().then(nonGroupExpenseData => {
+        setNonGroupExpenses(nonGroupExpenseData);
+        setShowNonGroup(true);
+      });
+
+      if (showEvents && showNonGroup) {
+        calculateAmount(events.overallOweAmount, events.owingPerson, nonGroupExpenses.overallYouAreOwed, nonGroupExpenses.overallYouOwe);
+      }
+    } catch (error) {
+      // Handle any errors
+      console.error('Error fetching data:', error);
+    }
+  }
 
   const calculateAmount = (eventOweAmount: number, eventOwePerson: string, nonGroupOwed: number, nonGroupOwe: number) => {
     let friend_owe = 0;
@@ -62,7 +72,7 @@ const Events: FC<EventsProps> = () => {
     <DashboardContainer>
       <>
         <Button onClick={handleCreateEvent}>Create Event <MdOutlineGroupAdd style={{ fontSize: 'x-large' }}></MdOutlineGroupAdd></Button><br /><br />
-        {!showEvents && (<div className="d-flex justify-content-center align-items-center"><CircularProgress color="secondary" variant="indeterminate" /></div>)}
+        {!showEvents || !showNonGroup && (<div className="d-flex justify-content-center align-items-center"><CircularProgress color="secondary" variant="indeterminate" /></div>)}
         {showEvents && events && events?.events.length > 0 && (
           <>
             {owingPerson == 'user' && (<h2>Totally, you owe Rs.{oweAmount}</h2>)}
@@ -74,14 +84,16 @@ const Events: FC<EventsProps> = () => {
                   <EventCard eventSent={event}></EventCard>
                 </div>
               ))}
-              <NonGroupExpenseCard expenses={nonGroupExpenses}></NonGroupExpenseCard>
             </List>
           </>)}
+        {showEvents}
         {showEvents && events && events?.events.length == 0 && (
           <NoItemsWrapper>
             <TbFaceIdError style={{ fontSize: 'xx-large' }}></TbFaceIdError>
             <h6>No events yet!</h6>
+            <br /><br />
           </NoItemsWrapper>)}
+        {showNonGroup && <NonGroupExpenseCard expenses={nonGroupExpenses}></NonGroupExpenseCard>}
       </>
     </DashboardContainer>
   );
