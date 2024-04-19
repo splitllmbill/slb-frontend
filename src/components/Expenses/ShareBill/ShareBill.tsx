@@ -205,8 +205,9 @@ const ShareBill = () => {
         setLoading(true);
         try {
             const result = await dataService.createExpense(expenseToCreate as unknown as Expense);
-            if (result) {
-                navigate(`/expense/${result.id}`)
+            setSnackBarState({ message: result.message, open: true });
+            if (result.success == "true") {
+                navigate(`/expense/${result.data.id}`)
             }
         } catch (error) {
             console.error('Unexpected error event creation:', error);

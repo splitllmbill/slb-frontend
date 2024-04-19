@@ -6,6 +6,7 @@ import { IoMdArrowBack } from "react-icons/io";
 import './CreateEventDrawer.styles.css';
 import { Button, DashboardContainer, Flex } from "../../../App.styled";
 import CustomAutocomplete from "../../Common/CustomAutoComplete/CustomAutoComplete";
+import CustomSnackbar from "../../Common/SnackBar/SnackBar";
 
 interface CreateEventDrawerProps {
     eventID: string;
@@ -17,6 +18,11 @@ const CreateEventDrawer: FC<CreateEventDrawerProps> = ({ eventID }) => {
     const [users, setUsers] = useState<User[]>([])
     const [eventData, setEventData] = useState<Partial<EventObject>>({});
     const [loading, setLoading] = useState(false); // Add loading state
+    const [snackBarState, setSnackBarState] = useState<{ open: boolean, message: string }>({ open: false, message: "" });
+
+    const handleClose = () => {
+        setSnackBarState({ ...snackBarState, open: false });
+    };
 
     const fetchData = async () => {
         try {
@@ -42,6 +48,10 @@ const CreateEventDrawer: FC<CreateEventDrawerProps> = ({ eventID }) => {
     }, []);// Initial data fetch
 
     const handleCreateEvent = async () => {
+        if (eventName == "") {
+            setSnackBarState({ message: "Event name cannot be empty!", open: true });
+            return;
+        }
         setLoading(true);
         const createEventObject = {
             eventName: eventName,
@@ -98,6 +108,7 @@ const CreateEventDrawer: FC<CreateEventDrawerProps> = ({ eventID }) => {
                     <IoMdArrowBack style={{ fontSize: 'x-large' }}></IoMdArrowBack> Go Back
                 </Button>
             </Flex>
+            <CustomSnackbar message={snackBarState.message} handleClose={handleClose} open={snackBarState.open} />
             <br />
             {/* <Row className="d-flex justify-content-end align-items-center text-end">
                 <CloseIcon onClick={toggleCreateEventButton} style={{ paddingTop: '0px', fontSize: '50px', fill: 'white', paddingBottom: '0px' }} />
