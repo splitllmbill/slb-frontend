@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { encrypt } from '../../util/aes';
 import VerificationModal from '../Account/VerificationModal/VerificationModal';
 import CustomSnackbar from '../Common/SnackBar/SnackBar';
+import ChangePasswordModal from '../Account/ChangePasswordModal/ChangePasswordModal';
 
 interface LoginProps {
    loginRefresh: () => void;
@@ -27,6 +28,8 @@ const Login: React.FC<LoginProps> = ({ loginRefresh }) => {
    const [loading, setLoading] = useState(false); // Add loading state
    const [isVerificationModalOpen, setisVerificationModalOpen] = useState(false);
    const [snackBarState, setSnackBarState] = useState<{ open: boolean, message: string }>({ open: false, message: "" });
+   const [isPasswordModalOpen, setisPasswordModalOpen] = useState(false);
+
    const handleCloseAlert = () => {
       setAlertInfo({ ...alertInfo, open: false });
    };
@@ -96,6 +99,14 @@ const Login: React.FC<LoginProps> = ({ loginRefresh }) => {
       setSnackBarState({ ...snackBarState, open: false });
    };
 
+   const handleForgotPassword = () => {
+      setisPasswordModalOpen(true);
+   }
+
+   const handleCloseChangePassword = () => {
+      setisPasswordModalOpen(false);
+   }
+
    const appDesc = `Welcome to ${appTitle}, your go-to app for seamless bill splitting. Easily manage shared expenses, split bills with friends, and keep track of your finances.`;
 
    return (
@@ -104,6 +115,7 @@ const Login: React.FC<LoginProps> = ({ loginRefresh }) => {
             <Header></Header>
             <CustomSnackbar message={snackBarState.message} handleClose={handleClose} open={snackBarState.open} />
             <br></br>
+            {isPasswordModalOpen && <ChangePasswordModal onClose={handleCloseChangePassword} handleMessage={handleMessageFromModal} forgotPassword={true} />}
             {isVerificationModalOpen && <VerificationModal handleClose={handleCloseVerification} handleMessage={handleMessageFromModal} type={'Email'} userData={{ email: email }} />}
             {alertInfo.open && (
                <Alert onClose={handleCloseAlert} severity={alertInfo.severity as AlertColor} sx={{ width: '100%' }}>
@@ -150,6 +162,7 @@ const Login: React.FC<LoginProps> = ({ loginRefresh }) => {
                               <Button disabled={loading} variant="primary" type="submit">
                                  {buttonText}
                               </Button>
+                              <a href="#" onClick={handleForgotPassword}>Forgot password?</a>
                            </Form>
                         </Col>
                      </Row>
