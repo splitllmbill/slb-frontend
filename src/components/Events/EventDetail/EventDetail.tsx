@@ -85,7 +85,7 @@ const EventDetail: FC = () => {
     if (eventId) {
       await dataService.deleteEvent(eventId).then((data) => {
         setSnackBarState({ message: data.message, open: true });
-        if (data.success == 'true') navigate(-2);
+        if (data.success == 'true' || data.success == true) navigate('/events');
       });
     } else {
       setSnackBarState({ message: "Invalid event ID!", open: true });
@@ -109,8 +109,9 @@ const EventDetail: FC = () => {
 
     try {
       const result = await dataService.createExpense(createExpenseObject as unknown as globalThis.Expense);
-      if (result) {
-        navigate(`/expense/${result.id}`)
+      setSnackBarState({ message: result.message, open: true });
+      if (result.success == "true") {
+        navigate(`/expense/${result.data.id}`)
       }
     } catch (error) {
       console.error('Unexpected error expense creation:', error);
@@ -223,12 +224,12 @@ const EventDetail: FC = () => {
               </Row>
               {summary.isOwed.map(item => (
                 <>
-                  <FiCornerDownRight style={{ fontSize: 'x-large' }}></FiCornerDownRight> <span>{item.name} owes you Rs.{item.amount}</span><br/>
+                  <FiCornerDownRight style={{ fontSize: 'x-large' }}></FiCornerDownRight> <span>{item.name} owes you Rs.{item.amount}</span><br />
                 </>
               ))}
               {summary.inDebtTo.map(item => (
                 <>
-                  <FiCornerDownRight style={{ fontSize: 'x-large' }}></FiCornerDownRight> <span>You owe {item.name} Rs.{item.amount}</span><br/>
+                  <FiCornerDownRight style={{ fontSize: 'x-large' }}></FiCornerDownRight> <span>You owe {item.name} Rs.{item.amount}</span><br />
                 </>
               ))}
             </Col>

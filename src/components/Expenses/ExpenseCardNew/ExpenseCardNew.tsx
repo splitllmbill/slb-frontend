@@ -54,7 +54,7 @@ const ExpenseCardNew: FC<ExpenseCardNewProps> = ({ expense }) => {
                             </>)}
                         <Col className="d-flex ">
                             <MarginLeft className="text-left"> {/* Add text-left class for left alignment inside the div */}
-                                <Typography variant="h6" component="div" sx={{ fontWeight: 'bold', textTransform: 'capitalize' }}>
+                                <Typography variant="h6" component="div" sx={{ fontWeight: 'bold', textTransform: 'capitalize', color: expense.type === 'settle' ? 'green' : 'inherit' }}>
                                     {toTitleCase(expense.expenseName)}
                                 </Typography>
                                 {!isMobile && <p>Category: {toTitleCase(expense.category)}</p>}
@@ -70,7 +70,7 @@ const ExpenseCardNew: FC<ExpenseCardNewProps> = ({ expense }) => {
                                     <> You borrowed </>
                                 ) : (
                                     <>You lent </>
-                                )}<br/>
+                                )}<br />
                                 <>Rs.{expense?.user_summary?.oweAmount} </>
                                 {/* <small>{expense.user_summary.owePerson === 'user' ? "from " + expense.paidBy : ""}</small>
                                 {expense.user_summary.owePerson === 'user' && <></>} */}

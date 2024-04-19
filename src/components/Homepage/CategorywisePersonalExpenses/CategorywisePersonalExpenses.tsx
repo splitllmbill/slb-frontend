@@ -39,10 +39,13 @@ const CategorywisePersonalExpenses: React.FC<Props> = ({ expenses }) => {
         <PersonalExpenseListWrapper2 style={{ borderRadius: '10px' }}>
             <H3><h5>Personal Expenses Summary </h5></H3><br></br>
             {expenses && expenses.length == 0 && (
-                <NoExpensesWrapper>
-                    <TbFaceIdError style={{ fontSize: 'xx-large' }}></TbFaceIdError>
-                    <h6>No records yet!</h6>
-                </NoExpensesWrapper>
+                <>
+                    <NoExpensesWrapper>
+                        <TbFaceIdError style={{ fontSize: 'xx-large' }}></TbFaceIdError>
+                        <h6>No records yet!</h6>
+                    </NoExpensesWrapper>
+                    <br />
+                </>
             )}
             {expenses && expenses.length > 0 && (
                 <>

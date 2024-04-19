@@ -56,7 +56,7 @@ const ExpenseDetail: FC = () => {
             await dataService.deleteExpense(expenseId).then((data) => {
                 setSnackBarState({ message: data.message, open: true });
                 if (data.success == 'true') {
-                    navigate(-2);
+                    navigate(-1); 
                 }
             });
         } else {
