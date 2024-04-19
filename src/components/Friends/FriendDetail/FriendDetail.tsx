@@ -35,6 +35,7 @@ function FriendDetail() {
     const [snackBarState, setSnackBarState] = useState<{ open: boolean, message: string }>({ open: false, message: "" });
     const [confirmSnackBarState, setConfirmSnackBarState] = useState<{ open: boolean, message: string }>({ open: false, message: "" });
     const [confirmation, setConfirmation] = useState<boolean>(false);
+    const [showError, setShowError] = useState<boolean>(false);
 
     const handleClose = () => {
         setSnackBarState({ ...snackBarState, open: false });
@@ -79,12 +80,11 @@ function FriendDetail() {
                     setLoading(false);
                 })
                 .catch((error: Error): void => {
-                    if (error instanceof Error && error.message.startsWith('Error: 400')) {
-                        navigate('/friends')
-                    } else {
-                        console.error('Error while getting friend details', error);
-                    }
+                    setSnackBarState({ message: 'Error while getting friend details!', open: true });
+                    console.error('Error while getting friend details', error);
                     setLoading(false);
+                    setShowLoader(false);
+                    setShowError(true);
                 });
         }
     }, [refetchData, friendId]); // useEffect dependency
@@ -163,7 +163,8 @@ function FriendDetail() {
                 </Col>
             </Row>
             {showLoader && (<div className="d-flex justify-content-center align-items-center"><CircularProgress color="secondary" variant="indeterminate" /></div>)}
-            {!showLoader && (
+            {showError && (<div className="d-flex justify-content-center align-items-center">Sorry! An unexpected error occured!</div>)}
+            {!showLoader && !showError && (
                 <div>
                     <h2>{friendData.name}</h2>
                     <Row className="align-items-center">

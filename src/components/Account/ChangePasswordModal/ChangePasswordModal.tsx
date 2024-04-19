@@ -31,6 +31,8 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ onClose, forg
                         onClose();
                     })
                 } catch (error) {
+                    handleMessage("An unexpected error occured! Please try again later");
+                    onClose();
                     console.log("Error occured", error);
                 } finally {
                     setLoading(false);
