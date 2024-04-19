@@ -189,8 +189,9 @@ const CreateExpenseDrawer: FC<CreateExpenseDrawerProps> = ({ expenseId }) => {
 
         try {
             const result = await apiService.createExpense(createExpenseObject as unknown as Expense);
-            if (result) {
-                navigate(`/expense/${result.id}`)
+            setSnackBarState({message:result.message, open:true});
+            if (result.success == "true") {
+                navigate(`/expense/${result.data.id}`)
             }
         } catch (error) {
             console.error('Unexpected error event creation:', error);
@@ -235,13 +236,13 @@ const CreateExpenseDrawer: FC<CreateExpenseDrawerProps> = ({ expenseId }) => {
 
         try {
             const result = await apiService.editExpense(updateExpenseObject as unknown as Expense);
-            if (result) {
+            setSnackBarState({message:result.message, open:true});
+            if (result.success == "true") {
                 if (friendId) {
                     navigate(`/expense/${expenseId}?friendId=${friendId}`)
                 } else {
                     navigate(`/expense/${expenseId}`)
                 }
-
             }
         } catch (error) {
             console.error('Unexpected error event creation:', error);
