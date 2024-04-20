@@ -18,6 +18,12 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ onClose, forg
     const [loading, setLoading] = useState(false);
     const [confirmPassword, setConfirmPassword] = useState('');
 
+    const isValidEmail = (email: string) => {
+        // Regular expression for validating email
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    }
+
     const handleChangePassword = async () => {
         if (!forgotPassword) {
             setLoading(true);
@@ -46,10 +52,14 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ onClose, forg
             }
         }
         else {
+            if (email == '' || !isValidEmail(email)) {
+                handleMessage("Enter a valid email address!");
+                return;
+            }
             try {
                 await dataService.forgotPassword({ email: email }).then((data) => {
                     handleMessage(data.message);
-                    console.log("new password", data.new_password);
+                    // console.log("new password", data.new_password);
                     onClose();
                 })
             } catch (error) {
@@ -87,6 +97,7 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ onClose, forg
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     placeholder="Email"
+                                    required
                                 />
                             </Row>
                         )}

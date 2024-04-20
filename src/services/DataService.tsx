@@ -55,13 +55,7 @@ const dataService = {
     },
     changePassword: async (requestData: { password: string }) => {
         try {
-            const response = await fetch(`${BASE_URL}/db/changePassword`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(requestData),
-            });
+            const response = await fetchInterceptor(`${BASE_URL}/db/changePassword`, 'PUT', true, JSON.stringify(requestData));
             if (!response.ok) {
                 throw new Error('Cannot change password');
             }
