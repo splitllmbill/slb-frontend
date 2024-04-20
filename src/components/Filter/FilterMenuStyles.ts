@@ -8,10 +8,10 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
 export const StyledButton = styled(Button)({
-  color: '#fff', // Adjust the color to fit your theme
-  backgroundColor: 'black', // Example color
+  color: 'black', // Adjust the color to fit your theme
+  backgroundColor: 'none', // Example color
   '&:hover': {
-    backgroundColor: 'grey',
+    backgroundColor: 'none',
   },
 
 });
