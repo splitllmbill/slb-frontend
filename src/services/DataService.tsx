@@ -120,14 +120,12 @@ const dataService = {
         }
     },
     getExpensesForUser: async (filterInput: FilterInput) => {
-        try {
-            const response = await fetchInterceptor(`${BASE_URL}/db/expenses/personal`, 'POST', true, JSON.stringify(filterInput));
-            const data = await response.json();
-            return data;
-        } catch (error) {
-            console.error('Error making GET request:', error);
-            throw error;
+        const response = await fetchInterceptor(`${BASE_URL}/db/expenses/personal`, 'POST', true, JSON.stringify(filterInput));
+        const data = await response.json();
+        if (!response.ok) {
+            throw new Error('An unexpected error occured! Please try again later');
         }
+        return data;
     },
     getExpenseById: async (expenseId: string) => {
         try {
@@ -454,7 +452,6 @@ const dataService = {
         }
     },
     editExpense: async (expenseData: Expense) => {
-        console.log(expenseData)
         try {
             const response = await fetch(`${BASE_URL}/db/expense/${expenseData.id}`, {
                 method: 'PUT',
@@ -503,14 +500,12 @@ const dataService = {
         }
     },
     getFilterOptions: async (fields: string[]) => {
-        try {
-            const response = await fetchInterceptor(`${BASE_URL}/db/filter-options`, 'POST', true, JSON.stringify({ fields: fields }));
-            const data = await response.json();
-            return data;
-        } catch (error) {
-            console.error('Error making GET request:', error);
-            throw error;
+        const response = await fetchInterceptor(`${BASE_URL}/db/filter-options`, 'POST', true, JSON.stringify({ fields: fields }));
+        const data = await response.json();
+        if (!response.ok) {
+            throw new Error('An unexpected error occured! Please try again later');
         }
+        return data;
     },
 };
 
