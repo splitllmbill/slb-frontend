@@ -1,5 +1,4 @@
 // FilterMenuStyles.ts
-import {Fragment} from 'react';
 import { styled } from '@mui/system';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
@@ -57,9 +56,4 @@ export const StyledFormControl = styled(FormControl)({
 
 export const StyledSelect = styled(Select)({
   // Additional styling for selects if needed
-});
-
-export const StyledFragment = styled(Fragment)({
-  // Additional styling for selects if needed
-  marginRight:'20px',
 });

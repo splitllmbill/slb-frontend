@@ -1,4 +1,4 @@
-import React, {useEffect, useState } from 'react';
+import React, {Fragment, useEffect, useState } from 'react';
 import { Row } from 'react-bootstrap';
 import Box from '@mui/material/Box';
 import OutlinedInput from '@mui/material/OutlinedInput';
@@ -12,7 +12,6 @@ import {
   StyledButton,
   StyledMenu,
   StyledFormControl,
-  StyledFragment
 } from './FilterMenuStyles';
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
@@ -122,7 +121,7 @@ const DynamicFilter: React.FC<DynamicFilterProps> = ({applyFilter,filterOptions}
   // };
 
   return (
-    <StyledFragment >
+    <Fragment >
       <StyledButton
         aria-controls="filter-menu"
         aria-haspopup="true"
@@ -176,7 +175,6 @@ const DynamicFilter: React.FC<DynamicFilterProps> = ({applyFilter,filterOptions}
                             </li>
                         )}
                         renderInput={(params) => {
-                            console.log("params",params)
                             return <TextField {...params} placeholder="Select Filters.." />
                         }}
                     />
@@ -215,7 +213,7 @@ const DynamicFilter: React.FC<DynamicFilterProps> = ({applyFilter,filterOptions}
         </StyledButton>
       </div>
       </StyledMenu>
-    </StyledFragment>
+    </Fragment>
   );
 };
 
