@@ -6,7 +6,7 @@ import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
 import ContentCopyOutlinedIcon from '@mui/icons-material/ContentCopyOutlined';
 import dataService from '../../../services/DataService';
-import { convertTimestampToISO, personalExpenseAdded } from '../../../services/State';
+import { convertTimestampToISO, personalExpenseAdded, toTitleCase } from '../../../services/State';
 import "react-datepicker/dist/react-datepicker.css";
 import { Button } from '../../../App.styled';
 import { IoMdArrowUp } from 'react-icons/io';
@@ -19,14 +19,19 @@ const Chatbot = () => {
    const [showTable, setShowTable] = useState(false);
    const [loading, setLoading] = useState(false);
    const [expenses, setExpenses] = useState<any[]>([]);
-   const today = new Date();
 
    const handleInputChange = (e: { target: { value: SetStateAction<string> } }) => {
       setInput(e.target.value);
    };
 
+   const getDate = (numDays: number = 0): Date => {
+      const today = new Date();
+      today.setDate(today.getDate() + numDays);
+      return today;
+  };
+  
    const handleSendMessage = async () => {
-      if (input.trim() === '') return;
+      if (input.trim() === '' || showTable) return;
       const newMessages = [...messages, { text: input, sender: 'user' }];
       setMessages(newMessages);
       setInput('');
@@ -34,7 +39,7 @@ const Chatbot = () => {
       try {
          const botResponse = await dataService.addPersonalExpenseViaLLM(input);
          setMessages([...newMessages, { text: 'Here is a simple table of the expenses listed by you. Please make corrections to the data if necessary and click OKAY to add the expense!', sender: 'bot' }]);
-         const expensesWithDate = botResponse.llmoutput.map((item: any) => ({ ...item, date: new Date() }));
+         const expensesWithDate = botResponse.llmoutput.map((item: any) => ({ ...item, date: item.date ? getDate(parseInt(item.date)) : getDate()}));
          setExpenses(expensesWithDate);
          setShowTable(true);
       } catch (error) {
@@ -57,24 +62,20 @@ const Chatbot = () => {
          setLoading(true);
          for (const exp of expenses) {
             let expenseData = {
-               expenseName: exp.name,
+               expenseName: toTitleCase(exp.name),
                amount: exp.amount,
                type: 'normal',
-               paidBy: "",
                shares: [],
-               createdAt: today,
-               updatedAt: today,
-               createdBy: "",
-               updatedBy: "",
-               category: exp.category || null,
+               category: exp.category.toLowerCase(),
                date: convertTimestampToISO(exp.date)
-            } as Expense;
+            } as unknown as Expense;
             const createdExpense = await dataService.createExpense(expenseData as Expense);
             console.log('Expense created successfully:', createdExpense);
          }
          personalExpenseAdded.next();
          setShowTable(false);
-         setMessages([...messages, { text: 'Expense added ' + input, sender: 'bot' }]);
+         const displayMessage = `${expenses.length} expense` + (expenses.length === 1 ? '' : 's') + ' added successfully.';
+         setMessages([...messages, { text: displayMessage, sender: 'bot' }]);
       } catch (error) {
          console.error('Error creating expense:', error);
          setShowTable(false);
@@ -86,7 +87,10 @@ const Chatbot = () => {
 
    const handleTryAgain = () => {
       setShowTable(false);
-      setMessages([messages[0]]);
+      const initMessage = messages[0];
+      const userMessages = messages.filter((message) => message.sender === "user");
+      userMessages.unshift(initMessage)
+      setMessages(userMessages);
    };
 
    const handleExpenseChange = (index: number, key: string, value: any) => {
@@ -139,21 +143,21 @@ const Chatbot = () => {
                                  <td>
                                     <Input
                                        type="text"
-                                       value={row.name || row.Name}
+                                       value={row.name}
                                        onChange={(e) => handleExpenseChange(index, 'name', e.target.value)}
                                     />
                                  </td>
                                  <td>
                                     <Input
                                        type="text"
-                                       value={row.amount || row.Amount}
+                                       value={row.amount}
                                        onChange={(e) => handleExpenseChange(index, 'amount', e.target.value)}
                                     />
                                  </td>
                                  <td>
                                     <Input
                                        type="text"
-                                       value={row.category || row.Category}
+                                       value={row.category}
                                        onChange={(e) => handleExpenseChange(index, 'category', e.target.value)}
                                     />
                                  </td>
@@ -178,17 +182,20 @@ const Chatbot = () => {
                )}
             </div>
          </ChatbotWindow>
-         <InputContainer>
-            <Input
-               type="text"
-               placeholder="Type your expenses.."
-               value={input}
-               onChange={handleInputChange}
-               onKeyDown={handleKeyDown}
-               disabled={showTable} // Disable the input field when showTable is true
-            />
-            <IoMdArrowUp style={{ fontSize: "xx-large", marginRight: '15px', cursor: "pointer" }} onClick={handleSendMessage}></IoMdArrowUp >
-         </InputContainer>
+         <Tooltip title={showTable ? "Comeplete previous expense or click on try again" : ""} followCursor>
+            <InputContainer >
+               <Input
+                  style={ showTable ? {cursor: "not-allowed"} : undefined}
+                  type="text"
+                  placeholder="Type your expenses.."
+                  value={input}
+                  onChange={handleInputChange}
+                  onKeyDown={handleKeyDown}
+                  disabled={showTable} // Disable the input field when showTable is true
+               />
+               <IoMdArrowUp style={{ fontSize: "xx-large", marginRight: '15px', cursor: showTable ? "not-allowed" : "pointer" }} onClick={handleSendMessage}></IoMdArrowUp >
+            </InputContainer>
+         </Tooltip>
       </ChatbotContainer >
    );
 };
