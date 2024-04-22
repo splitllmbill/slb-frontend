@@ -11,6 +11,7 @@ import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import VerifiedUserOutlinedIcon from '@mui/icons-material/VerifiedUserOutlined';
 import QrCode2OutlinedIcon from '@mui/icons-material/QrCode2Outlined';
+import IosShareOutlinedIcon from '@mui/icons-material/IosShareOutlined';
 
 import { RiUpload2Line } from 'react-icons/ri';
 import { Alert } from 'react-bootstrap';
@@ -21,6 +22,7 @@ import FriendLink from '../Common/FriendLink';
 import { Button, Flex } from '../../App.styled';
 import QRModal from './QRModal/QRModal';
 import CustomSnackbar from '../Common/SnackBar/SnackBar';
+import UPIModal from './UPIModal/UPIModal';
 
 const UserPage = () => {
     const appTitle = import.meta.env.VITE_APP_TITLE;
@@ -51,6 +53,7 @@ const UserPage = () => {
     const [showLoader, setShowLoader] = useState(true);
     const [isPasswordModalOpen, setisPasswordModalOpen] = useState(false);
     const [isQRModalOpen, setisQRModalOpen] = useState(false);
+    const [isUPIModalOpen, setIsUPIModalOpen] = useState(false);
     const [isVerificationModalOpen, setisVerificationModalOpen] = useState(false);
     const [snackBarState, setSnackBarState] = useState<{ open: boolean, message: string }>({ open: false, message: "" });
 
@@ -90,8 +93,6 @@ const UserPage = () => {
                     upiId: userData.upiId,
                     name: userData.name
                 })
-                console.log(result);
-
                 if (result) {
                     setSnackBarState({ message: "Updated successfully!", open: true });
                     setApiData({
@@ -123,7 +124,7 @@ const UserPage = () => {
         }
     };
 
-    function fallbackCopyTextToClipboard(text: string, type: string) {
+    const fallbackCopyTextToClipboard = (text: string, type: string) => {
         const textArea = document.createElement('textarea');
         textArea.value = text;
         textArea.style.position = 'fixed';
@@ -244,6 +245,14 @@ const UserPage = () => {
         setisQRModalOpen(false);
     }
 
+    const handleUPIPage = () => {
+        setIsUPIModalOpen(true);
+    }
+
+    const handleCloseUPIPage = () => {
+        setIsUPIModalOpen(false);
+    }
+
     const validateNumber = (value: string) => {
         const mobileRegex = /^[0-9]{10}$/; // Regex for 10-digit numbers
         return mobileRegex.test(value);
@@ -275,6 +284,7 @@ const UserPage = () => {
                 {isPasswordModalOpen && <ChangePasswordModal onClose={handleCloseChangePassword} handleMessage={handleMessageFromModal} forgotPassword={false} />}
                 {isVerificationModalOpen && <VerificationModal handleClose={handleCloseVerification} handleMessage={handleMessageFromModal} type={verificationFields.type} userData={userData} />}
                 {isQRModalOpen && <QRModal onClose={handleCloseQR} upiId={userData?.upiId} />}
+                {isUPIModalOpen && <UPIModal onClose={handleCloseUPIPage} handleCopy={handleCopyToClipboard} upiId={userData?.upiId} />}
                 <form onSubmit={handleSubmit}>
                     <div>
                         <Label>Name:</Label>
@@ -461,6 +471,18 @@ const UserPage = () => {
                                     onClick={handleGenerateQR}
                                 >
                                     <QrCode2OutlinedIcon style={{ color: validateUPI(userData.upiId) ? 'black' : 'grey' }} />
+                                </IconButton>
+                            </span>
+                        </Tooltip>
+                        <Tooltip title={validateUPI(userData.upiId) ? "Share UPI Link" : "Invalid UPI Id"}>
+                            <span>
+                                <IconButton
+                                    disabled={!validateUPI(userData.upiId)}
+                                    size="small"
+                                    style={{ width: 'auto', height: 'auto', marginBottom: '10px', marginRight: '10px', cursor: validateUPI(userData.upiId) ? 'auto' : 'not-allowed' }}
+                                    onClick={handleUPIPage}
+                                >
+                                    <IosShareOutlinedIcon style={{ color: validateUPI(userData.upiId) ? 'black' : 'grey' }} />
                                 </IconButton>
                             </span>
                         </Tooltip>

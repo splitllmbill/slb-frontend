@@ -12,7 +12,7 @@ const setHeaders = (headers: Headers): boolean => {
     return true
 };
 
-const fetchInterceptor = async (url: string, type: string, jsonBody: boolean, body: any = null): Promise<Response> => {
+const fetchInterceptor = async (url: string, type: string, jsonBody: boolean = false, body: any = null): Promise<Response> => {
     const headers: Headers = new Headers();
     const valid = setHeaders(headers);
     if(!valid){

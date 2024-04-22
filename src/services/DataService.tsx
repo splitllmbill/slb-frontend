@@ -501,6 +501,32 @@ const dataService = {
         }
         return data;
     },
+    createUPIPage: async (requestData: any) => {
+        const response = await fetchInterceptor(`${BASE_URL}/db/payment`, 'POST', true, JSON.stringify(requestData));
+        const data = await response.json();
+        if (!response.ok) {
+            throw new Error('An unexpected error occured! Please try again later');
+        }
+        return data;
+    },
+    getUPIPages: async () => {
+        const response = await fetchInterceptor(`${BASE_URL}/db/payment`, 'GET');
+        const data = await response.json();
+        if (!response.ok) {
+            throw new Error('An unexpected error occured! Please try again later');
+        }
+        return data;
+    },
+    getUPIPage: async (id: string) => {
+        const response = await fetch(`${BASE_URL}/db/payment/${id}`, {
+            method: 'GET'
+        });
+        const data = await response.json();
+        if (!response.ok) {
+            throw new Error('An unexpected error occured! Please try again later');
+        }
+        return data;
+    },
 };
 
 export default dataService;
