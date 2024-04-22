@@ -25,7 +25,6 @@ const PersonalExpenseList: FC<PersonalExpenseListProps> = () => {
   const [filterInput, setFilterInput] = useState<FilterInput>({ filters: [] })
   const [page, setPage] = useState(1);
   const [showLoader, setShowLoader] = useState(true);
-  const [refreshData, setRefresh] = useState(false);
   const [snackBarState, setSnackBarState] = useState<{ open: boolean, message: string }>({ open: false, message: "" });
   const itemsPerPage = 5;
   const [isEditable, setIsEditable] = useState<number | null>(null);
@@ -41,7 +40,7 @@ const PersonalExpenseList: FC<PersonalExpenseListProps> = () => {
     const updateExpenseObject = { id, expenseName, amount, type, category: lowerCaseCategory, date, paidBy };
     await dataService.editExpense(updateExpenseObject as unknown as Expense).then((data) => {
       setSnackBarState({ message: data.message, open: true });
-      setRefresh(!refreshData);
+      setFilterInput({ filters: [] });
     });
   };
 
@@ -77,7 +76,7 @@ const PersonalExpenseList: FC<PersonalExpenseListProps> = () => {
     setShowLoader(true);
     await dataService.deleteExpense(expenses[startIndex+index].id!).then((data) => {
       setSnackBarState({ message: data.message, open: true });
-      setRefresh(!refreshData);
+      setFilterInput({ filters: [] });
     });
   };
 
@@ -127,7 +126,7 @@ const PersonalExpenseList: FC<PersonalExpenseListProps> = () => {
   useEffect(() => {
     setShowLoader(true);
     fetchData(filterInput);
-  }, [filterInput,refreshData])
+  }, [filterInput])
 
   const handleChangePage = (_event: React.ChangeEvent<unknown>, newPage: number) => {
     setIsEditable(null);

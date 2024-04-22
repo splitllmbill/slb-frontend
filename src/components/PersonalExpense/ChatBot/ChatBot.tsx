@@ -6,7 +6,7 @@ import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
 import ContentCopyOutlinedIcon from '@mui/icons-material/ContentCopyOutlined';
 import dataService from '../../../services/DataService';
-import { convertTimestampToISO, personalExpenseAdded, toTitleCase } from '../../../services/State';
+import { personalExpenseAdded, toTitleCase } from '../../../services/State';
 import "react-datepicker/dist/react-datepicker.css";
 import { Button } from '../../../App.styled';
 import { IoMdArrowUp } from 'react-icons/io';
@@ -67,7 +67,7 @@ const Chatbot = () => {
                type: 'normal',
                shares: [],
                category: exp.category.toLowerCase(),
-               date: convertTimestampToISO(exp.date)
+               date: exp.date.toDateString()
             } as unknown as Expense;
             const createdExpense = await dataService.createExpense(expenseData as Expense);
             console.log('Expense created successfully:', createdExpense);

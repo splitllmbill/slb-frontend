@@ -1,9 +1,9 @@
-import React, {Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { Row } from 'react-bootstrap';
 import Box from '@mui/material/Box';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
-import {Autocomplete,TextField,Checkbox,Typography} from '@mui/material';
+import { Autocomplete, TextField, Checkbox, Typography } from '@mui/material';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import { toTitleCase } from '../../services/State';
@@ -33,20 +33,19 @@ const filterFields: FilterField[] = [
   },
   // You can add more fields as needed
 ];
-type mapStringToString={
+type mapStringToString = {
   [key: string]: string[]
 }
 interface DynamicFilterProps {
-  applyFilter: (Filters:FilterCriteria[]) => void;
-  filterOptions:mapStringToString;
+  applyFilter: (Filters: FilterCriteria[]) => void;
+  filterOptions: mapStringToString;
 }
 
-const DynamicFilter: React.FC<DynamicFilterProps> = ({applyFilter,filterOptions}) => {
+const DynamicFilter: React.FC<DynamicFilterProps> = ({ applyFilter, filterOptions }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [filters, setFilters] = useState<FilterCriteria[]>([]);
   const open = Boolean(anchorEl);
 
-  
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -55,70 +54,55 @@ const DynamicFilter: React.FC<DynamicFilterProps> = ({applyFilter,filterOptions}
     setAnchorEl(null);
   };
 
-
-
-  const handleApplyFilters=()=>{
-    
-    const validFilters=filters.filter((filter)=>{
-      if (filter.operator=="BTW" && (filter.values[0]==''||filter.values[1]=='') )
-        return false
-      return true
+  const handleApplyFilters = () => {
+    const validFilters = filters.filter((filter) => {
+      if (filter.operator === 'BTW') {
+        if (filter.values[0] === '' && filter.values[1] === '') {
+          return false;
+        }
+        if (filter.values[0] === '' || filter.values[1] === '') {
+          if (filter.values[0] === '') filter.values[0] = 'MIN';
+          if (filter.values[1] === '') filter.values[1] = 'MAX';
+        }
+      }
+      if (filter.operator === 'IN' && filter.values.length == 0)
+        return false;
+      return true;
     })
-    if(validFilters && validFilters.length!=0){
+    if (validFilters && validFilters.length != 0) {
       applyFilter(validFilters);
     }
     setAnchorEl(null);
-   
+
   }
 
-  useEffect(()=>{
-    const initialFilters =filterFields.map((filter)=>({
-      field:filter.name,
-      operator: filter.type == "dropdown"? "IN":"BTW",
-      values: filter.type == "dropdown"?[]:['','']
+  useEffect(() => {
+    const initialFilters = filterFields.map((filter) => ({
+      field: filter.name,
+      operator: filter.type == "dropdown" ? "IN" : "BTW",
+      values: filter.type == "dropdown" ? [] : ['', '']
     }))
     setFilters(initialFilters)
-  },[])
+  }, [])
 
-  // const handleFieldChange = (index: number, fieldName: string) => {
-  //   // Update the selected field for a specific filter criteria
-  //   const updatedFilters = [...filters];
-  //   const field = filterFields.find((field) => field.name === fieldName);
-  //   if (field) {
-  //     updatedFilters[index] = {
-  //       ...updatedFilters[index],
-  //       field: fieldName,
-  //       operator: field.type=="dropdown"?"IN":"BTW",
-  //       values: field.type === 'range' ? ['','']: [],
-  //     };
-  //     setFilters(updatedFilters);
-  //   }
-  // };
   const convertToArray = (value: string | string[]): string[] => Array.isArray(value) ? value : [value];
-
 
   const handleDropdownChange = (index: number, selectedOptions: string[]) => {
     const updatedFilters = [...filters];
     updatedFilters[index].values = selectedOptions;
     setFilters(updatedFilters);
-    
   };
 
   const handleRangeChange = (index: number, name: 'min' | 'max', value: string) => {
     const updatedFilters = [...filters];
-    if(name=='min'){
-        updatedFilters[index].values[0] = value
-    }else{
-        updatedFilters[index].values[1] =value 
+    if (name == 'min') {
+      updatedFilters[index].values[0] = value
+    } else {
+      updatedFilters[index].values[1] = value
     }
     setFilters(updatedFilters);
-   
-  };
 
-  // const handleRemoveFilter = (index: number) => {
-  //   const updatedFilters = filters.filter((_, i) => i !== index);
-  //   setFilters(updatedFilters);
-  // };
+  };
 
   return (
     <Fragment >
@@ -139,79 +123,75 @@ const DynamicFilter: React.FC<DynamicFilterProps> = ({applyFilter,filterOptions}
           'aria-labelledby': 'filter-button',
         }}
       >
-      {filters.map((filter, index) => (
-        <Box key={index} sx={{ mb: 2 }}>
-          <Row  sx={{width:'250px'}}>
-          <Typography variant="body1" component="div" sx={{ fontWeight: 'bold', textTransform: 'capitalize' }}>
-            {toTitleCase(filter.field)}
-          </Typography>
-          {filter.operator === 'IN' && (
-            
-            <StyledFormControl>
-
-              <Autocomplete
-              sx={{
-                marginRight:'20px',
-                marginTop:'5px',
-                marginLeft:'8px'
-              }}
-                        multiple
-                        options={filterOptions[filter.field]}
-                        onChange={(_,option) => handleDropdownChange(index,convertToArray(option))}
-                        getOptionLabel={(option) => option}
-                        disableCloseOnSelect
-                        limitTags={1}
-                        value={filter.values}
-                        isOptionEqualToValue={(option, value) => option === value}
-                        renderOption={(props, option, { selected }) => (
-                            <li {...props}>
-                                <Checkbox
-                                    icon={icon}
-                                    checkedIcon={checkedIcon}
-                                    style={{ marginRight: 8 }}
-                                    checked={selected}
-                                />
-                                {option}
-                            </li>
-                        )}
-                        renderInput={(params) => {
-                            return <TextField {...params} placeholder="Select Filters.." />
-                        }}
+        {filters.map((filter, index) => (
+          <Box key={index} sx={{ mb: 2 }}>
+            <Row sx={{ width: '250px' }}>
+              <Typography variant="body1" component="div" sx={{ fontWeight: 'bold', textTransform: 'capitalize' }}>
+                {toTitleCase(filter.field)}
+              </Typography>
+              {filter.operator === 'IN' && (
+                <StyledFormControl>
+                  <Autocomplete
+                    sx={{
+                      marginRight: '20px',
+                      marginTop: '5px',
+                      marginLeft: '8px'
+                    }}
+                    multiple
+                    options={filterOptions[filter.field]}
+                    onChange={(_, option) => handleDropdownChange(index, convertToArray(option))}
+                    getOptionLabel={(option) => option}
+                    disableCloseOnSelect
+                    limitTags={1}
+                    value={filter.values}
+                    isOptionEqualToValue={(option, value) => option === value}
+                    renderOption={(props, option, { selected }) => (
+                      <li {...props}>
+                        <Checkbox
+                          icon={icon}
+                          checkedIcon={checkedIcon}
+                          style={{ marginRight: 8 }}
+                          checked={selected}
+                        />
+                        {toTitleCase(option)}
+                      </li>
+                    )}
+                    renderInput={(params) => {
+                      return <TextField {...params} placeholder="Select Filters.." />
+                    }}
+                  />
+                </StyledFormControl>
+              )}
+              {filter.operator === 'BTW' && (
+                <Box sx={{ display: 'flex', marginRight: '20px' }}>
+                  <StyledFormControl>
+                    <OutlinedInput
+                      sx={{ width: '100%' }}
+                      type="number"
+                      value={filter.values[0]}
+                      onChange={(e) => handleRangeChange(index, 'min', e.target.value)}
+                      placeholder="Min"
                     />
-            </StyledFormControl>
-            
-          )}
-          
-          {filter.operator === 'BTW' && (
-               <Box sx={{ display: 'flex',marginRight:'20px'}}>
-               <StyledFormControl>
-                 <OutlinedInput
-                 sx={{width:'100%'}}
-                   type="number"
-                   value={filter.values[0]}
-                   onChange={(e) => handleRangeChange(index, 'min', e.target.value)}
-                   placeholder="Min"
-                 />
-               </StyledFormControl>
-               <StyledFormControl >
-                 <OutlinedInput sx={{width:'100%',marginRight:'20px'}}
-                   type="number"
-                   value={filter.values[1]}
-                   onChange={(e) => handleRangeChange(index, 'max', e.target.value)}
-                   placeholder="Max"
-                 />
-               </StyledFormControl>
-             </Box>
-             )}
-          </Row>
-        </Box>
-        
-      ))}
+                  </StyledFormControl>
+                  <StyledFormControl >
+                    <OutlinedInput sx={{ width: '100%', marginRight: '20px' }}
+                      type="number"
+                      value={filter.values[1]}
+                      onChange={(e) => handleRangeChange(index, 'max', e.target.value)}
+                      placeholder="Max"
+                    />
+                  </StyledFormControl>
+                </Box>
+              )}
+            </Row>
+          </Box>
+
+        ))}
         <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-        <StyledButton variant="contained" onClick={handleApplyFilters} sx={{marginRight:'5px' ,width:'20px'}}>
-          Apply
-        </StyledButton>
-      </div>
+          <StyledButton variant="contained" onClick={handleApplyFilters} sx={{ marginRight: '5px', width: '20px' }}>
+            Apply
+          </StyledButton>
+        </div>
       </StyledMenu>
     </Fragment>
   );
