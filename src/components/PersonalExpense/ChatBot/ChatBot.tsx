@@ -67,7 +67,7 @@ const Chatbot = () => {
                type: 'normal',
                shares: [],
                category: exp.category.toLowerCase(),
-               date: convertTimestampToISO(exp.date)
+               date: exp.date.toDateString()
             } as unknown as Expense;
             const createdExpense = await dataService.createExpense(expenseData as Expense);
             console.log('Expense created successfully:', createdExpense);
