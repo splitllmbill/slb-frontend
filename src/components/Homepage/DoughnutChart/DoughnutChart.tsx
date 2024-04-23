@@ -3,6 +3,7 @@ import { shades } from '../colors';
 import { PieChart } from '@mui/x-charts';
 import { NoExpensesWrapper } from '../../Expenses/ExpenseDetail/ExpenseDetails.styled';
 import { TbFaceIdError } from 'react-icons/tb';
+import { toTitleCase } from '../../../services/State';
 
 interface Expense {
     cost: number;
@@ -17,9 +18,9 @@ interface Props {
 
 const DonutChart: FC<Props> = ({ expenses }) => {
     const data = expenses.map((expense) => ({
-        name: expense.category || '',
+        name: toTitleCase(expense.category) || '',
         value: typeof expense.percent === 'number' ? expense.percent : 0,
-        label: expense.category || ''
+        label: toTitleCase(expense.category) || ''
     }));
 
     return (
@@ -37,6 +38,9 @@ const DonutChart: FC<Props> = ({ expenses }) => {
                         series={[
                             {
                                 data: data,
+                                valueFormatter: (v: any) => {
+                                    return `${v.value.toFixed(2)}%`;
+                                },
                                 innerRadius: 50,
                                 outerRadius: 100,
                                 paddingAngle: 0,
