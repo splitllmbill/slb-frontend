@@ -98,7 +98,7 @@ function FriendDetail() {
         try {
             await dataService.deleteFriend(friendData.uuid).then((data) => {
                 setSnackBarState({ message: data.message, open: true });
-                if (data.success == true) {
+                if (data.success == 'true') {
                     navigate('/friends');
                 }
             });
