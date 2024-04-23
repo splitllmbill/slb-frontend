@@ -121,7 +121,11 @@ const CreateEventDrawer: FC<CreateEventDrawerProps> = ({ eventID }) => {
                     <CustomAutocomplete
                         options={users}
                         onChange={(value) => setSelectedUsers(value)}
-                        getOptionLabel={(option) => option.name}
+                        getOptionLabel={(option) => {
+                            if(option.name=="Select All")
+                             return option.name
+                            return option.name + " ("+option.email+")"
+                        }}
                         value={selectedUsers}
                         isOptionEqualToValue={(option, value) => option.id === value.id}
                     />

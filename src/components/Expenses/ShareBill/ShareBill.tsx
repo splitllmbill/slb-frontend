@@ -392,7 +392,7 @@ const ShareBill = () => {
                                                 <Col xs={6}>
                                                     <div><b>Item Name:</b> {item.item_name}</div>
                                                     <div><b>Quantity:</b> {item.quantity}</div>
-                                                    <div><Typography variant="body1" style={{ color: 'green' }}><b> Rs. {item.total_amount}</b></Typography></div>
+                                                    <div><Typography variant="body1" style={{ color: 'green' }}><b> Rs. {item.total_amount.toFixed(2)}</b></Typography></div>
                                                 </Col>
                                             )}
                                             {isEditOnList[index] && (
@@ -463,7 +463,7 @@ const ShareBill = () => {
                                                 <Col xs={6}>
                                                     <div><b>Tax Type:</b> {item.type}</div>
                                                     <div><b>Percentage:</b> {item.percent}</div>
-                                                    <div><Typography variant="body1" style={{ color: 'green' }}><b> Rs. {item.amount}</b></Typography></div>
+                                                    <div><Typography variant="body1" style={{ color: 'green' }}><b> Rs. {item.amount.toFixed(2)}</b></Typography></div>
                                                 </Col>)}
                                             {isEditOnTaxList[index] && (
                                                 <Col xs={6}>

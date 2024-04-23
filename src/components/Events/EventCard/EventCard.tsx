@@ -34,13 +34,13 @@ const EventCard: FC<EventCardProps> = ({ eventSent }) => {
                         {eventSent.dues?.totalOwed > 0 && (
                            <>
                               <Typography variant="h6" color="text.secondary">
-                                 You are owed Rs.{eventSent.dues.totalOwed}
+                                 You are owed Rs.{eventSent.dues.totalOwed.toFixed(2)}
                               </Typography>
                               <Typography variant="body1" color="text.secondary" component="div">
                                  <ul>
                                     {eventSent.dues?.isOwed?.map((item: any, index: number) => (
                                        <li key={index}>
-                                          <span><strong>{toTitleCase(item.name)} owes you Rs.{item.amount}</strong></span>
+                                          <span><strong>{toTitleCase(item.name)} owes you Rs.{item.amount.toFixed(2)}</strong></span>
                                        </li>
                                     ))}
                                  </ul>
@@ -50,13 +50,13 @@ const EventCard: FC<EventCardProps> = ({ eventSent }) => {
                         {eventSent.dues?.totalDebt > 0 && (
                            <>
                               <Typography variant="h6" color="text.secondary">
-                                 You owe Rs.{eventSent.dues.totalDebt}
+                                 You owe Rs.{eventSent.dues.totalDebt.toFixed(2)}
                               </Typography>
                               <Typography variant="body1" color="text.secondary" component="div">
                                  <ul>
                                     {eventSent.dues?.inDebtTo?.map((item: any) => (
                                        <li key={item.id}>
-                                          <span><strong>You owe {item.name} Rs.{item.amount}</strong></span>
+                                          <span><strong>You owe {item.name} Rs.{item.amount.toFixed(2)}</strong></span>
                                        </li>
                                     ))}
                                  </ul>

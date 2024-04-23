@@ -34,7 +34,7 @@ const PersonalExpenseList: FC<PersonalExpenseListProps> = () => {
   const handleSave = async (index: number) => {
     setIsEditable(null);
     setShowLoader(true);
-    const expense = expenses[startIndex+index];
+    const expense = expenses[startIndex + index];
     const { id, expenseName, amount, type, category, date, paidBy } = expense;
     const lowerCaseCategory = category.toLowerCase();
     const updateExpenseObject = { id, expenseName, amount, type, category: lowerCaseCategory, date, paidBy };
@@ -50,31 +50,31 @@ const PersonalExpenseList: FC<PersonalExpenseListProps> = () => {
 
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
     const newExpenses = [...expenses];
-    newExpenses[startIndex+index].amount = parseInt(e.target.value);
+    newExpenses[startIndex + index].amount = parseInt(e.target.value);
     setExpenses(newExpenses);
   };
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
     const newExpenses = [...expenses];
-    newExpenses[startIndex+index].expenseName = e.target.value;
+    newExpenses[startIndex + index].expenseName = e.target.value;
     setExpenses(newExpenses);
   };
 
   const handleCategoryChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
     const newExpenses = [...expenses];
-    newExpenses[startIndex+index].category = e.target.value;
+    newExpenses[startIndex + index].category = e.target.value;
     setExpenses(newExpenses);
   };
 
   const handleDateChange = (date: Date, index: number) => {
     const newExpenses = [...expenses];
-    newExpenses[startIndex+index].date = date.toDateString(); 
+    newExpenses[startIndex + index].date = date.toDateString();
     setExpenses(newExpenses);
   };
 
   const handleDelete = async (index: number) => {
     setShowLoader(true);
-    await dataService.deleteExpense(expenses[startIndex+index].id!).then((data) => {
+    await dataService.deleteExpense(expenses[startIndex + index].id!).then((data) => {
       setSnackBarState({ message: data.message, open: true });
       setFilterInput({ filters: [] });
     });
@@ -95,7 +95,7 @@ const PersonalExpenseList: FC<PersonalExpenseListProps> = () => {
         setPage(1);
         setShowLoader(false);
       })
-      .catch((error : Error) => {
+      .catch((error: Error) => {
         // Handle errors if needed
         setExpenses([]);
         setShowLoader(false);
@@ -135,116 +135,138 @@ const PersonalExpenseList: FC<PersonalExpenseListProps> = () => {
 
   const handleClose = () => {
     setSnackBarState({ ...snackBarState, open: false });
-};
-  
+  };
+
+  const isMobile = window.innerWidth <= 650;
+
   return (
     <>
       <CustomSnackbar message={snackBarState.message} handleClose={handleClose} open={snackBarState.open} />
       {
         showLoader ? <div className="d-flex justify-content-center align-items-center"><CircularProgress color="secondary" variant="indeterminate" /></div>
-        : (
+          : (
             <PersonalExpenseListWrapper>
-            <H3>
-              <Row className="align-items-center"> {/* This ensures vertical alignment */}
-                <Col md={11} xs={8}> {/* Adjusted for centering text */} 
+              <H3>
+                <Row className="align-items-center"> {/* This ensures vertical alignment */}
+                  <Col md={11} xs={8}> {/* Adjusted for centering text */}
                     <h3>Personal Expenses</h3>
-                    <h6>&nbsp;Total expense: Rs.{expenses.reduce((acc, expense) => acc + expense.amount, 0)}</h6>
+                    <h6>&nbsp;Total expense: Rs.{(expenses.reduce((acc, expense) => acc + expense.amount, 0)).toFixed(2)}</h6>
                     <h6>&nbsp;No. of Transactions {expenses.length}</h6>
-                </Col>
-                <Col md={1} xs={4} > {/* Ensures the icon is in a separate column and centered */}
-                  <DynamicFilter applyFilter={handleSetFilters} filterOptions={filterOptions} />
-                </Col>
-              </Row>
-            </H3>
-            {expenses.slice(startIndex, endIndex).map((expense, index) => (
-              <TableLikeRow key={expense.id}>
-                <TableLikeRowItem>
-                  <AiOutlineDoubleRight style={{ fontSize: 'x-large' }} />
-                </TableLikeRowItem>
-                <div style={{ flex: '1' }}>
-                  {isEditable !== index ?
-                    (<div>{formatDateForTransactions(formatDate(expense.date))}</div>) :
-                    (
-                      <div>
-                        <DatePickerSmall
-                          selected={new Date(expense.date)}
-                          onChange={(date: Date) => handleDateChange(date, index)}
-                          dateFormat="dd/MM/yyyy"
-                        />
-                      </div>
-                    )
-                  }
-                </div>
-                <div style={{ flex: '2' }}>
-                  <InputSmall
-                    value={isEditable !== index ? toTitleCase(expense.expenseName) : expense.expenseName}
-                    onChange={(e) => handleNameChange(e, index)}
-                    disabled={isEditable !== index}
-                    style={isEditable !== index ? { border: '0', fontWeight: 'bold' } : undefined}
-                  />
-                  <InputSmall
-                    value={isEditable !== index ? toTitleCase(expense.category) : expense.category}
-                    onChange={(e) => handleCategoryChange(e, index)}
-                    disabled={isEditable !== index}
-                    style={isEditable !== index ? { border: '0' } : undefined}
-                  />
-                </div>
-                <div style={{ flex: '3' }}>
-                  {isEditable !== index ?
-                    (<div style={{ marginLeft: '10px' }}><b>Rs. {expense.amount}</b></div>) :
-                    (
-                      <Input
-                        value={expense.amount.toString()}
-                        onChange={(e) => handleAmountChange(e, index)}
-                        disabled={isEditable !== index}
-                        style={isEditable !== index ? { border: '0' } : undefined}
-                      />
-                    )
-                  }
-                </div>
-                <div style={{ flex: '1' }}>
-                  {isEditable === index ? (
-                    <>
-                      <IconButton style={{ width: 'auto', height: 'auto' }} onClick={() => handleSave(index)}>
-                        <SaveOutlinedIcon />
-                      </IconButton>
-                      <IconButton style={{ width: 'auto', height: 'auto' }} onClick={() => setIsEditable(null)}>
-                        <CloseOutlinedIcon />
-                      </IconButton>
-                    </>
-                  ) : (
-                    <>
-                      <IconButton style={{ width: 'auto', height: 'auto' }} onClick={() => setEditable(index)}>
-                        <EditOutlinedIcon />
-                      </IconButton>
-                      <IconButton style={{ width: 'auto', height: 'auto' }} onClick={() => handleDelete(index)}>
-                        <DeleteOutlineOutlinedIcon />
-                      </IconButton>
-                    </>
-                  )}
-                </div>
-              </TableLikeRow>
-            ))}
-            { 
-              expenses && expenses.length == 0 &&
-              <NoExpensesWrapper>
-                <TbFaceIdError style={{ fontSize: 'xx-large' }}></TbFaceIdError>
-                <h6>No expenses yet!</h6>
-              </NoExpensesWrapper>
-            }
-            
-      
-            <PaginationContainer>
-              <Pagination
-                count={Math.ceil(expenses.length / itemsPerPage)}
-                page={page}
-                onChange={handleChangePage}
-                shape="rounded"
-                size="large"
-              />
-            </PaginationContainer>
-          </PersonalExpenseListWrapper>
-        )
+                  </Col>
+                  <Col md={1} xs={4} > {/* Ensures the icon is in a separate column and centered */}
+                    <DynamicFilter applyFilter={handleSetFilters} filterOptions={filterOptions} />
+                  </Col>
+                </Row>
+              </H3>
+              {expenses.slice(startIndex, endIndex).map((expense, index) => (
+                <TableLikeRow key={expense.id}>
+                  <TableLikeRowItem>
+                    <AiOutlineDoubleRight style={{ fontSize: 'x-large' }} />
+                  </TableLikeRowItem>
+                  <div style={{ flex: '1' }}>
+                    {isEditable !== index ?
+                      (<div>{formatDateForTransactions(formatDate(expense.date))}</div>) :
+                      (
+                        <div>
+                          <DatePickerSmall
+                            selected={new Date(expense.date)}
+                            onChange={(date: Date) => handleDateChange(date, index)}
+                            dateFormat="dd/MM/yyyy"
+                          />
+                        </div>
+                      )
+                    }
+                  </div>
+                  <div style={{ flex: '3', overflowX: 'auto', whiteSpace: 'nowrap' }}>
+                    <InputSmall
+                      value={isEditable !== index ? toTitleCase(expense.expenseName) : expense.expenseName}
+                      onChange={(e) => handleNameChange(e, index)}
+                      disabled={isEditable !== index}
+                      style={isEditable !== index ? { border: '0', fontWeight: 'bold' } : undefined}
+                    />
+                    <br />
+                    <InputSmall
+                      value={isEditable !== index ? toTitleCase(expense.category) : expense.category}
+                      onChange={(e) => handleCategoryChange(e, index)}
+                      disabled={isEditable !== index}
+                      style={isEditable !== index ? { border: '0' } : undefined}
+                    />
+                    {isMobile && (
+                      <>
+                        {isEditable !== index ?
+                          (<div style={{ marginLeft: '28px' }}><b>Rs. {expense.amount.toFixed(2)}</b></div>) :
+                          (
+                            <>
+                              <br></br>
+                              <InputSmall
+                                value={expense.amount.toString()}
+                                onChange={(e) => handleAmountChange(e, index)}
+                                disabled={isEditable !== index}
+                                style={isEditable !== index ? { border: '0' } : undefined}
+                              />
+                            </>
+                          )
+                        }
+                      </>
+                    )}
+                  </div>
+                  {!isMobile && (
+                    <div style={{ flex: '2' }}>
+                      {isEditable !== index ?
+                        (<div style={{ marginLeft: '10px' }}><b>Rs. {expense.amount.toFixed(2)}</b></div>) :
+                        (
+                          <Input
+                            value={expense.amount.toString()}
+                            onChange={(e) => handleAmountChange(e, index)}
+                            disabled={isEditable !== index}
+                            style={isEditable !== index ? { border: '0' } : undefined}
+                          />
+                        )
+                      }
+                    </div>)}
+                  <div style={{ flex: '1' }} className="text-end">
+                    {isEditable === index ? (
+                      <>
+                        <IconButton style={{ width: 'auto', height: 'auto' }} onClick={() => handleSave(index)}>
+                          <SaveOutlinedIcon />
+                        </IconButton>
+                        <IconButton style={{ width: 'auto', height: 'auto' }} onClick={() => setIsEditable(null)}>
+                          <CloseOutlinedIcon />
+                        </IconButton>
+                      </>
+                    ) : (
+                      <>
+                        <IconButton style={{ width: 'auto', height: 'auto' }} onClick={() => setEditable(index)}>
+                          <EditOutlinedIcon />
+                        </IconButton>
+                        <IconButton style={{ width: 'auto', height: 'auto' }} onClick={() => handleDelete(index)}>
+                          <DeleteOutlineOutlinedIcon />
+                        </IconButton>
+                      </>
+                    )}
+                  </div>
+                </TableLikeRow>
+              ))}
+              {
+                expenses && expenses.length == 0 &&
+                <NoExpensesWrapper>
+                  <TbFaceIdError style={{ fontSize: 'xx-large' }}></TbFaceIdError>
+                  <h6>No expenses yet!</h6>
+                </NoExpensesWrapper>
+              }
+
+
+              <PaginationContainer>
+                <Pagination
+                  count={Math.ceil(expenses.length / itemsPerPage)}
+                  page={page}
+                  onChange={handleChangePage}
+                  shape="rounded"
+                  size="large"
+                />
+              </PaginationContainer>
+            </PersonalExpenseListWrapper>
+          )
       }
     </>
   )
