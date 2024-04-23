@@ -4,6 +4,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { checkTokenValidity } from './components/Auth/auth';
 import Login from './components/Login/Login';
 import './App.css';
+import Payment from './components/Payment/Payment';
 
 type ImportFunction<T> = () => Promise<{ default: ComponentType<T> }>;
 type Props = Record<string, unknown>;
@@ -35,6 +36,7 @@ function App() {
     <BrowserRouter>
       <Routes>
           <Route index element={<Login loginRefresh={handleLogin} />} />
+          <Route path="payments/*" element={<Payment />} />
           <Route path="*" element={<Login loginRefresh={handleLogin} />} />
         {
           isAuthenticated ? (

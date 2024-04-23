@@ -45,10 +45,6 @@ export function formatDate(dateString: any) {
     return date.toLocaleDateString('en-GB', options).replace(/(\d+)(th|st|nd|rd)/, '$1');
 }
 
-export function convertTimestampToISO(timestamp: string | number | Date) {
-    return new Date(timestamp)?.toISOString();
-}
-
 export const formatDateForTransactions = (dateString: string | number | Date) => {
     const date = new Date(dateString);
     const day = date.getDate();
