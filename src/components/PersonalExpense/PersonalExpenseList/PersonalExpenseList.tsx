@@ -148,7 +148,7 @@ const PersonalExpenseList: FC<PersonalExpenseListProps> = () => {
               <Row className="align-items-center"> {/* This ensures vertical alignment */}
                 <Col md={11} xs={8}> {/* Adjusted for centering text */} 
                     <h3>Personal Expenses</h3>
-                    <h6>&nbsp;Total expense: Rs.{expenses.reduce((acc, expense) => acc + expense.amount, 0)}</h6>
+                    <h6>&nbsp;Total expense: Rs.{(expenses.reduce((acc, expense) => acc + expense.amount, 0)).toFixed(2)}</h6>
                     <h6>&nbsp;No. of Transactions {expenses.length}</h6>
                 </Col>
                 <Col md={1} xs={4} > {/* Ensures the icon is in a separate column and centered */}
@@ -191,7 +191,7 @@ const PersonalExpenseList: FC<PersonalExpenseListProps> = () => {
                 </div>
                 <div style={{ flex: '3' }}>
                   {isEditable !== index ?
-                    (<div style={{ marginLeft: '10px' }}><b>Rs. {expense.amount}</b></div>) :
+                    (<div style={{ marginLeft: '10px' }}><b>Rs. {expense.amount.toFixed(2)}</b></div>) :
                     (
                       <Input
                         value={expense.amount.toString()}

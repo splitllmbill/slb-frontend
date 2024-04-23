@@ -119,11 +119,11 @@ const ExpenseDetail: FC = () => {
                                     <h4> {expense.expenseName}</h4>
                                     {expense.eventName && expense.eventName != 'None' && (<><span> <a href="" onClick={handleEventClick}><strong>Event: {expense.eventName}</strong></a></span><br /></>)}
                                     < span > <strong>Category:</strong> {expense.category}</span><br />
-                                    <span><strong>Amount:</strong> Rs.{expense.amount}</span>
+                                    <span><strong>Amount:</strong> Rs.{expense.amount.toFixed(2)}</span>
                                     <Small> Created by {expense.createdBy} on {formatDate(expense.createdAt)}</Small>
                                     <Small> Updated by {expense.updatedBy} on {formatDate(expense.updatedAt)}</Small>
                                     <br></br>
-                                    <MdOutlineArrowForwardIos></MdOutlineArrowForwardIos><span><strong> {toTitleCase(expense.paidBy)} paid Rs.{expense.amount}</strong></span>
+                                    <MdOutlineArrowForwardIos></MdOutlineArrowForwardIos><span><strong> {toTitleCase(expense.paidBy)} paid Rs.{expense.amount.toFixed(2)}</strong></span>
                                     <br></br>
                                     <UL>
                                         {expense.shares.map((share) => (
@@ -132,7 +132,7 @@ const ExpenseDetail: FC = () => {
                                                     {share.name === 'you' && expense.paidBy !== 'you' ? 'You owe ' : ''}
                                                     {share.name === 'you' && expense.paidBy === 'you' ? 'You paid ' : ''}
                                                     {share.name && share.name !== 'you' ? `${toTitleCase(share.name)} owes ` : ''}
-                                                    Rs.{share.amount}
+                                                    Rs.{share.amount.toFixed(2)}
                                                 </span>
                                             </li>
                                         ))}

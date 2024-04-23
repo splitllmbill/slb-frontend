@@ -82,7 +82,7 @@ const Payment = () => {
                 </Tooltip>
             </Flex>
             <Typography variant="body2" color="textSecondary">Note: Links work only on mobile. For other devices use QR</Typography>
-            <Typography variant="h6">You are paying an amount of Rs. {upiData?.amount} for {upiData?.note} to {upiData?.userName}. </Typography>
+            <Typography variant="h6">You are paying an amount of Rs. {upiData?.amount.toFixed(2)} for {upiData?.note} to {upiData?.userName}. </Typography>
 
             {
                 !showQR &&

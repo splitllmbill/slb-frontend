@@ -29,11 +29,11 @@ const NonGroupExpenseCard: FC<NonGroupExpenseCardProps> = ({ expenses }) => {
                                 <>
                                     {(expenses.overallYouAreOwed > 0.0) && (
                                         <Typography variant="h6" color="text.secondary">
-                                            You are owed Rs.{expenses.overallYouAreOwed}
+                                            You are owed Rs.{expenses.overallYouAreOwed.toFixed(2)}
                                         </Typography>)}
                                     {(expenses.overallYouOwe > 0.0) && (
                                         <Typography variant="h6" color="text.secondary">
-                                            You owe Rs.{expenses.overallYouOwe}
+                                            You owe Rs.{expenses.overallYouOwe.toFixed(2)}
                                         </Typography>)}
 
                                     {<Typography variant="body1" color="text.secondary" component="div">
@@ -42,9 +42,9 @@ const NonGroupExpenseCard: FC<NonGroupExpenseCardProps> = ({ expenses }) => {
                                                 <li key={index}>
                                                     <span><strong>
                                                         {friend.whoOwes === 'user' ? (
-                                                            <div>You owe {friend.name} Rs.{friend.oweAmount}</div>
+                                                            <div>You owe {friend.name} Rs.{friend.oweAmount.toFixed(2)}</div>
                                                         ) : (
-                                                            <div>{friend.name} owes you Rs.{friend.oweAmount}</div>
+                                                            <div>{friend.name} owes you Rs.{friend.oweAmount.toFixed(2)}</div>
                                                         )}
                                                     </strong></span>
                                                 </li>

@@ -75,8 +75,8 @@ const Events: FC<EventsProps> = () => {
         {!showEvents || !showNonGroup && (<div className="d-flex justify-content-center align-items-center"><CircularProgress color="secondary" variant="indeterminate" /></div>)}
         {showEvents && events && events?.events.length > 0 && (
           <>
-            {owingPerson == 'user' && (<h2>Totally, you owe Rs.{oweAmount}</h2>)}
-            {owingPerson == 'friend' && (<h2>Totally, you are owed Rs.{oweAmount}</h2>)}
+            {owingPerson == 'user' && (<h2>Totally, you owe Rs.{oweAmount.toFixed(2)}</h2>)}
+            {owingPerson == 'friend' && (<h2>Totally, you are owed Rs.{oweAmount.toFixed(2)}</h2>)}
             <br></br>
             <List>
               {events?.events?.map((event) => (

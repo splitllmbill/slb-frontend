@@ -16,7 +16,6 @@ import CustomSnackbar from "../Common/SnackBar/SnackBar";
 
 const FriendsPage = () => {
     const { friendId } = useParams();
-    const navigate = useNavigate();
     const [friends, setFriends] = useState({
         "uuid": "",
         "overallYouOwe": "",

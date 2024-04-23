@@ -59,7 +59,7 @@ const CategorywisePersonalExpenses: React.FC<Props> = ({ expenses }) => {
                                 <div>{expense.noOfTransactions} transactions</div>
                             </div>
                             <div style={{ flex: '1' }}><b>{expense.percent.toFixed(2)}%</b></div>
-                            <div style={{ flex: '1' }} className='text-end'><b>Rs. {expense.cost}</b></div>
+                            <div style={{ flex: '1' }} className='text-end'><b>Rs. {expense.cost.toFixed(2)}</b></div>
                         </TableLikeRow>
                     ))}
                 </>)}

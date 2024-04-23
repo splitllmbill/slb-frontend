@@ -44,11 +44,11 @@ const ExpenseCard: FC<ExpenseCardProps> = ({expense}) => {
                      <div className="text-right"> {/* Change justify-content-right to justify-content-end */}
                         {involved ? !paid ? 
                         <Typography variant="h6" component="div" sx={{ fontWeight:'bold',color: 'red' ,textTransform: 'capitalize'}}>
-                           You owe Rs. {owe}
+                           You owe Rs. {owe.toFixed(2)}
                         </Typography>
                         : 
                         <Typography variant="h6" component="div" sx={{ fontWeight:'bold',color: 'green' ,textTransform: 'capitalize'}}>
-                           You are owed Rs. {owed}
+                           You are owed Rs. {owed.toFixed(2)}
                         </Typography>
                         :"-"}
                      </div>

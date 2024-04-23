@@ -71,7 +71,7 @@ const ExpenseCardNew: FC<ExpenseCardNewProps> = ({ expense }) => {
                                 ) : (
                                     <>You lent </>
                                 )}<br />
-                                <>Rs.{expense?.user_summary?.oweAmount} </>
+                                <>Rs.{expense?.user_summary?.oweAmount.toFixed(2)} </>
                                 {/* <small>{expense.user_summary.owePerson === 'user' ? "from " + expense.paidBy : ""}</small>
                                 {expense.user_summary.owePerson === 'user' && <></>} */}
                             </Typography>}
