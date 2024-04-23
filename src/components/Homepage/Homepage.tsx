@@ -13,6 +13,7 @@ import { useNavigate } from 'react-router-dom';
 import { formatDate } from '../../services/State';
 import dataService from '../../services/DataService';
 import CircularProgress from '@mui/material/CircularProgress';
+import { Typography } from '@mui/material';
 
 interface SummaryState {
   group_expenses: number;
@@ -133,7 +134,7 @@ const Homepage: React.FC = () => {
                     <br />
                     <Row>
                       <h5>Personal Expenses</h5>
-                      <b>Rs.{summary.personal_expenses}</b>
+                      <b>Rs.{summary.personal_expenses.toFixed(2)}</b>
                     </Row>
                   </BoxContent>
                 </SmallBox>
@@ -153,7 +154,7 @@ const Homepage: React.FC = () => {
                     <br />
                     <Row>
                       <h5>Shared expenses</h5>
-                      <b>Rs.{summary.group_expenses}</b>
+                      <b>Rs.{summary.group_expenses.toFixed(2)}</b>
                     </Row>
                   </BoxContent>
                 </SmallBox>
@@ -163,11 +164,12 @@ const Homepage: React.FC = () => {
                 <SmallBox>
                   <BoxContent>
                     <Flex>
-                      <MdOutlineKeyboardDoubleArrowRight style={{ fontSize: 'x-large' }} /><h5> Totally, you owe Rs.{summary.total_you_owe}</h5>
+                      <MdOutlineKeyboardDoubleArrowRight style={{ fontSize: 'x-large' }} /><h6> Totally, you owe Rs.{summary.total_you_owe.toFixed(2)}</h6>
                     </Flex>
                     <Flex>
-                      <MdOutlineKeyboardDoubleArrowRight style={{ fontSize: 'x-large' }} /><h5> Totally, you are owed Rs.{summary.total_owed_to_you}</h5>
+                      <MdOutlineKeyboardDoubleArrowRight style={{ fontSize: 'x-large' }} /><h6> Totally, you are owed Rs.{summary.total_owed_to_you.toFixed(2)}</h6>
                     </Flex>
+                    <Typography variant="subtitle2" color="textSecondary">Note: Date range does not apply.</Typography>
                   </BoxContent>
                 </SmallBox>
               </Col>

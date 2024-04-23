@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { Row , Col } from "react-bootstrap";
 import { CircularProgress, List } from "@mui/material";
 import { AiOutlineUsergroupAdd } from "react-icons/ai";
@@ -16,7 +16,6 @@ import CustomSnackbar from "../Common/SnackBar/SnackBar";
 
 const FriendsPage = () => {
     const { friendId } = useParams();
-    const navigate = useNavigate();
     const [friends, setFriends] = useState({
         "uuid": "",
         "overallYouOwe": "",

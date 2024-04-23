@@ -176,7 +176,7 @@ function FriendDetail() {
                                 ) : (
                                     ` ${friendData.name} owes you `
                                 )}
-                                Rs.{friendData.overallOweAmount}
+                                Rs.{friendData.overallOweAmount.toFixed(2)}
                             </Typography>)}
                         </Col>
                         {(friendData.overallWhoOwes === 'user' && friendData.overallOweAmount !== 0) &&

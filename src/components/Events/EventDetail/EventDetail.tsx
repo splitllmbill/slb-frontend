@@ -196,7 +196,7 @@ const EventDetail: FC = () => {
             </Col>
             <Col xs={12} sm={6} className="text-sm-end">
               <Typography variant="h5" sx={{ fontWeight: 'bold', textTransform: 'capitalize' }}>
-                Total Expense: Rs. {totalExpense}
+                Total Expense: Rs. {totalExpense.toFixed(2)}
               </Typography>
             </Col>
           </Row>
@@ -206,9 +206,9 @@ const EventDetail: FC = () => {
               <Row className="align-items-center"> {/* This ensures that all items in the row align vertically in the center */}
                 <Col xs={6} md={9} className="d-flex align-items-center"> {/* This makes sure the column itself is a flex container, aligning items vertically */}
                   {(summary.totalDebt > summary.totalOwed) &&
-                    <h5>Overall, you owe Rs.{summary.totalDebt - summary.totalOwed}</h5>}
+                    <h5>Overall, you owe Rs.{(summary.totalDebt - summary.totalOwed).toFixed(2)}</h5>}
                   {(summary.totalDebt < summary.totalOwed) &&
-                    <h5>Overall, you are owed Rs.{summary.totalOwed - summary.totalDebt}</h5>}
+                    <h5>Overall, you are owed Rs.{(summary.totalOwed - summary.totalDebt).toFixed(2)}</h5>}
                 </Col>
 
                 {(summary.totalDebt != 0) &&
@@ -224,12 +224,12 @@ const EventDetail: FC = () => {
               </Row>
               {summary.isOwed.map(item => (
                 <>
-                  <FiCornerDownRight style={{ fontSize: 'x-large' }}></FiCornerDownRight> <span>{item.name} owes you Rs.{item.amount}</span><br />
+                  <FiCornerDownRight style={{ fontSize: 'x-large' }}></FiCornerDownRight> <span>{item.name} owes you Rs.{item.amount.toFixed(2)}</span><br />
                 </>
               ))}
               {summary.inDebtTo.map(item => (
                 <>
-                  <FiCornerDownRight style={{ fontSize: 'x-large' }}></FiCornerDownRight> <span>You owe {item.name} Rs.{item.amount}</span><br />
+                  <FiCornerDownRight style={{ fontSize: 'x-large' }}></FiCornerDownRight> <span>You owe {item.name} Rs.{item.amount.toFixed(2)}</span><br />
                 </>
               ))}
             </Col>
