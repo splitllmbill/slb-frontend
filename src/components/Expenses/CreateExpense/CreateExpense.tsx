@@ -74,7 +74,7 @@ const CreateExpenseDrawer: FC<CreateExpenseDrawerProps> = ({ expenseId }) => {
                 setCategory(data.category);
                 setAmount(data.amount);
                 setSelectedDate(new Date(data.date));
-                const paidByDetail: { name: string; email: string; id: string } = { name: data.paidBy, email: "", id: data.paidById }
+                const paidByDetail: { name: string; email: string; id: string } = { name: data.paidBy, email: data.paidByEmail, id: data.paidById }
                 setPaidBy(paidByDetail);
                 console.log("paid by value", data.paidById);
                 let splitTypeString: string = 'equally';
@@ -84,7 +84,7 @@ const CreateExpenseDrawer: FC<CreateExpenseDrawerProps> = ({ expenseId }) => {
                 for (const share of data.shares) {
                     const user: User = {
                         id: share.userId,
-                        email: " ",
+                        email: share.email,
                         name: share.name
                     };
                     const shareDetail = {
@@ -320,7 +320,11 @@ const CreateExpenseDrawer: FC<CreateExpenseDrawerProps> = ({ expenseId }) => {
                     options={users}
                     onChange={(_, value) => setPaidBy(value!)}
                     defaultValue={paidBy}
-                    getOptionLabel={(option) => option.name}
+                    getOptionLabel={(option) => {
+                        if(option.name!="") 
+                            return option.name + " ("+option.email+")"
+                        return option.name
+                        }}
                     disableClearable
                     renderInput={(params) => (
                         <TextField {...params} placeholder="Enter the payee" />
@@ -342,7 +346,11 @@ const CreateExpenseDrawer: FC<CreateExpenseDrawerProps> = ({ expenseId }) => {
                             options={users}
                             onChange={(value) => setSelectedUsers(value)}
                             isOptionEqualToValue={(option, value) => option.id === value.id}
-                            getOptionLabel={(option) => option.name}
+                            getOptionLabel={(option) => {
+                                if(option.name=="Select All")
+                                 return option.name
+                                return option.name + " ("+option.email+")"
+                            }}
                             value={selectedUsers}
                         />
                     </>)
