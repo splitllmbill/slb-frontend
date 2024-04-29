@@ -133,7 +133,7 @@ const CreateEventDrawer: FC<CreateEventDrawerProps> = ({ eventID }) => {
 
                 </Stack>
                 <br />
-                <Button disabled={loading} onClick={eventID == "" ? handleCreateEvent : handleEditEvent}>{eventID == "" ? "Add" : "Edit"}</Button>
+                <Button disabled={loading || eventName==""} onClick={eventID == "" ? handleCreateEvent : handleEditEvent}>{eventID == "" ? "Add" : "Edit"}</Button>
             </div>
         </DashboardContainer>
 
