@@ -282,7 +282,7 @@ const UserPage = () => {
                     </Alert>
                 </div>
                 {isPasswordModalOpen && <ChangePasswordModal onClose={handleCloseChangePassword} handleMessage={handleMessageFromModal} forgotPassword={false} />}
-                {isVerificationModalOpen && <VerificationModal handleClose={handleCloseVerification} handleMessage={handleMessageFromModal} type={verificationFields.type} userData={userData} />}
+                {isVerificationModalOpen && <VerificationModal handleClose={handleCloseVerification} handleMessage={handleMessageFromModal} type={verificationFields.type} userData={userData} navigationPath='/user-account' />}
                 {isQRModalOpen && <QRModal onClose={handleCloseQR} upiId={userData?.upiId} />}
                 {isUPIModalOpen && <UPIModal onClose={handleCloseUPIPage} handleCopy={handleCopyToClipboard} upiId={userData?.upiId} />}
                 <form onSubmit={handleSubmit}>
