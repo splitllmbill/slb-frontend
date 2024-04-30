@@ -2,7 +2,13 @@
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "http://34.100.225.177:8081/$1"
+      "destination": "/api/$1",
+      "has": [
+        {
+          "type": "middleware",
+          "function": "middleware/redirect.ts"
+        }
+      ]
     },
     {
       "source": "/(.*)",
