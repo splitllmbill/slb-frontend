@@ -1,20 +1,8 @@
 {
   "rewrites": [
     {
-      "source": "/api/(.*)",
-      "destination": "/api/$1",
-      "has": [
-        {
-          "type": "middleware"
-        }
-      ]
-    },
-    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
-  ],
-  "middleware": {
-    "api/(.*)": "middleware/redirect.js"
-  }
+  ]
 }
