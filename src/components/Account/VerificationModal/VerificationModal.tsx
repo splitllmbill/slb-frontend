@@ -10,6 +10,7 @@ interface VerificationModalProps {
   type: string;
   userData: any;
   handleMessage: (message: string) => void;
+  navigationPath?: string;
 }
 
 const typeMap: Record<string, string> = {
@@ -18,7 +19,7 @@ const typeMap: Record<string, string> = {
   'Email': 'email'
 };
 
-const VerificationModal: React.FC<VerificationModalProps> = ({ handleClose, type, userData, handleMessage }) => {
+const VerificationModal: React.FC<VerificationModalProps> = ({ handleClose, type, userData, handleMessage, navigationPath }) => {
 
   const navigate = useNavigate();
   const [codes, setCodes] = useState(['', '', '', '']);
@@ -46,7 +47,7 @@ const VerificationModal: React.FC<VerificationModalProps> = ({ handleClose, type
       else {
         handleMessage('Verified ' + type)
         handleClose(true);
-        navigate('/home');
+        navigate(navigationPath || '/home');
       }
     } catch (error) {
       console.error("Error while validating verification code", error);
