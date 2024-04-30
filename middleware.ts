@@ -7,7 +7,7 @@ export default function redirectMiddleware(request: Request) {
   console.log(request.url);
   // If backend URL is not defined or the request is not for the /api context, return original request
   if (!backendURL || !request.url.startsWith('/api')) {
-    return request;
+    return rewrite(new URL(request.url));
   }
   console.log(new URL(backendURL + request.url));
   
