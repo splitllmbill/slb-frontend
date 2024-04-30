@@ -12,5 +12,8 @@ export default defineConfig({
         rewrite: (path) => path.replace(/^\/api/, '') // Rewrite path
       }
     }
-  }
+  },
+  define: {
+    'import.meta.env': import.meta.env,
+  },
 })
