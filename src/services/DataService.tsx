@@ -4,7 +4,7 @@ import fetchInterceptor from "./Interceptor";
 const dataService = {
     signup: async (userData: User) => {
         try {
-            const response = await fetch(BASE_URL + `/db/signup`, {
+            const response = await fetch(`${BASE_URL}/db/signup`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
