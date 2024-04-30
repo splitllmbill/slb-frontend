@@ -73,12 +73,20 @@ const ShareBill = () => {
                 const data = await dataService.fileUpload(selectedFile);
                 setShowLoader(false);
                 setOcrOutput(data.ocroutput);
+                let total : number = 0;
+                if (data.ocroutput.items.length > 0) {
+                    for (let i = 0; i < data.ocroutput.items.length; i++) {
+                        total += data.ocroutput.items[i].total_amount;
+                    }
+                }                                
                 if (data.ocroutput.tax.length > 0) {
                     const initialSharedByUsersTax: any[] = [];
                     for (let i = 0; i < data.ocroutput.tax.length; i++) {
                         initialSharedByUsersTax.push(users);
+                        total += data.ocroutput.tax[i].amount
                     }
                     setSharedByUsersTax(initialSharedByUsersTax);
+                    // setBillTotal(total);
                 }
                 setShowTable(true);
             } catch (error) {
@@ -113,7 +121,6 @@ const ShareBill = () => {
         if (type && id && payer) {
             let totalAmount = ocrOutput.items.reduce((total, item) => total + item.total_amount, 0);
             totalAmount += ocrOutput.tax.reduce((total, item) => total + item.amount, 0);
-
             if (sharedByUsers.length !== ocrOutput.items.length || sharedByUsersTax.length != ocrOutput.tax.length || !type || !payer) {
                 setSnackBarState({ message: "Please fill all required fields!", open: true });
             } else {
@@ -175,9 +182,6 @@ const ShareBill = () => {
                 if (type === 'group' && id) {
                     expense.eventId = id;
                 }
-                console.log(userSharesMap);
-
-                console.log(expense);
                 if (expense) {
                     setExpenseToCreate(expense);
                     setShowShares(true);
@@ -390,9 +394,9 @@ const ShareBill = () => {
                                         <Row>
                                             {!isEditOnList[index] && (
                                                 <Col xs={6}>
-                                                    <div><b>Item Name:</b> {item.item_name}</div>
-                                                    <div><b>Quantity:</b> {item.quantity}</div>
-                                                    <div><Typography variant="body1" style={{ color: 'green' }}><b> Rs. {item.total_amount.toFixed(2)}</b></Typography></div>
+                                                    <div><b>Item Name:</b> {editableItems[index]?.item_name || item.item_name}</div>
+                                                    <div><b>Quantity:</b> {editableItems[index]?.quantity || item.quantity}</div>
+                                                    <div><Typography variant="body1" style={{ color: 'green' }}><b> Rs. {editableItems[index]?.total_amount.toFixed(2) || item.total_amount.toFixed(2)}</b></Typography></div>
                                                 </Col>
                                             )}
                                             {isEditOnList[index] && (
@@ -519,6 +523,21 @@ const ShareBill = () => {
                                 </div>
                             </TableLikeRow>
                         ))}
+                        {/* <TableLikeRow key="total">
+                            <TableLikeRowItem>
+                                <AiOutlineDoubleRight style={{ fontSize: window.innerWidth <= 650 ? 'large' : 'x-large' }} />
+                            </TableLikeRowItem>
+                            <div style={{ flex: '2' }}>
+                                <TableLikeRowItem>
+                                    <Row>
+                                        <Col xs={6}>
+                                            <div><b>Total Bill Amount: </b></div>
+                                            <div><Typography variant="body1" style={{ color: 'green' }}><b> Rs. {billTotal.toFixed(2)}</b></Typography></div>
+                                        </Col>
+                                    </Row>
+                                </TableLikeRowItem>
+                            </div>
+                        </TableLikeRow> */}
                         <Button onClick={calculateShares}>Calculate Shares</Button>
                         <br></br>
                         {showShares && (
