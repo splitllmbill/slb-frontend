@@ -59,7 +59,6 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ onClose, forg
             try {
                 await dataService.forgotPassword({ email: email }).then((data) => {
                     handleMessage(data.message);
-                    // console.log("new password", data.new_password);
                     onClose();
                 })
             } catch (error) {
