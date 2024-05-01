@@ -447,17 +447,8 @@ const dataService = {
     },
     editExpense: async (expenseData: Expense) => {
         try {
-            const response = await fetch(`${BASE_URL}/db/expense/${expenseData.id}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + localStorage.getItem('authToken')
-                },
-                body: JSON.stringify(expenseData),
-            });
-
+            const response = await fetchInterceptor(`${BASE_URL}/db/expense/${expenseData.id}`, 'PUT', true, JSON.stringify(expenseData));
             if (!response.ok) {
-                console.log(response.json())
                 throw new Error(`Error: ${response.status}`);
             }
             return response.json();
@@ -518,9 +509,7 @@ const dataService = {
         return data;
     },
     getUPIPage: async (id: string) => {
-        const response = await fetch(`${BASE_URL}/db/payment/${id}`, {
-            method: 'GET'
-        });
+        const response = await fetchInterceptor(`${BASE_URL}/db/payment/${id}`,'GET');
         const data = await response.json();
         if (!response.ok) {
             throw new Error('An unexpected error occured! Please try again later');

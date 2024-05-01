@@ -22,12 +22,13 @@ const fetchInterceptor = async (url: string, type: string, jsonBody: boolean = f
     }
     if(jsonBody)
         headers.set('Content-Type','application/json');
-
+    headers.set('Cache-Control', 'no-cache, no-store, must-revalidate');
     const response: Response = await fetch(url, {
         method: type,
         headers: headers,
         body: body
     });
+    
     if (response.status === 401) {
         localStorage.clear();
         alert('Unauthorized');
