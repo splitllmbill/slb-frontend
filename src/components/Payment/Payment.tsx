@@ -41,13 +41,13 @@ const Payment = () => {
         return dateObj.toLocaleString('en-US', options);
     }
     
-    const calculateRemainingHours = (expiryTime: string): number => {
-        const expiryDate = new Date(expiryTime);
-        const currentTime = new Date();
-        const timeDifference = expiryDate.getTime() - currentTime.getTime();
-        const hoursDifference = Math.ceil(timeDifference / (1000 * 60 * 60)); // Convert milliseconds to hours
-        return hoursDifference;
-    };
+    // const calculateRemainingHours = (expiryTime: string): number => {
+    //     const expiryDate = new Date(expiryTime);
+    //     const currentTime = new Date();
+    //     const timeDifference = expiryDate.getTime() - currentTime.getTime();
+    //     const hoursDifference = Math.ceil(timeDifference / (1000 * 60 * 60)); // Convert milliseconds to hours
+    //     return hoursDifference;
+    // };
 
     const getPageDetails = async (id: string) => {
         setShowLoader(true);
@@ -128,9 +128,9 @@ const Payment = () => {
             <Typography variant="body2" color="textSecondary">
                 This link expires on {formatDateString(upiData?.expiryAt as string)}
             </Typography>
-            <Typography variant="body2" color="textSecondary">
+            {/* <Typography variant="body2" color="textSecondary">
                 {calculateRemainingHours(upiData?.expiryAt as string).toString()} hours left.
-            </Typography>
+            </Typography> */}
         </BaseContainer>
 };
 
