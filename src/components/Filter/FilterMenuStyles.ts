@@ -12,6 +12,10 @@ export const StyledButton = styled(Button)({
   '&:hover': {
     backgroundColor: 'none',
   },
+  '&:active':{
+    backgroundColor: 'none'
+  },
+  marginRight:'10px'
 
 });
 
@@ -24,7 +28,6 @@ export const StyledMenu = styled(Menu)`
   margin-right :20px;
   min-width: 300px; // Adjust for mobile devices
   max-width: 300px; // Adjust for mobile devices
-  height:275px;
   box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.2);
     padding: 20px 20px 20px 20px;
   }

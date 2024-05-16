@@ -11,7 +11,13 @@ import "react-datepicker/dist/react-datepicker.css";
 import { Button } from '../../../App.styled';
 import { IoMdArrowUp } from 'react-icons/io';
 
-const Chatbot = () => {
+
+interface ChatBotProps {
+   handleMessage: (message: string) => void;
+}
+
+
+const Chatbot: React.FC<ChatBotProps> = ({ handleMessage }) => {
    const [messages, setMessages] = useState<any[]>([
       { text: "Hi there! Please type your expense related details and I'll give you a structured format of the same which you can edit and add to your expenses!", sender: 'bot' },
    ]);
@@ -28,8 +34,8 @@ const Chatbot = () => {
       const today = new Date();
       today.setDate(today.getDate() + numDays);
       return today;
-  };
-  
+   };
+
    const handleSendMessage = async () => {
       if (input.trim() === '' || showTable) return;
       const newMessages = [...messages, { text: input, sender: 'user' }];
@@ -39,7 +45,7 @@ const Chatbot = () => {
       try {
          const botResponse = await dataService.addPersonalExpenseViaLLM(input);
          setMessages([...newMessages, { text: 'Here is a simple table of the expenses listed by you. Please make corrections to the data if necessary and click OKAY to add the expense!', sender: 'bot' }]);
-         const expensesWithDate = botResponse.llmoutput.map((item: any) => ({ ...item, date: item.date ? getDate(parseInt(item.date)) : getDate()}));
+         const expensesWithDate = botResponse.llmoutput.map((item: any) => ({ ...item, date: item.date ? getDate(parseInt(item.date)) : getDate() }));
          setExpenses(expensesWithDate);
          setShowTable(true);
       } catch (error) {
@@ -58,6 +64,10 @@ const Chatbot = () => {
    };
 
    const handleAddExpense = async () => {
+      if (expenses.some(exp => exp.name === '' || exp.category === '' || !exp.date || !exp.amount || exp.amount === 0)) {
+         handleMessage("Fields cannot be empty!");
+         return;
+      }
       try {
          setLoading(true);
          for (const exp of expenses) {
@@ -111,7 +121,7 @@ const Chatbot = () => {
                   {message.sender === 'bot' && <img src={logo} height={50} width={50} />}
                   {message.sender === 'user' && <PiUserCircleThin style={{ color: '#370342', fontSize: '53px' }} />}
                   {message.text}
-                  {message.sender === 'user' && 
+                  {message.sender === 'user' &&
                      <Tooltip title="Copy to new message ">
                         <IconButton
                            size="small"
@@ -185,7 +195,7 @@ const Chatbot = () => {
          <Tooltip title={showTable ? "Comeplete previous expense or click on try again" : ""} followCursor>
             <InputContainer >
                <Input
-                  style={ showTable ? {cursor: "not-allowed"} : undefined}
+                  style={showTable ? { cursor: "not-allowed" } : undefined}
                   type="text"
                   placeholder="Type your expenses.."
                   value={input}

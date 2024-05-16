@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, useState } from 'react';
 import { Row } from 'react-bootstrap';
 import Box from '@mui/material/Box';
 import OutlinedInput from '@mui/material/OutlinedInput';
-import FilterAltIcon from '@mui/icons-material/FilterAlt';
+import { RiFilterFill, RiFilterLine } from 'react-icons/ri';
 import { Autocomplete, TextField, Checkbox, Typography } from '@mui/material';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
@@ -16,12 +16,6 @@ import {
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
-
-
-// Define types for filter fields and filter criteria
-
-
-// Mock data for filter fields
 const filterFields: FilterField[] = [
   {
     name: 'category',
@@ -30,8 +24,7 @@ const filterFields: FilterField[] = [
   {
     name: 'amount',
     type: 'range',
-  },
-  // You can add more fields as needed
+  }
 ];
 type mapStringToString = {
   [key: string]: string[]
@@ -39,11 +32,14 @@ type mapStringToString = {
 interface DynamicFilterProps {
   applyFilter: (Filters: FilterCriteria[]) => void;
   filterOptions: mapStringToString;
+  initialFilterValues: mapStringToString; 
+  setInitialFilterValues:() => void;
 }
 
-const DynamicFilter: React.FC<DynamicFilterProps> = ({ applyFilter, filterOptions }) => {
+const DynamicFilter: React.FC<DynamicFilterProps> = ({ applyFilter, filterOptions, initialFilterValues, setInitialFilterValues  }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [filters, setFilters] = useState<FilterCriteria[]>([]);
+  const [filterApplied, setFilterApplied] = useState<boolean>(false);
   const open = Boolean(anchorEl);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -54,36 +50,59 @@ const DynamicFilter: React.FC<DynamicFilterProps> = ({ applyFilter, filterOption
     setAnchorEl(null);
   };
 
-  const handleApplyFilters = () => {
-    const validFilters = filters.filter((filter) => {
-      if (filter.operator === 'BTW') {
-        if (filter.values[0] === '' && filter.values[1] === '') {
-          return false;
-        }
-        if (filter.values[0] === '' || filter.values[1] === '') {
-          if (filter.values[0] === '') filter.values[0] = 'MIN';
-          if (filter.values[1] === '') filter.values[1] = 'MAX';
-        }
-      }
-      if (filter.operator === 'IN' && filter.values.length == 0)
-        return false;
-      return true;
-    })
-    if (validFilters && validFilters.length != 0) {
-      applyFilter(validFilters);
-    }
-    setAnchorEl(null);
-
+  const handleClearFilters = () => {
+    setFilters([]);
+    applyFilter([]);
+    setInitialFilterValues({});
+    setFilterApplied(false);
   }
 
+  const handleApplyFilters = () => {
+
+    const updatedFilters = filters.filter(filter => !(filter.operator === 'IN' && filter.values.length === 0));
+    setFilters(updatedFilters);
+    updatedFilters.forEach(filter => {
+      if (filter.operator === 'BTW') {
+        if (filter.values[0] === '') filter.values[0] = 'MIN';
+        if (filter.values[1] === '') filter.values[1] = 'MAX';
+      }
+    });
+    console.log("valid", updatedFilters);
+    applyFilter(updatedFilters);
+    setFilterApplied(isFilterApplied(updatedFilters));
+    setAnchorEl(null);
+  };
+
+  const isFilterApplied = (criteria: { operator: string; values: any[]; }[]) => {
+    return criteria.some((filter: { operator: string; values: any[]; }) => {
+      if (filter.operator === 'IN') {
+        return filter.values.length > 0 && !filter.values.some(value => value === '');
+      } else if (filter.operator === 'BTW') {
+        console.log("um", (filter.values[0] !== '' && filter.values[0] !== 'MIN') ||
+        (filter.values[1] !== '' && filter.values[1] !== 'MAX'));
+        
+        return (filter.values[0] !== '' && filter.values[0] !== 'MIN') ||
+          (filter.values[1] !== '' && filter.values[1] !== 'MAX');
+      } else {
+        return false;
+      }
+    });
+  };
+
+
   useEffect(() => {
+    console.log("initial", initialFilterValues);
+
     const initialFilters = filterFields.map((filter) => ({
       field: filter.name,
-      operator: filter.type == "dropdown" ? "IN" : "BTW",
-      values: filter.type == "dropdown" ? [] : ['', '']
-    }))
-    setFilters(initialFilters)
-  }, [])
+      operator: filter.type === "dropdown" ? "IN" : "BTW",
+      values: initialFilterValues[filter.name] || (filter.type === "dropdown" ? [] : ['', ''])
+    }));
+    setFilters(initialFilters);
+    console.log(initialFilters, isFilterApplied(initialFilters));
+
+    setFilterApplied(isFilterApplied(initialFilters));
+  }, [initialFilterValues]);
 
   const convertToArray = (value: string | string[]): string[] => Array.isArray(value) ? value : [value];
 
@@ -95,13 +114,12 @@ const DynamicFilter: React.FC<DynamicFilterProps> = ({ applyFilter, filterOption
 
   const handleRangeChange = (index: number, name: 'min' | 'max', value: string) => {
     const updatedFilters = [...filters];
-    if (name == 'min') {
-      updatedFilters[index].values[0] = value
+    if (name === 'min') {
+      updatedFilters[index].values[0] = value;
     } else {
-      updatedFilters[index].values[1] = value
+      updatedFilters[index].values[1] = value;
     }
     setFilters(updatedFilters);
-
   };
 
   return (
@@ -111,7 +129,7 @@ const DynamicFilter: React.FC<DynamicFilterProps> = ({ applyFilter, filterOption
         aria-haspopup="true"
         aria-expanded={open ? 'true' : undefined}
         onClick={handleClick}
-        startIcon={<FilterAltIcon />}
+        startIcon={filterApplied ? <RiFilterFill /> : <RiFilterLine />} // Conditionally render icons
       >
       </StyledButton>
       <StyledMenu
@@ -188,6 +206,9 @@ const DynamicFilter: React.FC<DynamicFilterProps> = ({ applyFilter, filterOption
 
         ))}
         <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <StyledButton variant="contained" onClick={handleClearFilters} sx={{ marginRight: '5px', width: '20px' }}>
+            Clear
+          </StyledButton>
           <StyledButton variant="contained" onClick={handleApplyFilters} sx={{ marginRight: '5px', width: '20px' }}>
             Apply
           </StyledButton>

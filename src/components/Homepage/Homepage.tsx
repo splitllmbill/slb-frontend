@@ -169,7 +169,7 @@ const Homepage: React.FC = () => {
                     <Flex>
                       <MdOutlineKeyboardDoubleArrowRight style={{ fontSize: 'x-large' }} /><h6> Totally, you are owed Rs.{summary.total_owed_to_you.toFixed(2)}</h6>
                     </Flex>
-                    <Typography variant="subtitle2" color="textSecondary">Note: Date range does not apply.</Typography>
+                    <Typography style={{ marginLeft: '35px' }} variant="subtitle2" color="textSecondary">Note: Date range does not apply.</Typography>
                   </BoxContent>
                 </SmallBox>
               </Col>

@@ -62,4 +62,7 @@ export const AddFilterButton = styled.button`
   &:hover {
     background-color: #059669;
   }
+  &:active {
+    background-color:none;
+  }
 `;

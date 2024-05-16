@@ -19,6 +19,10 @@ import { TbFaceIdError } from 'react-icons/tb';
 
 interface PersonalExpenseListProps { }
 
+type mapStringToString = {
+  [key: string]: string[];
+};
+
 const PersonalExpenseList: FC<PersonalExpenseListProps> = () => {
   const [filterOptions, setFilterOptions] = useState({})
   const [expenses, setExpenses] = useState<Expense[]>([]);
@@ -139,6 +143,17 @@ const PersonalExpenseList: FC<PersonalExpenseListProps> = () => {
 
   const isMobile = window.innerWidth <= 650;
 
+  const [previousFilterValues, setPreviousFilterValues] = useState<mapStringToString>({});
+
+  const applyFilters = (filters: FilterCriteria[]) => {
+    setFilterInput({ filters });
+    const updatedPreviousValues = { ...previousFilterValues };
+    filters.forEach(filter => {
+      updatedPreviousValues[filter.field] = filter.values;
+    });
+    setPreviousFilterValues(updatedPreviousValues);
+  };
+  
   return (
     <>
       <CustomSnackbar message={snackBarState.message} handleClose={handleClose} open={snackBarState.open} />
@@ -154,7 +169,7 @@ const PersonalExpenseList: FC<PersonalExpenseListProps> = () => {
                     <h6>&nbsp;No. of Transactions {expenses.length}</h6>
                   </Col>
                   <Col md={1} xs={4} > {/* Ensures the icon is in a separate column and centered */}
-                    <DynamicFilter applyFilter={handleSetFilters} filterOptions={filterOptions} />
+                    <DynamicFilter applyFilter={applyFilters} filterOptions={filterOptions} initialFilterValues={previousFilterValues} /> {/* Pass initial filter values */}
                   </Col>
                 </Row>
               </H3>
