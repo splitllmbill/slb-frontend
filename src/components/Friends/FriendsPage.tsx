@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Row , Col } from "react-bootstrap";
 import { CircularProgress, List } from "@mui/material";
 import { AiOutlineUsergroupAdd } from "react-icons/ai";
@@ -15,6 +15,7 @@ import { Button, DashboardContainer, NoItemsWrapper } from "../../App.styled";
 import CustomSnackbar from "../Common/SnackBar/SnackBar";
 
 const FriendsPage = () => {
+    let navigate = useNavigate();
     const { friendId } = useParams();
     const [friends, setFriends] = useState({
         "uuid": "",
@@ -36,7 +37,7 @@ const FriendsPage = () => {
     const handleCloseAddFriend = () => {
         setIsModalOpen(false);
         if(location.pathname.startsWith('/add-friend')){
-            // navigate('/friends');
+            navigate('/friends');
         }
         else {
             setShowLoader(true);
