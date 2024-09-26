@@ -107,6 +107,9 @@ const Login: React.FC<LoginProps> = ({ loginRefresh }) => {
       setisPasswordModalOpen(false);
    }
 
+   const appDesc = `SplitLLM is designed to make managing shared expenses a breeze. Whether you're dining out with friends or organizing group activities, our app allows you to effortlessly split bills and ensure everyone pays their fair share. Simply take a photo of your bill, and SplitLLM will handle the rest! Stay organized with our intuitive interface that helps you track your finances, so you can enjoy hassle-free outings while keeping your budget in check.`;
+
+
    return (
       <>
          <div className="login-container">
@@ -168,18 +171,31 @@ const Login: React.FC<LoginProps> = ({ loginRefresh }) => {
                </Col>
                <Col sm={1}></Col>
                <Col sm={5}>
-               <div>
-                     <p>
-                        Welcome to {appTitle}! SplitLLM is designed to make managing shared expenses a breeze. Whether you're dining out with friends or organizing group activities, our app allows you to effortlessly split bills and ensure everyone pays their fair share.
-                     </p>
-                     <br />
-                     <p>
-                        Simply take a photo of your bill, and SplitLLM will handle the rest!
-                     </p>
-                     <br />
-                     <p>
-                        Our intuitive interface helps you track your finances with ease, allowing you to enjoy hassle-free outings while keeping your budget in check. With SplitLLM, managing shared expenses has never been easier!
-                     </p>
+                  <div>
+                     <div style={{ textAlign: "justify" }}>
+                        <p>
+                           <b>Welcome to {appTitle}!</b>
+                        </p>
+                        <p>
+                           SplitLLM simplifies managing shared expenses. Whether dining with friends or organizing group activities, you can easily split bills and ensure everyone pays their fair share.
+                        </p>
+                        <p>
+                           Just take a photo of your bill, and SplitLLM takes care of the rest! Our intuitive interface helps you track your finances effortlessly, making outings hassle-free while keeping your budget in check.
+                        </p>
+                        <p>
+                           For more details, watch our YouTube video!
+                        </p>
+
+                        <iframe
+                           width="400"
+                           height="250"
+                           src="https://www.youtube.com/embed/1G2chXNCphg"
+                           title="SplitLLM Overview"
+                           frameBorder="0"
+                           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                           allowFullScreen
+                        ></iframe>
+                     </div>
                   </div>
 
                </Col>
