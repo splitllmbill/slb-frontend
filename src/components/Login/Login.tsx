@@ -107,7 +107,8 @@ const Login: React.FC<LoginProps> = ({ loginRefresh }) => {
       setisPasswordModalOpen(false);
    }
 
-   const appDesc = `Welcome to ${appTitle}, your go-to app for seamless bill splitting. Easily manage shared expenses, split bills with friends, and keep track of your finances.`;
+   const appDesc = `SplitLLM is designed to make managing shared expenses a breeze. Whether you're dining out with friends or organizing group activities, our app allows you to effortlessly split bills and ensure everyone pays their fair share. Simply take a photo of your bill, and SplitLLM will handle the rest! Stay organized with our intuitive interface that helps you track your finances, so you can enjoy hassle-free outings while keeping your budget in check.`;
+
 
    return (
       <>
@@ -154,12 +155,12 @@ const Login: React.FC<LoginProps> = ({ loginRefresh }) => {
                                     </FormGroup>
                                     <br></br>
                                     <FormGroup controlId="formBasicInviteCode">
-                                       <Form.Control type="text" placeholder="Enter invite code provided" onChange={(event) => setInviteCode(event.target.value)} value={inviteCode} name="inviteCode" required />
+                                       <Form.Control type="text" placeholder="Your invite code (or use: BQRM27)" onChange={(event) => setInviteCode(event.target.value)} value={inviteCode} name="inviteCode" required />
                                     </FormGroup>
                                     <br></br>
                                  </>
                               }
-                              <Button disabled={loading} variant="primary" type="submit">
+                              <Button disabled={loading} variant="outline-primary" type="submit">
                                  {buttonText}
                               </Button>
                               <a href="#" onClick={handleForgotPassword}>Forgot password?</a>
@@ -170,11 +171,20 @@ const Login: React.FC<LoginProps> = ({ loginRefresh }) => {
                </Col>
                <Col sm={1}></Col>
                <Col sm={5}>
-                  <div>
-                     <br></br>
-                     <br></br>
-                     <p>{appDesc}</p>
+               <div>
+                     <p>
+                        Welcome to {appTitle}! SplitLLM is designed to make managing shared expenses a breeze. Whether you're dining out with friends or organizing group activities, our app allows you to effortlessly split bills and ensure everyone pays their fair share.
+                     </p>
+                     <br />
+                     <p>
+                        Simply take a photo of your bill, and SplitLLM will handle the rest!
+                     </p>
+                     <br />
+                     <p>
+                        Our intuitive interface helps you track your finances with ease, allowing you to enjoy hassle-free outings while keeping your budget in check. With SplitLLM, managing shared expenses has never been easier!
+                     </p>
                   </div>
+
                </Col>
             </Row>
          </div >

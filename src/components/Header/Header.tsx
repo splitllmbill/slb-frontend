@@ -10,7 +10,7 @@ const Header: FC<HeaderProps> = () => (
    <HeaderWrapper>
       <AppHeader>
          <Stack direction="horizontal" gap={2}>
-            <img src={logo} height={50} width={50} />
+            <img src={logo} height={60} width={60} />
             <AppName>
                <b>{appName}</b>
             </AppName>
