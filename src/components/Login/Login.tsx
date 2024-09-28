@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Form, Button, FormGroup } from 'react-bootstrap';
 import { Row, Col } from 'react-bootstrap';
-import { Alert, AlertColor } from '@mui/material';
+import { Alert, AlertColor, useMediaQuery } from '@mui/material';
 import './Login.css';
 import Header from '../Header/Header';
 import apiService from '../../services/DataService';
@@ -29,6 +29,7 @@ const Login: React.FC<LoginProps> = ({ loginRefresh }) => {
    const [isVerificationModalOpen, setisVerificationModalOpen] = useState(false);
    const [snackBarState, setSnackBarState] = useState<{ open: boolean, message: string }>({ open: false, message: "" });
    const [isPasswordModalOpen, setisPasswordModalOpen] = useState(false);
+   const isMobile = screen.width<768; // Adjust max-width as needed
 
    const handleCloseAlert = () => {
       setAlertInfo({ ...alertInfo, open: false });
@@ -168,6 +169,7 @@ const Login: React.FC<LoginProps> = ({ loginRefresh }) => {
                   </Row>
                </Col>
                <Col sm={1}></Col>
+               {isMobile && <br/>}
                <Col sm={5}>
                   <div>
                      <div style={{ textAlign: "justify" }}>
@@ -184,15 +186,16 @@ const Login: React.FC<LoginProps> = ({ loginRefresh }) => {
                            For more details, watch our YouTube video!
                         </p>
 
-                        <iframe
-                           width="400"
-                           height="250"
-                           src="https://www.youtube.com/embed/1G2chXNCphg"
-                           title="SplitLLM Overview"
-                           frameBorder="0"
-                           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                           allowFullScreen
-                        ></iframe>
+                        <div className="iframe-container">
+                           <iframe
+                              src="https://www.youtube.com/embed/1G2chXNCphg"
+                              title="SplitLLM Overview"
+                              frameBorder="0"
+                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                              allowFullScreen>
+                           </iframe>
+                        </div>
+
                      </div>
                   </div>
 
