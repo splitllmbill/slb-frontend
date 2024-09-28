@@ -6,5 +6,5 @@ export function encrypt(plaintext: string): string {
     const key = CryptoJS.enc.Utf8.parse(aes_key);
     const iv = CryptoJS.enc.Utf8.parse(aes_iv);
     const encrypted = CryptoJS.AES.encrypt(plaintext, key, { iv: iv });
-    return encrypted.toString();
+    return encrypted.toString(); //returns the encrypted string
 }
