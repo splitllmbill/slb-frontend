@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Form, Button, FormGroup } from 'react-bootstrap';
 import { Row, Col } from 'react-bootstrap';
-import { Alert, AlertColor, useMediaQuery } from '@mui/material';
+import { Alert, AlertColor } from '@mui/material';
 import './Login.css';
 import Header from '../Header/Header';
 import apiService from '../../services/DataService';
