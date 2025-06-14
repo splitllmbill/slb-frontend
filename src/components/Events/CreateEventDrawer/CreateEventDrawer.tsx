@@ -61,7 +61,7 @@ const CreateEventDrawer: FC<CreateEventDrawerProps> = ({ eventID }) => {
             const result = await apiService.createEvent(createEventObject as unknown as EventObject)
             if (result) {
                 setEventName('');
-                navigate(`/event/${result.id}`);
+                navigate(`/event/${result.id}`,{replace: true});
             }
         } catch (error) {
             // setAlertInfo({ open: true, severity: 'error', message: 'Unexpected error occured! Please try again.' });
