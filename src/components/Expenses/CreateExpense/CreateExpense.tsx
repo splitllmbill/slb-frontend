@@ -191,7 +191,7 @@ const CreateExpenseDrawer: FC<CreateExpenseDrawerProps> = ({ expenseId }) => {
             const result = await apiService.createExpense(createExpenseObject as unknown as Expense);
             setSnackBarState({message:result.message, open:true});
             if (result.success == "true") {
-                navigate(`/expense/${result.data.id}`)
+                navigate(`/expense/${result.data.id}`,{replace:true})
             }
         } catch (error) {
             console.error('Unexpected error event creation:', error);
