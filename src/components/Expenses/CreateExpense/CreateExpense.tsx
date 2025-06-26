@@ -21,7 +21,9 @@ const CreateExpenseDrawer: FC<CreateExpenseDrawerProps> = ({ expenseId }) => {
     const [expenseName, setExpenseName] = useState('');
     const [category, setCategory] = useState('');
     const [amount, setAmount] = useState(0);
-    const [paidBy, setPaidBy] = useState<User>({ name: "", email: "" });
+    const [mapUserIdToPayShareDetails, setMapUserIdToPayShareDetails] = useState<Map<string, { userId:string;name:string; email: string ;amount:number}>>(new Map());
+    const [payShare, setPayShare] = useState<{ userId:string;name:string; email: string ;amount:number}[]>([]);
+    const [paidBy, setPaidBy] = useState<User[]>([]);
     const [showShareDetails, setShowShareDetails] = useState<boolean>(false);
     const [splitType, setSplitType] = useState('equally');
     const [shareDetails, setShareDetails] = useState<{ userId: string; amount: number }[]>([]);
@@ -75,7 +77,7 @@ const CreateExpenseDrawer: FC<CreateExpenseDrawerProps> = ({ expenseId }) => {
                 setAmount(data.amount);
                 setSelectedDate(new Date(data.date));
                 const paidByDetail: { name: string; email: string; id: string } = { name: data.paidBy, email: data.paidByEmail, id: data.paidById }
-                setPaidBy(paidByDetail);
+                //setPaidBy(paidByDetail);
                 console.log("paid by value", data.paidById);
                 let splitTypeString: string = 'equally';
                 let t = -1;
@@ -176,11 +178,15 @@ const CreateExpenseDrawer: FC<CreateExpenseDrawerProps> = ({ expenseId }) => {
             userId: share.userId,
             amount: splitType == 'equally' ? amount / (selectedUsers.length) : share.amount
         }));
+        const payShares = payShare.map(share => ({
+            userId: share.userId,
+            amount: share.amount
+        }));
         const createExpenseObject = {
             expenseName: expenseName,
             amount: amount,
             type: typeToPass,
-            paidBy: paidBy.id,
+            payShares:payShares,
             eventId: event.id,
             category: category,
             shares: shares,
@@ -223,12 +229,17 @@ const CreateExpenseDrawer: FC<CreateExpenseDrawerProps> = ({ expenseId }) => {
                 typeToPass = 'friend';
                 break;
         }
+        const payShares = payShare.map(share => ({
+            userId: share.userId,
+            amount: share.amount
+        }));
         const updateExpenseObject = {
             id: expenseId,
             expenseName: expenseName,
             amount: amount,
             type: typeToPass,
-            paidBy: paidBy.id,
+            payShares:payShares
+            ,
             category: category,
             shares: shares,
             date: selectedDate.toDateString()
@@ -289,6 +300,43 @@ const CreateExpenseDrawer: FC<CreateExpenseDrawerProps> = ({ expenseId }) => {
         setShareDetails(updatedShareDetails);
     };
 
+    const handlePayAmountChange = (event: ChangeEvent<HTMLInputElement>, userId: string | undefined) => {
+        const { value } = event.target;
+
+        // Create a copy of the shareDetails array
+        let flag=0
+        const updatedPayShareDetails = payShare.map(share => {
+            if (share.userId === userId) {
+                flag=1;
+                mapUserIdToPayShareDetails.set(share.userId!, {
+                    ...share,
+                    amount: parseFloat(value)
+                });
+                return {
+                    ...share,
+                    amount: parseFloat(value)
+                };
+                
+            }
+            return share;
+        });
+        if(flag==0) {
+            const newShare = {
+                userId: userId!,
+                name: users.find(user => user.id === userId)?.name || "",
+                email: users.find(user => user.id === userId)?.email || "",
+                amount: parseFloat(value)
+            };
+            mapUserIdToPayShareDetails.set(newShare.userId!,newShare);
+            updatedPayShareDetails.push(newShare);
+        }
+
+
+        // Update the shareDetails state with the modified array
+        setPayShare(updatedPayShareDetails);
+        setMapUserIdToPayShareDetails(mapUserIdToPayShareDetails);
+    };
+
     return (
         <DashboardContainer>
             <CustomSnackbar message={snackBarState.message} handleClose={handleClose} open={snackBarState.open} />
@@ -315,11 +363,10 @@ const CreateExpenseDrawer: FC<CreateExpenseDrawerProps> = ({ expenseId }) => {
                 <span><strong>Expense Amount</strong></span>
                 <TextField type="number" onChange={(event) => setAmount(parseFloat(event.target.value))} value={amount} name="amount" required />
                 <span><strong>Paid By</strong></span>
-                <Autocomplete
+                {/* <Autocomplete
                     id="disable-clearable"
                     options={users}
                     onChange={(_, value) => setPaidBy(value!)}
-                    defaultValue={paidBy}
                     getOptionLabel={(option) => {
                         if(option.name!="") 
                             return option.name + " ("+option.email+")"
@@ -327,10 +374,43 @@ const CreateExpenseDrawer: FC<CreateExpenseDrawerProps> = ({ expenseId }) => {
                         }}
                     disableClearable
                     renderInput={(params) => (
-                        <TextField {...params} placeholder="Enter the payee" />
+                        <TextField {...params} placeholder="Select the payees" />
                     )}
                     value={paidBy}
-                />
+                /> */}
+                <CustomAutocomplete
+                            options={users}
+                            onChange={(value) => {
+                                setPaidBy(value);
+                            }}
+                            isOptionEqualToValue={(option, value) => option.id === value.id}
+                            getOptionLabel={(option) => {
+                                if(option.name=="Select All")
+                                 return option.name
+                                return option.name + " ("+option.email+")"
+                            }}
+                            value={paidBy}
+                        />
+                <span ><strong>Contribution</strong></span>
+                {paidBy.length>1 && paidBy.map((user) => {
+                    console.log("printing mapp ahain", mapUserIdToShareDetails.get(user.id!))
+                    return (
+                        <div key={user.id}>
+                            <Row>
+                                <Col>
+                                    <span>{user.name}</span>
+                                </Col>
+                                <Col>
+                                    <input
+                                        type="number"
+                                        value={mapUserIdToPayShareDetails.has(user.id!) ? mapUserIdToPayShareDetails.get(user.id!)?.amount : 0}
+                                        onChange={(e) => handlePayAmountChange(e, user.id)}
+                                    />
+                                </Col>
+                            </Row>
+                        </div>
+                    )
+                })}
                 <FormControl>
                     <RadioGroup row aria-labelledby="demo-row-radio-buttons-group-label" name="row-radio-buttons-group"
                         value={splitType} onChange={handleSplitTypeChange}>
