@@ -6,12 +6,9 @@ export const HeaderWrapper = styled.div`
 
 export const AppHeader = styled.div`
     justify-content: center;
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
     text-align: center;
 `;
 
 export const AppName = styled.div`
-    font-weight: 320;
-    font-style: normal;
-    font-size:xx-large
+    font-size:x-large
 `;

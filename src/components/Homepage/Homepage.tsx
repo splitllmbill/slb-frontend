@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
-import { HomepageContainer, Item, SmallBox, BoxContent } from './Homepage.styled';
-import { TbUsersGroup } from "react-icons/tb";
-import { LuWallet } from "react-icons/lu";
+import { HomepageContainer, ModernCard, StatsCard, ChartCard, WelcomeSection } from './Homepage.styled';
+import { TbUsersGroup, TbTrendingUp, TbWallet, TbChartPie } from "react-icons/tb";
+import { LuWallet, LuArrowUpRight, LuArrowDownRight } from "react-icons/lu";
 import { FaChevronRight } from "react-icons/fa";
+import { HiOutlineSparkles } from "react-icons/hi2";
 import DonutChart from './DoughnutChart/DoughnutChart';
 import DateFilterDropdown from './DateFilterDropdown';
 import { MdOutlineKeyboardDoubleArrowRight } from "react-icons/md";
@@ -13,7 +14,7 @@ import { useNavigate } from 'react-router-dom';
 import { formatDate } from '../../services/State';
 import dataService from '../../services/DataService';
 import CircularProgress from '@mui/material/CircularProgress';
-import { Typography } from '@mui/material';
+import { Typography, Chip } from '@mui/material';
 
 interface SummaryState {
   group_expenses: number;
@@ -31,7 +32,6 @@ interface ChartExpense {
 }
 
 const Homepage: React.FC = () => {
-
   const isMobile: boolean = window.innerWidth <= 650;
   const [summary, setSummary] = useState<SummaryState>({
     group_expenses: 0,
@@ -90,120 +90,220 @@ const Homepage: React.FC = () => {
     navigate('/events')
   }
 
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return 'Good morning';
+    if (hour < 17) return 'Good afternoon';
+    return 'Good evening';
+  };
+
+  const netBalance = summary.total_owed_to_you - summary.total_you_owe;
+
   return (
     <HomepageContainer>
       <div className='app'>
-        <Container>
-          <br />
-          {
-            summary.username !== '' ? (
-              <Row>
-                <Col xs={12} sm={9}>
-                  <h3>Welcome, {summary.username} ! {isMobile}</h3>
-                  <h6>Here's a snapshot of your expenditures.</h6>
+        <Container fluid>
+          {summary.username !== '' && (
+            <WelcomeSection>
+              <Row className="align-items-center">
+                <Col xs={12} lg={8}>
+                  <div className="welcome-content">
+                    <div className="greeting-section">
+                      <HiOutlineSparkles className="sparkle-icon" />
+                      <h1 className="greeting-text">
+                        {getGreeting()}, {summary.username}!
+                      </h1>
+                    </div>
+                    <p className="welcome-subtitle">
+                      Here's your financial overview and spending insights
+                    </p>
+                  </div>
                 </Col>
-                {isMobile && <Col xs={12}><br /></Col>}
-                <Col xs={12} sm={3} className="text-end" >
-                  <DateFilterDropdown setDateRange={handleDateChange}></DateFilterDropdown>
+                <Col xs={12} lg={4} className="text-end">
+                  <div className="date-filter-wrapper">
+                    <DateFilterDropdown setDateRange={handleDateChange} />
+                  </div>
                 </Col>
               </Row>
-            ) : <></>
-          }
-          <br />
-          <Row>
-            <Col xs={12} className="text-end">
-              {dateRange.startDate && dateRange.endDate && <h6>From {formatDate(dateRange.startDate)} to {formatDate(dateRange.endDate)}</h6>}
-              {!dateRange.startDate && !dateRange.endDate && <h6>Date Range: All time</h6>}
-            </Col>
-          </Row>
-          <br />
-          <div>
-            {!showSummary && (<div className="d-flex justify-content-center align-items-center"><CircularProgress color="secondary" variant="indeterminate" /></div>)}
-            {showSummary && (<Row>
-              <Col sm={12} md={4}>
-                <SmallBox onClick={redirectToPersonalExpense}>
-                  <BoxContent>
-                    <Row>
-                      <Col xs={6}>
-                        <LuWallet style={{ fontSize: 'x-large' }} />
-                      </Col>
-                      <Col xs={6} className="text-end">
-                        <FaChevronRight style={{ fontSize: 'x-large' }} />
-                      </Col>
-                    </Row>
-                    <br />
-                    <Row>
-                      <h5>Personal Expenses</h5>
-                      <b>Rs.{summary.personal_expenses.toFixed(2)}</b>
-                    </Row>
-                  </BoxContent>
-                </SmallBox>
+              
+              <Row className="mt-3">
+                <Col xs={12} className="text-center">
+                  <div className="date-range-display">
+                    {dateRange.startDate && dateRange.endDate ? (
+                      <Chip 
+                        label={`${formatDate(dateRange.startDate)} - ${formatDate(dateRange.endDate)}`}
+                        variant="outlined"
+                        className="date-chip"
+                      />
+                    ) : (
+                      <Chip 
+                        label="All time data"
+                        variant="outlined"
+                        className="date-chip"
+                      />
+                    )}
+                  </div>
+                </Col>
+              </Row>
+            </WelcomeSection>
+          )}
+
+          {!showSummary && (
+            <div className="loading-container">
+              <CircularProgress color="secondary" variant="indeterminate" />
+              <Typography variant="h6" className="loading-text">Loading your dashboard...</Typography>
+            </div>
+          )}
+
+          {showSummary && (
+            <>
+              {/* Stats Cards */}
+              <Row className="stats-row">
+                <Col xs={12} md={6} lg={3}>
+                  <StatsCard onClick={redirectToPersonalExpense} className="personal-card">
+                    <div className="card-header">
+                      <div className="icon-wrapper personal">
+                        <LuWallet />
+                      </div>
+                      <FaChevronRight className="arrow-icon" />
+                    </div>
+                    <div className="card-content">
+                      <h3 className="card-title">Personal Expenses</h3>
+                      <div className="amount">₹{summary.personal_expenses.toFixed(2)}</div>
+                      <div className="card-subtitle">Your spending</div>
+                    </div>
+                  </StatsCard>
+                </Col>
+
+                <Col xs={12} md={6} lg={3}>
+                  <StatsCard onClick={redirectToEvents} className="shared-card">
+                    <div className="card-header">
+                      <div className="icon-wrapper shared">
+                        <TbUsersGroup />
+                      </div>
+                      <FaChevronRight className="arrow-icon" />
+                    </div>
+                    <div className="card-content">
+                      <h3 className="card-title">Shared Expenses</h3>
+                      <div className="amount">₹{summary.group_expenses.toFixed(2)}</div>
+                      <div className="card-subtitle">Group spending</div>
+                    </div>
+                  </StatsCard>
+                </Col>
+
+                <Col xs={12} md={6} lg={3}>
+                  <StatsCard className="owe-card">
+                    <div className="card-header">
+                      <div className="icon-wrapper owe">
+                        <LuArrowUpRight />
+                      </div>
+                    </div>
+                    <div className="card-content">
+                      <h3 className="card-title">You Owe</h3>
+                      <div className="amount owe-amount">₹{summary.total_you_owe.toFixed(2)}</div>
+                      <div className="card-subtitle">To friends</div>
+                    </div>
+                  </StatsCard>
+                </Col>
+
+                <Col xs={12} md={6} lg={3}>
+                  <StatsCard className="owed-card">
+                    <div className="card-header">
+                      <div className="icon-wrapper owed">
+                        <LuArrowDownRight />
+                      </div>
+                    </div>
+                    <div className="card-content">
+                      <h3 className="card-title">You're Owed</h3>
+                      <div className="amount owed-amount">₹{summary.total_owed_to_you.toFixed(2)}</div>
+                      <div className="card-subtitle">From friends</div>
+                    </div>
+                  </StatsCard>
+                </Col>
+              </Row>
+
+              {/* Net Balance Card */}
+              <Row className="balance-row">
+                <Col xs={12}>
+                  <ModernCard className="balance-card">
+                    <div className="balance-content">
+                      <div className="balance-header">
+                        <TbTrendingUp className="balance-icon" />
+                        <h3>Net Balance</h3>
+                      </div>
+                      <div className={`balance-amount ${netBalance >= 0 ? 'positive' : 'negative'}`}>
+                        {netBalance >= 0 ? '+' : ''}₹{netBalance.toFixed(2)}
+                      </div>
+                      <p className="balance-description">
+                        {netBalance >= 0 
+                          ? "You're in a good position! Others owe you more than you owe them."
+                          : "You have some outstanding payments to settle."
+                        }
+                      </p>
+                      <Typography variant="caption" className="balance-note">
+                        * Date range does not apply to balance calculations
+                      </Typography>
+                    </div>
+                  </ModernCard>
+                </Col>
+              </Row>
+            </>
+          )}
+
+          {showChart && expenses.length > 0 && (
+            <Row className="chart-row">
+              <Col xs={12} lg={7}>
+                <ChartCard>
+                  <div className="chart-header">
+                    <div className="chart-title-section">
+                      <TbChartPie className="chart-icon" />
+                      <h3>Expense Breakdown</h3>
+                    </div>
+                    <div className="chart-subtitle">
+                      Personal expenses by category
+                    </div>
+                  </div>
+                  <div className="chart-content">
+                    <DonutChart expenses={expenses} />
+                  </div>
+                </ChartCard>
               </Col>
-              {isMobile && <Col xs={12}><br /></Col>}
-              <Col sm={12} md={4}>
-                <SmallBox onClick={redirectToEvents}>
-                  <BoxContent>
-                    <Row>
-                      <Col xs={6}>
-                        <TbUsersGroup style={{ fontSize: 'x-large' }}></TbUsersGroup>
-                      </Col>
-                      <Col xs={6} className="text-end">
-                        <FaChevronRight style={{ fontSize: 'x-large' }} />
-                      </Col>
-                    </Row>
-                    <br />
-                    <Row>
-                      <h5>Shared expenses</h5>
-                      <b>Rs.{summary.group_expenses.toFixed(2)}</b>
-                    </Row>
-                  </BoxContent>
-                </SmallBox>
-              </Col>
-              {isMobile && <Col xs={12}><br /></Col>}
-              <Col sm={12} md={4}>
-                <SmallBox>
-                  <BoxContent>
-                    <Flex>
-                      <MdOutlineKeyboardDoubleArrowRight style={{ fontSize: 'x-large' }} /><h6> Totally, you owe Rs.{summary.total_you_owe.toFixed(2)}</h6>
-                    </Flex>
-                    <Flex>
-                      <MdOutlineKeyboardDoubleArrowRight style={{ fontSize: 'x-large' }} /><h6> Totally, you are owed Rs.{summary.total_owed_to_you.toFixed(2)}</h6>
-                    </Flex>
-                    <Typography variant="subtitle2" color="textSecondary">Note: Date range does not apply.</Typography>
-                  </BoxContent>
-                </SmallBox>
+              
+              <Col xs={12} lg={5}>
+                <ChartCard>
+                  <div className="chart-header">
+                    <div className="chart-title-section">
+                      <TbWallet className="chart-icon" />
+                      <h3>Category Details</h3>
+                    </div>
+                    <div className="chart-subtitle">
+                      Detailed breakdown
+                    </div>
+                  </div>
+                  <div className="category-content">
+                    <CategorywisePersonalExpenses expenses={expenses} />
+                  </div>
+                </ChartCard>
               </Col>
             </Row>
-            )}
-            <br />
-            {showChart && (
-              <Row>
-                <Col xs={12} lg={7}>
-                  <Item>
-                    <BoxContent>
-                      <Row>
-                        <Col xs={12} className="d-flex align-items-center">
-                          <h5>Personal Expenses</h5>
-                        </Col>
-                      </Row>
-                      <Row className="justify-content-center">
-                        <DonutChart expenses={expenses} />
-                      </Row>
-                    </BoxContent>
-                  </Item>
-                </Col>
-                <Col xs={12} className="d-lg-none"><br /></Col>
-                <Col xs={12} lg={5}>
-                  <Item>
-                    <CategorywisePersonalExpenses expenses={expenses} />
-                  </Item>
-                </Col>
-              </Row>
-            )}
-          </div>
+          )}
+
+          {showChart && expenses.length === 0 && (
+            <Row className="empty-state-row">
+              <Col xs={12}>
+                <ModernCard className="empty-state">
+                  <div className="empty-content">
+                    <TbChartPie className="empty-icon" />
+                    <h3>No expense data available</h3>
+                    <p>Start adding your expenses to see detailed analytics and insights.</p>
+                  </div>
+                </ModernCard>
+              </Col>
+            </Row>
+          )}
         </Container>
-      </div >
-    </HomepageContainer >
+      </div>
+    </HomepageContainer>
   );
 };
 
