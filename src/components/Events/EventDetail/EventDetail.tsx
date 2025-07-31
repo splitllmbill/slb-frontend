@@ -100,7 +100,10 @@ const EventDetail: FC = () => {
       expenseName: summary.userName + " Settled Up!",
       amount: shares[0].amount,
       type: "settle",
-      paidBy: localStorage.getItem("userId"),
+      payShares:[{
+        userId: localStorage.getItem("userId"),
+        amount: shares[0].amount
+      }],
       eventId: eventId,
       category: "settle",
       shares: shares,

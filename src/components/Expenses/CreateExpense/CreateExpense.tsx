@@ -1,6 +1,6 @@
 import { ChangeEvent, FC, SetStateAction, useEffect, useState } from "react";
 import apiService from '../../../services/DataService';
-import { FormControl, FormControlLabel, RadioGroup, Radio, Stack, TextField, Autocomplete } from "@mui/material";
+import { FormControl, FormControlLabel, RadioGroup, Radio, Stack, TextField } from "@mui/material";
 import { LabelForm } from "./CreateExpense.styled";
 import { IoMdArrowBack } from "react-icons/io";
 import { useNavigate, useParams } from "react-router-dom";
@@ -76,8 +76,6 @@ const CreateExpenseDrawer: FC<CreateExpenseDrawerProps> = ({ expenseId }) => {
                 setCategory(data.category);
                 setAmount(data.amount);
                 setSelectedDate(new Date(data.date));
-                const paidByDetail: { name: string; email: string; id: string } = { name: data.paidBy, email: data.paidByEmail, id: data.paidById }
-                //setPaidBy(paidByDetail);
                 console.log("paid by value", data.paidById);
                 let splitTypeString: string = 'equally';
                 let t = -1;
@@ -105,6 +103,31 @@ const CreateExpenseDrawer: FC<CreateExpenseDrawerProps> = ({ expenseId }) => {
                         }
                     }
                 }
+                const paySharesDetails: { userId: string; amount: number }[] = [];
+                 let currPaidBy:User[] = [];
+                for(const ps of data.payShares) {
+
+                    const payShareDetail = {
+                        userId: ps.userId,
+                        name: "",
+                        email: "",
+                        amount: ps.amount
+                    };
+                    for(const user of users) {
+                        if(user.id == ps.userId) {
+                            payShareDetail.name = user.name;
+                            payShareDetail.email = user.email;
+                            currPaidBy.push(user);
+                           
+                        }
+                    }
+                    
+
+                    paySharesDetails.push(payShareDetail);
+                    mapUserIdToPayShareDetails.set(ps.userId, payShareDetail)
+                }
+                console.log("current paid by", currPaidBy)
+                setPaidBy(currPaidBy);
                 setEventId(data.eventId)
                 console.log("setting event id", eventId, data.eventId)
                 setEventType(data.type)
@@ -178,10 +201,18 @@ const CreateExpenseDrawer: FC<CreateExpenseDrawerProps> = ({ expenseId }) => {
             userId: share.userId,
             amount: splitType == 'equally' ? amount / (selectedUsers.length) : share.amount
         }));
-        const payShares = payShare.map(share => ({
-            userId: share.userId,
-            amount: share.amount
-        }));
+        let payShares: { userId: string; amount: number }[] = [];
+        if(paidBy.length >1) {
+            payShares = payShare.map(share => ({
+                userId: share.userId,
+                amount: share.amount
+            }))
+        }else if(paidBy.length == 1) {
+            payShares.push({
+                userId: paidBy[0].id!,
+                amount: amount
+            })
+        }
         const createExpenseObject = {
             expenseName: expenseName,
             amount: amount,
@@ -229,7 +260,7 @@ const CreateExpenseDrawer: FC<CreateExpenseDrawerProps> = ({ expenseId }) => {
                 typeToPass = 'friend';
                 break;
         }
-        const payShares = payShare.map(share => ({
+        const payShares: { userId: string; amount: number }[] = payShare.map(share => ({
             userId: share.userId,
             amount: share.amount
         }));
@@ -238,8 +269,7 @@ const CreateExpenseDrawer: FC<CreateExpenseDrawerProps> = ({ expenseId }) => {
             expenseName: expenseName,
             amount: amount,
             type: typeToPass,
-            payShares:payShares
-            ,
+            payShares:payShares,
             category: category,
             shares: shares,
             date: selectedDate.toDateString()
@@ -367,11 +397,11 @@ const CreateExpenseDrawer: FC<CreateExpenseDrawerProps> = ({ expenseId }) => {
                     id="disable-clearable"
                     options={users}
                     onChange={(_, value) => setPaidBy(value!)}
-                    getOptionLabel={(option) => {
-                        if(option.name!="") 
-                            return option.name + " ("+option.email+")"
-                        return option.name
-                        }}
+                            getOptionLabel={(option) => {
+                                if(option.name=="Select All")
+                                 return option.name
+                                return String(userMap.get(option.id)?.name || "") + " ("+option.email+")"
+                            }}
                     disableClearable
                     renderInput={(params) => (
                         <TextField {...params} placeholder="Select the payees" />
