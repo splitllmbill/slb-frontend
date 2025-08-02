@@ -7,8 +7,6 @@ import { FaChevronRight } from "react-icons/fa";
 import { HiOutlineSparkles } from "react-icons/hi2";
 import DonutChart from './DoughnutChart/DoughnutChart';
 import DateFilterDropdown from './DateFilterDropdown';
-import { MdOutlineKeyboardDoubleArrowRight } from "react-icons/md";
-import { Flex } from '../../App.styled';
 import CategorywisePersonalExpenses from './CategorywisePersonalExpenses/CategorywisePersonalExpenses';
 import { useNavigate } from 'react-router-dom';
 import { formatDate } from '../../services/State';
@@ -32,7 +30,6 @@ interface ChartExpense {
 }
 
 const Homepage: React.FC = () => {
-  const isMobile: boolean = window.innerWidth <= 650;
   const [summary, setSummary] = useState<SummaryState>({
     group_expenses: 0,
     personal_expenses: 0,
