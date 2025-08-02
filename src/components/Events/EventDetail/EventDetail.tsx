@@ -24,6 +24,7 @@ interface Expense {
 
 const EventDetail: FC = () => {
   const [event, setEvent] = useState<{ eventName: string; expenses: Expense[]; }>({ eventName: "", expenses: [] });
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 650);
   const [showLoader, setShowLoader] = useState<boolean>(true);
   const [summary, setSummary] = useState<{
     userName: string;
@@ -69,6 +70,19 @@ const EventDetail: FC = () => {
   useEffect(() => {
     fetchData();
   }, [eventId]); // Fetch data when eventId changes
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 650);
+    };
+
+    window.addEventListener('resize', handleResize);
+    
+    // Initial check
+    handleResize();
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const navigate = useNavigate();
   const handleGoBack = () => {
@@ -121,7 +135,6 @@ const EventDetail: FC = () => {
     }
   }
 
-  const isMobile = window.innerWidth <= 650;
 
   const handleChangePage = (_event: React.ChangeEvent<unknown>, page: number) => {
     setCurrentPage(page);

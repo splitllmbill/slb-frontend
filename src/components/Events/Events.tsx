@@ -70,7 +70,7 @@ const Events: FC<EventsProps> = () => {
 
   return (
     <DashboardContainer>
-      <>
+  
         <Button onClick={handleCreateEvent}>Create Event <MdOutlineGroupAdd style={{ fontSize: 'x-large' }}></MdOutlineGroupAdd></Button><br /><br />
         {!showEvents || !showNonGroup && (<div className="d-flex justify-content-center align-items-center"><CircularProgress color="secondary" variant="indeterminate" /></div>)}
         {showEvents && events && events?.events.length > 0 && (
@@ -94,7 +94,6 @@ const Events: FC<EventsProps> = () => {
             <br /><br />
           </NoItemsWrapper>)}
         {showNonGroup && <NonGroupExpenseCard expenses={nonGroupExpenses}></NonGroupExpenseCard>}
-      </>
     </DashboardContainer>
   );
 };
