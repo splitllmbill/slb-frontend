@@ -24,7 +24,7 @@ const EventCard: FC<EventCardProps> = ({ eventSent }) => {
             <CardContent>
                <Row>
                   <Col sm={2} xs={3} className="d-flex">
-                     <HiRectangleGroup style={{ fontSize: 'xxx-large' }}></HiRectangleGroup>
+                     <HiRectangleGroup style={{ fontSize: 'xxx-large'}}></HiRectangleGroup>
                   </Col>
                   <Col sm={10} xs={9} className="d-flex align-items-center">
                      <div className="text-left"> {/* Add text-left class for left alignment inside the div */}
@@ -33,7 +33,7 @@ const EventCard: FC<EventCardProps> = ({ eventSent }) => {
                         </Typography>
                         {eventSent.dues?.totalOwed > 0 && (
                            <>
-                              <Typography variant="h6" color="text.secondary">
+                              <Typography variant="h6" color="#22C55E" sx={{ fontWeight: 'bold' }}>
                                  You are owed Rs.{eventSent.dues.totalOwed.toFixed(2)}
                               </Typography>
                               <Typography variant="body1" color="text.secondary" component="div">
@@ -49,7 +49,7 @@ const EventCard: FC<EventCardProps> = ({ eventSent }) => {
                         )}
                         {eventSent.dues?.totalDebt > 0 && (
                            <>
-                              <Typography variant="h6" color="text.secondary">
+                              <Typography variant="h6" color="#EF4444" sx={{ fontWeight: 'bold' }}>
                                  You owe Rs.{eventSent.dues.totalDebt.toFixed(2)}
                               </Typography>
                               <Typography variant="body1" color="text.secondary" component="div">
