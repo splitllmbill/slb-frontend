@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Form, Button, FormGroup } from 'react-bootstrap';
+import { Form, Button } from 'react-bootstrap';
 import { Row, Col } from 'react-bootstrap';
 import { Alert, AlertColor } from '@mui/material';
 import './Login.css';
@@ -10,7 +10,7 @@ import { encrypt } from '../../util/aes';
 import VerificationModal from '../Account/VerificationModal/VerificationModal';
 import CustomSnackbar from '../Common/SnackBar/SnackBar';
 import ChangePasswordModal from '../Account/ChangePasswordModal/ChangePasswordModal';
-import { FaEye, FaEyeSlash, FaUser, FaEnvelope, FaLock, FaPlay } from 'react-icons/fa';
+import { FaUser, FaEnvelope, FaLock, FaPlay } from 'react-icons/fa';
 
 interface LoginProps {
    loginRefresh: () => void;
@@ -27,12 +27,9 @@ const Login: React.FC<LoginProps> = ({ loginRefresh }) => {
    const [buttonText, setButtonText] = useState('Login');
    const [alertInfo, setAlertInfo] = useState({ open: false, severity: 'success', message: '' });
    const [loading, setLoading] = useState(false);
-   const [showPassword, setShowPassword] = useState(false);
-   const [showRPassword, setShowRPassword] = useState(false);
    const [isVerificationModalOpen, setisVerificationModalOpen] = useState(false);
    const [snackBarState, setSnackBarState] = useState<{ open: boolean, message: string }>({ open: false, message: "" });
    const [isPasswordModalOpen, setisPasswordModalOpen] = useState(false);
-   const isMobile = screen.width < 768;
 
    const handleCloseAlert = () => {
       setAlertInfo({ ...alertInfo, open: false });
