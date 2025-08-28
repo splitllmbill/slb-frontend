@@ -23,7 +23,7 @@ const Login: React.FC<LoginProps> = ({ loginRefresh }) => {
    const [email, setEmail] = useState('');
    const [password, setPassword] = useState('');
    const [rpassword, setRPassword] = useState('');
-   const [inviteCode, setInviteCode] = useState('');
+   // const [inviteCode, setInviteCode] = useState('');
    const [buttonText, setButtonText] = useState('Login');
    const [alertInfo, setAlertInfo] = useState({ open: false, severity: 'success', message: '' });
    const [loading, setLoading] = useState(false);
@@ -78,7 +78,6 @@ const Login: React.FC<LoginProps> = ({ loginRefresh }) => {
                setEmail('');
                setPassword('');
                setRPassword('');
-               setInviteCode('');
                setButtonText('Login');
             }
          }
@@ -190,7 +189,7 @@ const Login: React.FC<LoginProps> = ({ loginRefresh }) => {
                                  <FaLock />
                               </div>
                               <Form.Control 
-                                 type={password} 
+                                 type="password"
                                  placeholder="Password" 
                                  onChange={(event) => setPassword(event.target.value)} 
                                  value={password} 
@@ -207,7 +206,7 @@ const Login: React.FC<LoginProps> = ({ loginRefresh }) => {
                                        <FaLock />
                                     </div>
                                     <Form.Control 
-                                       type={password} 
+                                       type="password"
                                        placeholder="Confirm Password" 
                                        onChange={(event) => setRPassword(event.target.value)} 
                                        value={rpassword} 
@@ -216,17 +215,17 @@ const Login: React.FC<LoginProps> = ({ loginRefresh }) => {
                                     />
                                  </div>
 
-                                 <div className="input-group">
+                                 {/* <div className="input-group">
                                     <Form.Control 
                                        type="text" 
-                                       placeholder="Invite Code (or use: BQRM27)" 
+                                       placeholder="Invite Code (or use: 8I3JVN)" 
                                        onChange={(event) => setInviteCode(event.target.value)} 
                                        value={inviteCode} 
                                        name="inviteCode" 
                                        required 
                                        className="modern-input"
                                     />
-                                 </div>
+                                 </div> */}
                               </>
                            )}
 

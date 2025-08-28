@@ -10,6 +10,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { SmallBox } from './Homepage.styled';
 import { Row } from 'react-bootstrap';
 import Popper from '@mui/material/Popper';
+import './DateFilterDropdown.css';
 
 const DateFilterDropdown: React.FC<{ setDateRange: React.Dispatch<React.SetStateAction<{ startDate: Date | null; endDate: Date | null; }>> }> = ({ setDateRange }) => {
     const [selectedValue, setSelectedValue] = useState('0');
@@ -117,7 +118,7 @@ const DateFilterDropdown: React.FC<{ setDateRange: React.Dispatch<React.SetState
     return (
         <Box>
             <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">Date</InputLabel>
+                <InputLabel id="demo-simple-select-label" >Date</InputLabel>
                 <Select
                     ref={selectRef}
                     labelId="demo-simple-select-label"

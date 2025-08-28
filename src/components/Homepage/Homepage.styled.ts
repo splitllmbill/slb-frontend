@@ -3,7 +3,7 @@ import { styled } from "styled-components";
 
 export const HomepageContainer = styled.div`
   padding: 1.5rem;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  background: #dce3ee;
   min-height: 100vh;
 `;
 
@@ -198,7 +198,6 @@ export const StatsCard = styled(Paper)`
   transition: all 0.3s ease !important;
   cursor: pointer;
   padding: 1.5rem !important;
-  height: 140px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;

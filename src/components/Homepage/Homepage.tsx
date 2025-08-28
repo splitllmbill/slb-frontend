@@ -87,6 +87,10 @@ const Homepage: React.FC = () => {
     navigate('/events')
   }
 
+  const redirectToFriends = () => {
+    navigate('/friends')
+  }
+
   const getGreeting = () => {
     const hour = new Date().getHours();
     if (hour < 12) return 'Good morning';
@@ -189,11 +193,12 @@ const Homepage: React.FC = () => {
                 </Col>
 
                 <Col xs={12} md={6} lg={3}>
-                  <StatsCard className="owe-card">
+                  <StatsCard onClick={redirectToFriends} className="owe-card">
                     <div className="card-header">
                       <div className="icon-wrapper owe">
                         <LuArrowUpRight />
                       </div>
+                      <FaChevronRight className="arrow-icon" />
                     </div>
                     <div className="card-content">
                       <h3 className="card-title">You Owe</h3>
@@ -204,11 +209,12 @@ const Homepage: React.FC = () => {
                 </Col>
 
                 <Col xs={12} md={6} lg={3}>
-                  <StatsCard className="owed-card">
+                  <StatsCard onClick={redirectToFriends} className="owed-card">
                     <div className="card-header">
                       <div className="icon-wrapper owed">
                         <LuArrowDownRight />
                       </div>
+                      <FaChevronRight className="arrow-icon" />
                     </div>
                     <div className="card-content">
                       <h3 className="card-title">You're Owed</h3>

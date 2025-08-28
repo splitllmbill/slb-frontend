@@ -13,8 +13,8 @@ export const Input = styled.input`
 
 export const Button = styled.button`
     padding: 10px 20px;
-    background-color: #d8d3db;
-    color: black;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;

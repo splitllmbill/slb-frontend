@@ -8,7 +8,7 @@ padding-top: 70px;
 `;
 
 export const ContentArea = styled.div`
-  background-color: whitesmoke;
+  background-color: #dce3ee;
   width: 100%;
   margin-right: 0;
   color: black;
@@ -18,7 +18,7 @@ export const ContentArea = styled.div`
 `;
 
 export const HeaderWrapper = styled.div`
-background-color:white;
+background-color: #dce3ee;
 padding:10px;
 color: #370342;
 display: flex;

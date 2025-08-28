@@ -1,0 +1,58 @@
+.MuiInputBase-root {
+    background: #fff !important; /* white background for input/Select */
+    color: #000 !important; /* black text */
+    border-radius: 8px;
+  }
+  
+  .MuiOutlinedInput-notchedOutline {
+    border-color: #ccc !important; /* light gray border */
+  }
+  
+  .MuiInputLabel-root {
+    color: #555 !important; /* dark gray label */
+  }
+  
+  .MuiMenu-paper {
+    background: #fff !important; /* white dropdown menu */
+    color: #000 !important; /* black text in dropdown */
+  }
+  
+  .MuiMenuItem-root {
+    color: #000 !important;
+  }
+  
+  .custom-datepicker {
+    background: #fff;
+    color: #000;
+    border: 1px solid #ccc;
+    padding: 6px 8px;
+    border-radius: 6px;
+    width: 100%;
+  }
+  
+  .react-datepicker__input-container input {
+    background: #fff;
+    color: #000;
+    border: none;
+    width: 100%;
+  }
+  
+  .react-datepicker {
+    background: #fff;
+    border: 1px solid #ccc;
+  }
+  
+  .react-datepicker__header {
+    background: #f8f8f8;
+    border-bottom: 1px solid #ccc;
+  }
+  
+  .react-datepicker__day {
+    color: #000;
+  }
+  
+  .react-datepicker__day--selected {
+    background: #667eea; /* Your purple highlight */
+    color: #fff;
+  }
+  
